@@ -6,7 +6,7 @@
 	<version>0.0.1-SNAPSHOT</version>
 
 	<packaging>jar</packaging>
-	<description>A JAX-RS web service for a book/media content store.</description>
+	<description>A JAX-RS web service for a online book store.</description>
 
 
 	<!-- Specify the servlet container port to listen on for incoming requests. -->
