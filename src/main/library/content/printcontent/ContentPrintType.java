@@ -9,14 +9,14 @@ import java.util.Date;
  */
 public abstract class ContentPrintType {
 	private String _title;
-	private String _author;
+	private Author _author;
 	private Date _year;
 	private String _description;
 	private BigDecimal _cost;
 	private PrintType _printType;
 	private String _publisher;
 	
-	public ContentPrintType(String title, String author, Date year, String description, BigDecimal cost, PrintType printType, String publisher){
+	public ContentPrintType(String title, Author author, Date year, String description, BigDecimal cost, PrintType printType, String publisher){
 		_title=title;
 		_author=author;
 		_year=year;
@@ -39,10 +39,10 @@ public abstract class ContentPrintType {
 	public void set_title(String _title) {
 		this._title = _title;
 	}
-	public String get_author() {
+	public Author get_author() {
 		return _author;
 	}
-	public void set_author(String _author) {
+	public void set_author(Author _author) {
 		this._author = _author;
 	}
 	public Date get_year() {

@@ -9,7 +9,7 @@ import java.util.Date;
  */
 public abstract class ContentFilmType {
 	private String _title;
-	private String _director;
+	private Director _director;
 	private Date _year;
 	private Rating _rating;
 	private String _ratingDescription;
@@ -18,7 +18,7 @@ public abstract class ContentFilmType {
 	private BigDecimal _cost;
 	private FilmGenre _genre;
 
-	public ContentFilmType(String title, String director, Date year, Rating rating, int length, String description){
+	public ContentFilmType(String title, Director director, Date year, Rating rating, int length, String description){
 		_title=title;
 		_director=director;
 		_year=year;
@@ -38,10 +38,10 @@ public abstract class ContentFilmType {
 	public void set_title(String _title) {
 		this._title = _title;
 	}
-	public String get_director() {
+	public Director get_director() {
 		return _director;
 	}
-	public void set_director(String _director) {
+	public void set_director(Director _director) {
 		this._director = _director;
 	}
 	public Date get_year() {
