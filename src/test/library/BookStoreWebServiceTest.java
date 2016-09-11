@@ -8,7 +8,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-public class StoreWebServiceTest {
+public class BookStoreWebServiceTest {
 	private static final String WEB_SERVICE_URI = "http://localhost:10000";
 
 	@BeforeClass
