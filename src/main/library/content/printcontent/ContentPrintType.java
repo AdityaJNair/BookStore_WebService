@@ -15,8 +15,9 @@ public abstract class ContentPrintType {
 	private BigDecimal _cost;
 	private PrintType _printType;
 	private String _publisher;
+	private BookGenre _genre;
 	
-	public ContentPrintType(String title, Author author, Date year, String description, BigDecimal cost, PrintType printType, String publisher){
+	public ContentPrintType(String title, Author author, Date year, String description, BigDecimal cost, PrintType printType, String publisher, BookGenre genre){
 		_title=title;
 		_author=author;
 		_year=year;
@@ -24,9 +25,8 @@ public abstract class ContentPrintType {
 		_cost=cost;
 		_printType=printType;
 		_publisher=publisher;
+		_genre=genre;
 	}
-	
-
 
 	public ContentPrintType(){
 		
@@ -74,5 +74,11 @@ public abstract class ContentPrintType {
 	}
 	public void set_printType(PrintType _printType) {
 		this._printType = _printType;
+	}
+	public BookGenre get_genre() {
+		return _genre;
+	}
+	public void set_genre(BookGenre _genre) {
+		this._genre = _genre;
 	}
 }
