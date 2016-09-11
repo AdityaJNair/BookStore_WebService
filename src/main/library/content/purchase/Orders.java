@@ -5,8 +5,7 @@ package main.library.content.purchase;
 import java.math.BigDecimal;
 import java.util.List;
 
-import main.library.content.printcontent.ContentPrintType;
-import main.library.content.visualcontent.ContentFilmType;
+import main.library.content.printcontent.books.ContentPrintType;
 
 
 /**
@@ -15,7 +14,6 @@ import main.library.content.visualcontent.ContentFilmType;
  */
 public class Orders {
 	private List<ContentPrintType> books;
-	private List<ContentFilmType> films;
 	private BigDecimal totalCost;
 	
 	
@@ -24,12 +22,6 @@ public class Orders {
 	}
 	public void setBooks(List<ContentPrintType> books) {
 		this.books = books;
-	}
-	public List<ContentFilmType> getFilms() {
-		return films;
-	}
-	public void setFilms(List<ContentFilmType> films) {
-		this.films = films;
 	}
 	public BigDecimal getTotalCost() {
 		return totalCost;

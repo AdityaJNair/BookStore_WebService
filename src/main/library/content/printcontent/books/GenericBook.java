@@ -1,10 +1,14 @@
 /**
  * 
  */
-package main.library.content.printcontent;
+package main.library.content.printcontent.books;
 
 import java.math.BigDecimal;
 import java.util.Date;
+
+import main.library.content.printcontent.Author;
+import main.library.content.printcontent.BookGenre;
+import main.library.content.printcontent.PrintType;
 
 /**
  * @author adijn

@@ -5,6 +5,8 @@ package main.library.content.printcontent;
 
 import java.util.List;
 
+import main.library.content.printcontent.books.ContentPrintType;
+
 /**
  * @author adijn
  *
