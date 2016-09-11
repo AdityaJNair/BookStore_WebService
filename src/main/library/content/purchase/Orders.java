@@ -26,6 +26,16 @@ public class Orders {
 	private BigDecimal totalCost;
 	private User _user;
 	
+	
+	public Orders(){
+		
+	}
+	
+	public Orders(User user){
+		_user = user;
+	}
+	
+	
 
 	@XmlElementWrapper(name="Books")
 	public List<ContentPrintType> getBooks() {

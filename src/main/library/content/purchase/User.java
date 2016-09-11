@@ -1,10 +1,13 @@
 package main.library.content.purchase;
 
 import java.math.BigDecimal;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 
-import javax.xml.bind.annotation.*;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlIDREF;
+import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement(name="User")
 public class User {
@@ -12,10 +15,10 @@ public class User {
 	private Set<Orders> _orders;
 	private BigDecimal _totalCost;
 	
-	public User(Address address, Set<Orders> orders, BigDecimal totalCost){
+	public User(Address address){
 		_address=address;
-		_orders=orders;
-		_totalCost=totalCost;
+		_orders=new HashSet<Orders>();
+		calculateCost();
 	}
 	
 	public User(){
@@ -44,5 +47,28 @@ public class User {
 	}
 	public void set_totalCost(BigDecimal _totalCost) {
 		this._totalCost = _totalCost;
+	}
+	
+	public void addOrder(Orders x){
+		_orders.add(x);
+		calculateCost();
+	}
+	
+	public void removeOrder(Orders x){
+		_orders.remove(x);
+		calculateCost();
+	}
+	
+	private void calculateCost(){
+		if(this._orders == null || this._orders.isEmpty()){
+			_totalCost = new BigDecimal("0");
+		} else {
+			BigDecimal tmp = new BigDecimal("0");
+			for(Orders s: _orders){
+				tmp.add(s.getTotalCost());
+			}
+			_totalCost = tmp;
+		}
+		
 	}
 }

@@ -22,11 +22,13 @@ import org.junit.Test;
 import org.xml.sax.SAXException;
 
 import main.library.content.printcontent.Author;
+import main.library.content.printcontent.BookGenre;
 import main.library.content.printcontent.Publisher;
 import main.library.content.printcontent.books.ArtBook;
 import main.library.content.printcontent.books.BiographyBook;
 import main.library.content.printcontent.books.ComicBook;
 import main.library.content.printcontent.books.EducationalBook;
+import main.library.content.printcontent.books.GenericBook;
 import main.library.content.printcontent.books.Journal;
 import main.library.content.printcontent.books.Magazine;
 import main.library.content.purchase.Address;
@@ -93,22 +95,22 @@ public class BookStoreWebServiceTest {
 	@Before
 	public void setUp() throws Exception {
 		//4 authors - 1 has done 2 books
-		Author author1 = new Author();
-		Author author2 = new Author();
-		Author author3 = new Author();
-		Author author4 = new Author();
-		
-		//2 publisher
-		Publisher publisher1 = new Publisher();
-		Publisher publisher2 = new Publisher();
-		
-		//single user
-		User user1 = new User();
+		Author author1 = new Author("J.K Rowling", 51, BookGenre.Fantasy);
+		Author author2 = new Author("Stephen King", 68, BookGenre.Horror);
+		Author author3 = new Author("Mark Twain", 74, BookGenre.Novel);
+		Author author4 = new Author("Ernest Hemingway", 61, BookGenre.Fiction);
 		
 		//address
-		Address addressUser = new Address();
-		Address addressPublisher1 = new Address();
-		Address addressPublisher2 = new Address();
+		Address addressUser = new Address("21","Ulta Street","Penrose","Auckland","New Zealand", "2502");
+		Address addressPublisher1 = new Address("1","Great Dane Street", "Oval", "Ottowa", "Canada", "1234");
+		Address addressPublisher2 = new Address("666", "Devils Street", "Hells Kitchen", "Hell", "Australia", "6666");
+		
+		//2 publisher
+		Publisher publisher1 = new Publisher(addressPublisher1, "Thompsons publishing");
+		Publisher publisher2 = new Publisher(addressPublisher2, "Nasty publishing");
+		
+		//single user
+		User user1 = new User(addressUser);
 		
 		//books
 		ArtBook artbook1 = new ArtBook("Book of art", null, null, null, null, null, null, null);
@@ -117,9 +119,20 @@ public class BookStoreWebServiceTest {
 		EducationalBook edubook1 = new EducationalBook();
 		Journal jbook1 = new Journal();
 		Magazine mbook1 = new Magazine();
+		GenericBook gbook1 = new GenericBook();
 		
 		//library -- only has all books
 		Library library1 = new Library();
+		library1.addPrintMedia(artbook1);
+		library1.addPrintMedia(biobook1);
+		library1.addPrintMedia(comicbook1);
+		library1.addPrintMedia(edubook1);
+		library1.addPrintMedia(mbook1);
+		library1.addPrintMedia(gbook1);
+		
+		//Bundle
+		//Bundle bundle1 = new Bundle();
+		//Bundle bundle2 = new Bundle();
 		
 		//orders -- for a user
 		Orders order1 = new Orders();

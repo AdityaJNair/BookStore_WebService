@@ -18,6 +18,18 @@ public class Address {
 	private String _zip;
 	
 	
+	public Address(String houseNumber, String street, String suburb, String city, String country, String zip) {
+		_houseNumber=houseNumber;
+		_street=street;
+		_suburb=suburb;
+		_city=city;
+		_country=country;
+		_zip=zip;
+	}
+	
+	public Address(){
+		
+	}
 	public String get_houseNumber() {
 		return _houseNumber;
 	}
