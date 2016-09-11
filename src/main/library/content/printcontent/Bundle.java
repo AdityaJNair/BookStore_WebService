@@ -9,6 +9,7 @@ import java.util.List;
  * @author adijn
  *
  */
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Bundle {
 	private List<ContentPrintType> _bundleList;
 	private int _bundleAmount;

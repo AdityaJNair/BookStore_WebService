@@ -8,6 +8,7 @@ import javax.xml.bind.annotation.*;
  * @author adijn
  *
  */
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Address {
 	private String _houseNumber;
 	private String _street;

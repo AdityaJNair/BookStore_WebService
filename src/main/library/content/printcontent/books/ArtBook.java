@@ -17,6 +17,7 @@ import main.library.content.printcontent.PrintType;
  * @author adijn
  *
  */
+@XmlAccessorType(XmlAccessType.FIELD)
 public class ArtBook extends ContentPrintType {
 	private List<String> _artists;
 	

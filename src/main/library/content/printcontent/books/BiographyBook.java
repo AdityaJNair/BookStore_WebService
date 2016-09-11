@@ -16,6 +16,7 @@ import javax.xml.bind.annotation.*;
  * @author adijn
  *
  */
+@XmlAccessorType(XmlAccessType.FIELD)
 public class BiographyBook extends ContentPrintType {
 	
 	public BiographyBook(){

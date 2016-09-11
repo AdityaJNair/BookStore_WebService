@@ -16,6 +16,7 @@ import main.library.content.printcontent.PrintType;
  * @author adijn
  *
  */
+@XmlAccessorType(XmlAccessType.FIELD)
 public class EducationalBook extends ContentPrintType {
 	
 	public EducationalBook(String title, Author author, Date year, String description, BigDecimal cost, PrintType printType, String publisher, BookGenre genre){
