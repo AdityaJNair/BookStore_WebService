@@ -3,6 +3,7 @@
  */
 package main.library.content.purchase;
 
+import javax.xml.bind.annotation.*;
 /**
  * @author adijn
  *

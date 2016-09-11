@@ -2,13 +2,14 @@
  * 
  */
 package main.library.content.printcontent;
-
+import javax.xml.bind.annotation.*;
 import java.util.List;
 
 /**
  * @author adijn
  *
  */
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Author {
 	private String _name;
 	private int _age;

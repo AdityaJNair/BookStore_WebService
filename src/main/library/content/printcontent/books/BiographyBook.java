@@ -11,7 +11,7 @@ import main.library.content.printcontent.Author;
 import main.library.content.printcontent.BookGenre;
 import main.library.content.printcontent.ContentPrintType;
 import main.library.content.printcontent.PrintType;
-
+import javax.xml.bind.annotation.*;
 /**
  * @author adijn
  *

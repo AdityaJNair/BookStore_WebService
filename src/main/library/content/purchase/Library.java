@@ -1,6 +1,7 @@
 package main.library.content.purchase;
 
 import java.util.ArrayList;
+import javax.xml.bind.annotation.*;
 import java.util.List;
 
 import main.library.content.printcontent.ContentPrintType;

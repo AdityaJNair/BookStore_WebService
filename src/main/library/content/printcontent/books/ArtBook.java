@@ -4,6 +4,7 @@
 package main.library.content.printcontent.books;
 
 import java.math.BigDecimal;
+import javax.xml.bind.annotation.*;
 import java.util.Date;
 import java.util.List;
 
