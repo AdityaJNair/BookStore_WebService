@@ -5,7 +5,7 @@ package main.library.content.purchase;
 import java.math.BigDecimal;
 import java.util.List;
 
-import main.library.content.printcontent.books.ContentPrintType;
+import main.library.content.printcontent.ContentPrintType;
 
 
 /**

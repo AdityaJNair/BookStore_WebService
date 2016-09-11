@@ -8,6 +8,7 @@ import java.util.Date;
 
 import main.library.content.printcontent.Author;
 import main.library.content.printcontent.BookGenre;
+import main.library.content.printcontent.ContentPrintType;
 import main.library.content.printcontent.PrintType;
 
 /**

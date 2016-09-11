@@ -6,7 +6,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import main.library.content.printcontent.books.ContentPrintType;
+import main.library.content.printcontent.ContentPrintType;
 import main.library.content.printcontent.books.EducationalBook;
 import main.library.content.purchase.Orders;
 
