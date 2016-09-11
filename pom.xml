@@ -1,34 +1,35 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>325ProjectPart1</groupId>
-  <artifactId>web_service</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
-  
-  	<packaging>jar</packaging>
-  	<description>A JAX-RS web service.</description>
-  
-  
-  	<!-- Specify the servlet container port to listen on for incoming requests. -->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>325ProjectPart1</groupId>
+	<artifactId>web_service</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+
+	<packaging>jar</packaging>
+	<description>A JAX-RS web service for a book/media content store.</description>
+
+
+	<!-- Specify the servlet container port to listen on for incoming requests. -->
 	<properties>
 		<servlet.container.port>10000</servlet.container.port>
 	</properties>
-  
-  <dependencies>
-  
-  		<!-- Hibernate JPA provider. -->
+
+	<dependencies>
+
+		<!-- Hibernate JPA provider. -->
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-entitymanager</artifactId>
 			<version>5.1.0.Final</version>
 		</dependency>
-		
-				<!-- H2 embedded database. -->
+
+		<!-- H2 embedded database. -->
 		<dependency>
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
 			<version>1.4.187</version>
 		</dependency>
-  	<!-- RESTEasy implementation -->
+		<!-- RESTEasy implementation -->
 		<dependency>
 			<groupId>org.jboss.resteasy</groupId>
 			<artifactId>resteasy-jaxrs</artifactId>
@@ -52,9 +53,9 @@
 			<artifactId>resteasy-servlet-initializer</artifactId>
 			<version>3.0.12.Final</version>
 		</dependency>
-		
+
 		<!-- Joda date/time library -->
-        <dependency>
+		<dependency>
 			<groupId>joda-time</groupId>
 			<artifactId>joda-time</artifactId>
 			<version>2.7</version>
@@ -79,20 +80,20 @@
 			<artifactId>slf4j-log4j12</artifactId>
 			<version>1.7.12</version>
 		</dependency>
-  	</dependencies>
-  	
-  <build>
-  	
-    <sourceDirectory>src</sourceDirectory>
-    <plugins>
-      <plugin>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.5.1</version>
-        <configuration>
-          <source/>
-          <target/>
-        </configuration>
-      </plugin>
-    </plugins>
-  </build>
+	</dependencies>
+
+	<build>
+
+		<sourceDirectory>src</sourceDirectory>
+		<plugins>
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.5.1</version>
+				<configuration>
+					<source />
+					<target />
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
 </project>
