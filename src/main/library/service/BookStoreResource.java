@@ -10,13 +10,13 @@ import main.library.content.printcontent.books.ContentPrintType;
 import main.library.content.printcontent.books.EducationalBook;
 import main.library.content.purchase.Orders;
 
-public class PurchaseResource {
-	private static final Logger _logger = LoggerFactory.getLogger(PurchaseResource.class);
+public class BookStoreResource {
+	private static final Logger _logger = LoggerFactory.getLogger(BookStoreResource.class);
 
 	private Map<Long, Orders> _orderDataBase;
 	private Map<Long, ContentPrintType> _printDataBase;
 	
-	public PurchaseResource(){
+	public BookStoreResource(){
 		reloadDatabase();
 	}
 	

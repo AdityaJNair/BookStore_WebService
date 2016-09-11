@@ -5,13 +5,13 @@ import java.util.Set;
 
 import javax.ws.rs.core.Application;
 
-public class PurchaseApplication extends Application {
+public class BookStoreApplication extends Application {
 
 	private Set<Object> singletons = new HashSet<Object>();
 	private Set<Class<?>> classes = new HashSet<Class<?>>();
 
-	public PurchaseApplication() {
-		PurchaseResource resource = new PurchaseResource();
+	public BookStoreApplication() {
+		BookStoreResource resource = new BookStoreResource();
 		singletons.add(resource);
 		// classes.add();
 	}
