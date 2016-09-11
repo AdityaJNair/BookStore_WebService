@@ -16,6 +16,7 @@ public abstract class ContentFilmType {
 	private int _length;
 	private String _description;
 	private BigDecimal _cost;
+	private FilmGenre _genre;
 
 	public ContentFilmType(String title, String director, Date year, Rating rating, int length, String description){
 		_title=title;
@@ -79,5 +80,12 @@ public abstract class ContentFilmType {
 
 	public void set_cost(BigDecimal _cost) {
 		this._cost = _cost;
+	}
+	public FilmGenre get_genre() {
+		return _genre;
+	}
+
+	public void set_genre(FilmGenre _genre) {
+		this._genre = _genre;
 	}
 }
