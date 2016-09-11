@@ -5,7 +5,7 @@ package main.library.content.printcontent;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
+import javax.persistence.*;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 
@@ -13,11 +13,28 @@ import javax.xml.bind.annotation.XmlAccessorType;
  * @author adijn
  *
  */
+@Entity
+@Access(AccessType.FIELD)
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Author {
+	
+	@Id
+	private Long _authorId;
+	
+	@Column(nullable=false, name = "Name")
 	private String _name;
+	
+	@Column(nullable=false, name="Age")
 	private int _age;
+	
+	@ElementCollection
+	@CollectionTable(
+			
+			)
+	@Column(name="Books authored")
 	private Set<ContentPrintType> _books;
+	
+	@Column(nullable=false, name="Main genre")
 	private BookGenre _mostKnownForGenre;
 	
 	
@@ -33,6 +50,12 @@ public class Author {
 	}
 	
 	
+	public Long get_authorId() {
+		return _authorId;
+	}
+	public void set_authorId(Long _authorId) {
+		this._authorId = _authorId;
+	}
 	public String get_name() {
 		return _name;
 	}

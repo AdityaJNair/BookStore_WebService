@@ -12,6 +12,7 @@ import main.library.content.printcontent.Author;
 import main.library.content.printcontent.BookGenre;
 import main.library.content.printcontent.ContentPrintType;
 import main.library.content.printcontent.PrintType;
+import main.library.content.printcontent.Publisher;
 
 /**
  * @author adijn
@@ -21,7 +22,7 @@ import main.library.content.printcontent.PrintType;
 public class ArtBook extends ContentPrintType {
 	private List<String> _artists;
 	
-	public ArtBook(String title, Author author, Date year, String description, BigDecimal cost, PrintType printType, String publisher, List<String> artists){
+	public ArtBook(String title, Author author, Date year, String description, BigDecimal cost, PrintType printType, Publisher publisher, List<String> artists){
 		super(title,author,year,description,cost,printType,publisher,BookGenre.Art);
 		this._artists = artists;
 	}

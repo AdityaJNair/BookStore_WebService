@@ -3,18 +3,32 @@
  */
 package main.library.content.purchase;
 
+import javax.persistence.*;
 import javax.xml.bind.annotation.*;
 /**
  * @author adijn
  *
  */
+@Embeddable
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Address {
+	
+	@Column(nullable=false, name="House Number")
 	private String _houseNumber;
+	
+	@Column(nullable=false, name="Street Name")
 	private String _street;
+	
+	@Column(nullable=false, name="Suburb")
 	private String _suburb;
+	
+	@Column(nullable=false, name="City")
 	private String _city;
+	
+	@Column(nullable=false, name="Country")
 	private String _country;
+	
+	@Column(nullable=false, name="Zip Code")
 	private String _zip;
 	
 	
@@ -30,6 +44,7 @@ public class Address {
 	public Address(){
 		
 	}
+	
 	public String get_houseNumber() {
 		return _houseNumber;
 	}

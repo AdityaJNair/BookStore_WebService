@@ -3,21 +3,44 @@ package main.library.content.printcontent;
 import java.math.BigDecimal;
 import java.util.Date;
 
+import javax.persistence.*;
+
 /**
  * @author adijn
  *
  */
+@Entity
 public abstract class ContentPrintType {
+	
+	@Id
+	private Long _bookId;
+	
+	@Column(nullable=false,name="Book Title")
 	private String _title;
+	
+	@Embedded
+	@OneToMany
 	private Author _author;
+	
+	@Column(nullable=false,name="Date")
 	private Date _year;
+	
+	@Column(nullable=false, name="Book Description")
 	private String _description;
+	
+	@Column(nullable=false, name="Book cost")
 	private BigDecimal _cost;
+	
+	@Column(nullable=false, name="Print Type")
 	private PrintType _printType;
-	private String _publisher;
+	
+	@OneToOne
+	private Publisher _publisher;
+	
+	@Column(nullable=false, name="Genre")
 	private BookGenre _genre;
 	
-	public ContentPrintType(String title, Author author, Date year, String description, BigDecimal cost, PrintType printType, String publisher, BookGenre genre){
+	public ContentPrintType(String title, Author author, Date year, String description, BigDecimal cost, PrintType printType, Publisher publisher, BookGenre genre){
 		_title=title;
 		_author=author;
 		_year=year;
@@ -32,7 +55,12 @@ public abstract class ContentPrintType {
 		
 	}
 	
-	
+	public Long get_bookId() {
+		return _bookId;
+	}
+	public void set_bookId(Long _bookId) {
+		this._bookId = _bookId;
+	}
 	public String get_title() {
 		return _title;
 	}
@@ -63,10 +91,10 @@ public abstract class ContentPrintType {
 	public void set_cost(BigDecimal _cost) {
 		this._cost = _cost;
 	}
-	public String get_publisher() {
+	public Publisher get_publisher() {
 		return _publisher;
 	}
-	public void set_publisher(String _publisher) {
+	public void set_publisher(Publisher _publisher) {
 		this._publisher = _publisher;
 	}
 	public PrintType get_printType() {

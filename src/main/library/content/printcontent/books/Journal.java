@@ -12,6 +12,7 @@ import main.library.content.printcontent.Author;
 import main.library.content.printcontent.BookGenre;
 import main.library.content.printcontent.ContentPrintType;
 import main.library.content.printcontent.PrintType;
+import main.library.content.printcontent.Publisher;
 
 /**
  * @author adijn
@@ -20,7 +21,7 @@ import main.library.content.printcontent.PrintType;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Journal extends ContentPrintType {
 
-	public Journal(String title, Author author, Date year, String description, BigDecimal cost, PrintType printType, String publisher){
+	public Journal(String title, Author author, Date year, String description, BigDecimal cost, PrintType printType, Publisher publisher){
 		super(title,author,year,description,cost,printType,publisher,BookGenre.Journal);
 	}
 	
