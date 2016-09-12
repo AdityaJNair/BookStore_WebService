@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<User xml-id-user="main.library.content.printcontent.User1">
+<User xml-id-user="library.content.printcontent.User1">
     <userId>1</userId>
     <userAddress>
         <houseNumber>21</houseNumber>
@@ -10,13 +10,13 @@
         <zip>2502</zip>
     </userAddress>
     <user-orders>
-        <orders xml-id-orders="main.library.content.printcontent.Orders1">
+        <orders xml-id-orders="library.content.printcontent.Orders1">
             <order_id>1</order_id>
             <Ordered-Books>
-                <Books xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="artBook" xml-id-printmedia="main.library.content.printcontent.books.ArtBook1">
+                <Books xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="artBook" xml-id-printmedia="library.content.printcontent.books.ArtBook1">
                     <bookId>1</bookId>
                     <title>A</title>
-                    <author xml-id-author="main.library.content.printcontent.Author1">
+                    <author xml-id-author="library.content.printcontent.Author1">
                         <authorId>1</authorId>
                         <authorName>J.K Rowling</authorName>
                         <authorAge>51</authorAge>
@@ -27,7 +27,7 @@
                     <description>book art</description>
                     <cost>25.6</cost>
                     <printType>E_Book</printType>
-                    <publisher xml-id-publisher="main.library.content.printcontent.Publisher1">
+                    <publisher xml-id-publisher="library.content.printcontent.Publisher1">
                         <publisher_id>1</publisher_id>
                         <address>
                             <houseNumber>1</houseNumber>
@@ -41,10 +41,10 @@
                     </publisher>
                     <genre>Art</genre>
                 </Books>
-                <Books xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="biographyBook" xml-id-printmedia="main.library.content.printcontent.books.BiographyBook2">
+                <Books xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="biographyBook" xml-id-printmedia="library.content.printcontent.books.BiographyBook2">
                     <bookId>2</bookId>
                     <title>B</title>
-                    <author xml-id-author="main.library.content.printcontent.Author1">
+                    <author xml-id-author="library.content.printcontent.Author1">
                         <authorId>1</authorId>
                         <authorName>J.K Rowling</authorName>
                         <authorAge>51</authorAge>
@@ -55,7 +55,7 @@
                     <description>book bio</description>
                     <cost>325.6</cost>
                     <printType>E_Book</printType>
-                    <publisher xml-id-publisher="main.library.content.printcontent.Publisher1">
+                    <publisher xml-id-publisher="library.content.printcontent.Publisher1">
                         <publisher_id>1</publisher_id>
                         <address>
                             <houseNumber>1</houseNumber>

@@ -1,23 +1,13 @@
 package library;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotSame;
-import static org.junit.Assert.fail;
-
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
 
-import javax.xml.XMLConstants;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
-import javax.xml.bind.SchemaOutputResolver;
 import javax.xml.bind.Unmarshaller;
-import javax.xml.validation.Schema;
-import javax.xml.validation.SchemaFactory;
 
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -40,8 +30,6 @@ import library.content.printcontent.books.EducationalBook;
 import library.content.printcontent.books.GenericBook;
 import library.content.printcontent.books.Journal;
 import library.content.printcontent.books.Magazine;
-import main.library.utility.DefaultSchemaOutputResolver;
-import main.library.utility.DefaultValidationEventHandler;
 
 public class BookStoreWebServiceTest {
 	private static final String WEB_SERVICE_URI = "http://localhost:10000";
