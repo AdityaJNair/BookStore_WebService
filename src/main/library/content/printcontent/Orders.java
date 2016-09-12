@@ -1,7 +1,7 @@
 /**
  * 
  */
-package main.library.content.purchase;
+package main.library.content.printcontent;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -20,8 +20,7 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlID;
-
-import main.library.content.printcontent.ContentPrintType;
+import javax.xml.bind.annotation.XmlRootElement;
 
 
 /**
@@ -29,6 +28,7 @@ import main.library.content.printcontent.ContentPrintType;
  *
  */
 @Entity
+@XmlRootElement(name="Orders")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Orders {
 	
@@ -37,10 +37,11 @@ public class Orders {
 	private String _xmlid;
 	
 	@Id
-	@GeneratedValue(generator="ID_GENERATOR")
+	@GeneratedValue(generator="ID-GENERATOR")
 	@XmlAttribute(name="ID")
 	private long _id;
 	
+	@XmlElement(name="Ordered_Books")
 	@ElementCollection
 	@CollectionTable(name="Ordered Books")
 	@Column(name = "Books")
@@ -50,9 +51,11 @@ public class Orders {
 			generator = "ID_GENERATOR")
 	private Collection<ContentPrintType> _books;
 	
+	@XmlElement(name="Order_Cost")
 	@Column(nullable=false, name="Order Cost")
 	private BigDecimal totalCost;
 	
+	@XmlElement(name="Order_User")
 	@ManyToOne(fetch=FetchType.LAZY)
 	private User _user;
 	
@@ -94,5 +97,19 @@ public class Orders {
 	}
 	public void set_user(User _user) {
 		this._user = _user;
+	}
+	
+	
+	//Do override toString, Equals and hashCode
+	@Override
+	public String toString() {
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+	}
+	
+	@Override
+	public int hashCode() {
 	}
 }

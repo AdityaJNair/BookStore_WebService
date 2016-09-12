@@ -1,7 +1,7 @@
 /**
  * 
  */
-package main.library.content.purchase;
+package main.library.content.printcontent;
 
 import javax.persistence.*;
 import javax.xml.bind.annotation.*;
@@ -10,24 +10,31 @@ import javax.xml.bind.annotation.*;
  *
  */
 @Embeddable
+@XmlRootElement(name="Address")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Address {
 	
+	@XmlElement(name="House Number")
 	@Column(nullable=false, name="House Number")
 	private String _houseNumber;
 	
+	@XmlElement(name="Street Name")
 	@Column(nullable=false, name="Street Name")
 	private String _street;
 	
+	@XmlElement(name="Suburb")
 	@Column(nullable=false, name="Suburb")
 	private String _suburb;
 	
+	@XmlElement(name="City")
 	@Column(nullable=false, name="City")
 	private String _city;
 	
+	@XmlElement(name="Country")
 	@Column(nullable=false, name="Country")
 	private String _country;
 	
+	@XmlElement(name="Zip Code")
 	@Column(nullable=false, name="Zip Code")
 	private String _zip;
 	
@@ -80,6 +87,19 @@ public class Address {
 	}
 	public void set_zip(String _zip) {
 		this._zip = _zip;
+	}
+	
+	//Do override toString, Equals and hashCode
+	@Override
+	public String toString() {
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+	}
+	
+	@Override
+	public int hashCode() {
 	}
 
 }

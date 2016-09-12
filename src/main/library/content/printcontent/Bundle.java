@@ -7,14 +7,14 @@ import java.util.Collection;
 import java.util.List;
 
 import javax.persistence.*;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.*;
 
 /**
  * @author adijn
  *
  */
 @Entity
+@XmlRootElement(name="Bundle")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Bundle {
 	
@@ -22,6 +22,7 @@ public class Bundle {
 	@GeneratedValue(generator="ID-GENERATOR")
 	private Long _bundleId;
 	
+	@XmlElement(name="books")
 	@ElementCollection
 	@CollectionTable(name="Bundle")
 	@Column(name = "BundleList")
@@ -31,6 +32,7 @@ public class Bundle {
 			generator = "ID_GENERATOR")
 	private Collection<ContentPrintType> _bundleList;
 	
+	@XmlElement(name="Cost")
 	@Column(name="Bundle Cost")
 	private int _bundleAmount;
 	
@@ -40,7 +42,6 @@ public class Bundle {
 	}
 	
 	public Bundle(){
-		
 	}
 	
 	
@@ -61,5 +62,18 @@ public class Bundle {
 	}
 	public void set_bundleId(Long _bundleId) {
 		this._bundleId = _bundleId;
+	}
+	
+	//Do override toString, Equals and hashCode
+	@Override
+	public String toString() {
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+	}
+	
+	@Override
+	public int hashCode() {
 	}
 }

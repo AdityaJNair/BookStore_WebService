@@ -8,35 +8,46 @@ import java.util.Set;
 import javax.persistence.*;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  * @author adijn
  *
  */
 @Entity
+@XmlRootElement(name="Author")
 @Access(AccessType.FIELD)
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Author {
 	
 	@Id
 	@GeneratedValue(generator="ID-GENERATOR")
+	@XmlElement(name="Author_ID")
 	private Long _authorId;
 	
+	@XmlElement(name="Author_Name")
 	@Column(nullable=false, name = "Name")
 	private String _name;
 	
+	@XmlElement(name="Age")
 	@Column(nullable=false, name="Age")
 	private int _age;
 	
+	@XmlElement(name="Books_Authored")
 	@ElementCollection
-	@CollectionTable(name="Books Authored",
+	@CollectionTable(name="Books_Authored",
 		joinColumns = @JoinColumn(name="Author_iD"))
 	@Column(name="Books")
 	private Set<ContentPrintType> _books;
 	
+	@XmlElement(name="Main_Genre")
 	@Column(nullable=false, name="Main genre")
 	private BookGenre _mostKnownForGenre;
 	
+	@XmlElement(name="Author_Description")
+	@Column(nullable=false, name="Author_Description")
+	private String _description;
 	
 	public Author(String name, int age, BookGenre mostKnownForGenre){
 		_name=name;
@@ -86,5 +97,18 @@ public class Author {
 	public void set_description(String _description) {
 		this._description = _description;
 	}
-	private String _description;
+	
+	//Do override toString, Equals and hashCode
+	@Override
+	public String toString() {
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+	}
+	
+	@Override
+	public int hashCode() {
+	}
+
 }

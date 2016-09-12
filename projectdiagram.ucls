@@ -109,8 +109,8 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="12" language="java" name="main.library.content.purchase.Address" project="325ProjectPart1" 
-    file="/325ProjectPart1/src/main/library/content/purchase/Address.java" binary="false" corner="BOTTOM_RIGHT">    
+  <class id="12" language="java" name="main.library.content.printcontent.Address" project="325ProjectPart1" 
+    file="/325ProjectPart1/src/main/library/content/printcontent/Address.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="65" y="720"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
@@ -127,8 +127,8 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="14" language="java" name="main.library.content.purchase.Orders" project="325ProjectPart1" 
-    file="/325ProjectPart1/src/main/library/content/purchase/Orders.java" binary="false" corner="BOTTOM_RIGHT">    
+  <class id="14" language="java" name="main.library.content.printcontent.Orders" project="325ProjectPart1" 
+    file="/325ProjectPart1/src/main/library/content/printcontent/Orders.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="513" y="166"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
@@ -136,8 +136,8 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="15" language="java" name="main.library.content.purchase.User" project="325ProjectPart1" 
-    file="/325ProjectPart1/src/main/library/content/purchase/User.java" binary="false" corner="BOTTOM_RIGHT">    
+  <class id="15" language="java" name="main.library.content.printcontent.User" project="325ProjectPart1" 
+    file="/325ProjectPart1/src/main/library/content/printcontent/User.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="204" y="154"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
@@ -177,123 +177,127 @@
     <end type="TARGET" refId="3" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <association id="26">    
-    <end type="SOURCE" refId="14" navigable="false">      
-      <attribute id="27" name="books"/>      
-      <multiplicity id="28" minimum="0" maximum="2147483647"/>    
-    </end>    
-    <end type="TARGET" refId="3" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <dependency id="29">    
+  <dependency id="26">    
     <end type="SOURCE" refId="10"/>    
     <end type="TARGET" refId="1"/>  
   </dependency>  
-  <generalization id="30">    
+  <generalization id="27">    
     <end type="SOURCE" refId="6"/>    
     <end type="TARGET" refId="3"/>  
   </generalization>  
-  <association id="31">    
+  <association id="28">    
     <end type="SOURCE" refId="14" navigable="false">      
-      <attribute id="32" name="_user"/>      
-      <multiplicity id="33" minimum="0" maximum="1"/>    
+      <attribute id="29" name="_user"/>      
+      <multiplicity id="30" minimum="0" maximum="1"/>    
     </end>    
     <end type="TARGET" refId="15" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <association id="34">    
+  <association id="31">    
     <end type="SOURCE" refId="1" navigable="false">      
+      <attribute id="32" name="_books"/>      
+      <multiplicity id="33" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="3" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="34">    
+    <end type="SOURCE" refId="13" navigable="false">      
       <attribute id="35" name="_books"/>      
       <multiplicity id="36" minimum="0" maximum="2147483647"/>    
     </end>    
     <end type="TARGET" refId="3" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <association id="37">    
-    <end type="SOURCE" refId="13" navigable="false">      
-      <attribute id="38" name="_books"/>      
-      <multiplicity id="39" minimum="0" maximum="2147483647"/>    
-    </end>    
-    <end type="TARGET" refId="3" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <dependency id="40">    
+  <dependency id="37">    
     <end type="SOURCE" refId="9"/>    
     <end type="TARGET" refId="1"/>  
   </dependency>  
-  <dependency id="41">    
+  <dependency id="38">    
     <end type="SOURCE" refId="11"/>    
     <end type="TARGET" refId="4"/>  
   </dependency>  
-  <dependency id="42">    
+  <dependency id="39">    
     <end type="SOURCE" refId="8"/>    
     <end type="TARGET" refId="1"/>  
   </dependency>  
-  <association id="43">    
+  <association id="40">    
     <end type="SOURCE" refId="3" navigable="false">      
-      <attribute id="44" name="_author"/>      
-      <multiplicity id="45" minimum="0" maximum="1"/>    
+      <attribute id="41" name="_author"/>      
+      <multiplicity id="42" minimum="0" maximum="1"/>    
     </end>    
     <end type="TARGET" refId="1" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <dependency id="46">    
+  <dependency id="43">    
     <end type="SOURCE" refId="8"/>    
     <end type="TARGET" refId="4"/>  
   </dependency>  
-  <dependency id="47">    
+  <dependency id="44">    
     <end type="SOURCE" refId="5"/>    
     <end type="TARGET" refId="1"/>  
   </dependency>  
-  <association id="48">    
+  <association id="45">    
     <end type="SOURCE" refId="3" navigable="false">      
-      <attribute id="49" name="_publisher"/>      
-      <multiplicity id="50" minimum="0" maximum="1"/>    
+      <attribute id="46" name="_publisher"/>      
+      <multiplicity id="47" minimum="0" maximum="1"/>    
     </end>    
     <end type="TARGET" refId="4" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <generalization id="51">    
+  <dependency id="48">    
+    <end type="SOURCE" refId="5"/>    
+    <end type="TARGET" refId="4"/>  
+  </dependency>  
+  <generalization id="49">    
     <end type="SOURCE" refId="5"/>    
     <end type="TARGET" refId="3"/>  
   </generalization>  
-  <association id="52">    
+  <association id="50">    
     <end type="SOURCE" refId="4" navigable="false">      
-      <attribute id="53" name="_address"/>      
-      <multiplicity id="54" minimum="0" maximum="1"/>    
+      <attribute id="51" name="_address"/>      
+      <multiplicity id="52" minimum="0" maximum="1"/>    
     </end>    
     <end type="TARGET" refId="12" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <dependency id="55">    
+  <dependency id="53">    
     <end type="SOURCE" refId="6"/>    
     <end type="TARGET" refId="1"/>  
   </dependency>  
-  <dependency id="56">    
+  <dependency id="54">    
     <end type="SOURCE" refId="6"/>    
     <end type="TARGET" refId="4"/>  
   </dependency>  
-  <generalization id="57">    
+  <generalization id="55">    
     <end type="SOURCE" refId="7"/>    
     <end type="TARGET" refId="3"/>  
   </generalization>  
-  <generalization id="58">    
+  <generalization id="56">    
     <end type="SOURCE" refId="10"/>    
     <end type="TARGET" refId="3"/>  
   </generalization>  
-  <generalization id="59">    
+  <generalization id="57">    
     <end type="SOURCE" refId="11"/>    
     <end type="TARGET" refId="3"/>  
   </generalization>  
-  <association id="60">    
+  <association id="58">    
     <end type="SOURCE" refId="15" navigable="false">      
-      <attribute id="61" name="_address"/>      
-      <multiplicity id="62" minimum="0" maximum="1"/>    
+      <attribute id="59" name="_address"/>      
+      <multiplicity id="60" minimum="0" maximum="1"/>    
     </end>    
     <end type="TARGET" refId="12" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <generalization id="63">    
+  <association id="61">    
+    <end type="SOURCE" refId="14" navigable="false">      
+      <attribute id="62" name="_books"/>      
+      <multiplicity id="63" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="3" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization id="64">    
     <end type="SOURCE" refId="9"/>    
     <end type="TARGET" refId="3"/>  
   </generalization>  

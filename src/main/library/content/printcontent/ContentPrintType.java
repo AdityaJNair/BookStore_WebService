@@ -4,17 +4,19 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 import javax.persistence.*;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  * @author adijn
  *
  */
 @Entity
+@XmlRootElement(name="Books")
 @Inheritance(strategy=InheritanceType.JOINED)
 public abstract class ContentPrintType {
 	
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@GeneratedValue(generator="ID-GENERATOR")
 	private Long _bookId;
 	
 	@Column(nullable=false,name="Book Title")
@@ -25,7 +27,7 @@ public abstract class ContentPrintType {
 	private Author _author;
 	
 	@Column(nullable=false,name="Date")
-	private Date _year;
+	private int _year;
 	
 	@Column(nullable=false, name="Book Description")
 	private String _description;
@@ -37,14 +39,15 @@ public abstract class ContentPrintType {
 	@Column(nullable=false, name="Print Type")
 	private PrintType _printType;
 	
-	@OneToMany
+	@OneToMany(fetch=FetchType.LAZY)
+	@JoinColumn(name="Publisher ID", nullable=false)
 	private Publisher _publisher;
 	
 	@Enumerated
 	@Column(nullable=false, name="Genre")
 	private BookGenre _genre;
 	
-	public ContentPrintType(String title, Author author, Date year, String description, BigDecimal cost, PrintType printType, Publisher publisher, BookGenre genre){
+	public ContentPrintType(String title, Author author, int year, String description, BigDecimal cost, PrintType printType, Publisher publisher, BookGenre genre){
 		_title=title;
 		_author=author;
 		_year=year;
@@ -77,10 +80,10 @@ public abstract class ContentPrintType {
 	public void set_author(Author _author) {
 		this._author = _author;
 	}
-	public Date get_year() {
+	public int get_year() {
 		return _year;
 	}
-	public void set_year(Date _year) {
+	public void set_year(int _year) {
 		this._year = _year;
 	}
 	public String get_description() {
@@ -112,5 +115,18 @@ public abstract class ContentPrintType {
 	}
 	public void set_genre(BookGenre _genre) {
 		this._genre = _genre;
+	}
+	
+	//Do override toString, Equals and hashCode
+	@Override
+	public String toString() {
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+	}
+	
+	@Override
+	public int hashCode() {
 	}
 }

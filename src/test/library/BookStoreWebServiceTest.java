@@ -21,10 +21,13 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.xml.sax.SAXException;
 
+import main.library.content.printcontent.Address;
 import main.library.content.printcontent.Author;
 import main.library.content.printcontent.BookGenre;
 import main.library.content.printcontent.Library;
+import main.library.content.printcontent.Orders;
 import main.library.content.printcontent.Publisher;
+import main.library.content.printcontent.User;
 import main.library.content.printcontent.books.ArtBook;
 import main.library.content.printcontent.books.BiographyBook;
 import main.library.content.printcontent.books.ComicBook;
@@ -32,9 +35,6 @@ import main.library.content.printcontent.books.EducationalBook;
 import main.library.content.printcontent.books.GenericBook;
 import main.library.content.printcontent.books.Journal;
 import main.library.content.printcontent.books.Magazine;
-import main.library.content.purchase.Address;
-import main.library.content.purchase.Orders;
-import main.library.content.purchase.User;
 import main.library.utility.DefaultSchemaOutputResolver;
 import main.library.utility.DefaultValidationEventHandler;
 
@@ -113,7 +113,7 @@ public class BookStoreWebServiceTest {
 		User user1 = new User(addressUser);
 		
 		//books
-		ArtBook artbook1 = new ArtBook("Book of art", null, null, null, null, null, null, null);
+		ArtBook artbook1 = new ArtBook();
 		BiographyBook biobook1 = new BiographyBook();
 		ComicBook comicbook1 = new ComicBook();
 		EducationalBook edubook1 = new EducationalBook();
