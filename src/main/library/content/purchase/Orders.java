@@ -3,8 +3,23 @@
  */
 package main.library.content.purchase;
 import java.math.BigDecimal;
-import javax.xml.bind.annotation.*;
-import java.util.List;
+import java.util.ArrayList;
+import java.util.Collection;
+
+import javax.persistence.CollectionTable;
+import javax.persistence.Column;
+import javax.persistence.ElementCollection;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
+import javax.xml.bind.annotation.XmlID;
 
 import main.library.content.printcontent.ContentPrintType;
 
@@ -13,17 +28,32 @@ import main.library.content.printcontent.ContentPrintType;
  * @author adijn
  *
  */
+@Entity
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Orders {
+	
 	@XmlID
 	@XmlAttribute(name="xml-id")
 	private String _xmlid;
 	
+	@Id
+	@GeneratedValue(generator="ID_GENERATOR")
 	@XmlAttribute(name="ID")
 	private long _id;
 	
-	private List<ContentPrintType> books;
+	@ElementCollection
+	@CollectionTable(name="Ordered Books")
+	@Column(name = "Books")
+	@org.hibernate.annotations.CollectionId(
+			columns = @Column( name = "Ordered Book_ID" ),
+			type = @org.hibernate.annotations.Type( type = "long"),
+			generator = "ID_GENERATOR")
+	private Collection<ContentPrintType> _books;
+	
+	@Column(nullable=false, name="Order Cost")
 	private BigDecimal totalCost;
+	
+	@ManyToOne(fetch=FetchType.LAZY)
 	private User _user;
 	
 	
@@ -33,16 +63,17 @@ public class Orders {
 	
 	public Orders(User user){
 		_user = user;
+		_books=new ArrayList<ContentPrintType>();
 	}
 	
 	
 
 	@XmlElementWrapper(name="Books")
-	public List<ContentPrintType> getBooks() {
-		return books;
+	public Collection<ContentPrintType> getBooks() {
+		return _books;
 	}
-	public void setBooks(List<ContentPrintType> books) {
-		this.books = books;
+	public void setBooks(Collection<ContentPrintType> books) {
+		this._books = books;
 	}
 	@XmlElement(name="Total_Cost")
 	public BigDecimal getTotalCost() {

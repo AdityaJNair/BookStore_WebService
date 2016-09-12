@@ -10,16 +10,18 @@ import javax.persistence.*;
  *
  */
 @Entity
+@Inheritance(strategy=InheritanceType.JOINED)
 public abstract class ContentPrintType {
 	
 	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long _bookId;
 	
 	@Column(nullable=false,name="Book Title")
 	private String _title;
 	
 	@Embedded
-	@OneToMany
+	@OneToMany(mappedBy="_books", fetch=FetchType.LAZY, cascade=CascadeType.PERSIST)
 	private Author _author;
 	
 	@Column(nullable=false,name="Date")
@@ -31,12 +33,14 @@ public abstract class ContentPrintType {
 	@Column(nullable=false, name="Book cost")
 	private BigDecimal _cost;
 	
+	@Enumerated
 	@Column(nullable=false, name="Print Type")
 	private PrintType _printType;
 	
-	@OneToOne
+	@OneToMany
 	private Publisher _publisher;
 	
+	@Enumerated
 	@Column(nullable=false, name="Genre")
 	private BookGenre _genre;
 	

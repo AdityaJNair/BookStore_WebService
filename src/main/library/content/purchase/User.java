@@ -2,16 +2,22 @@ package main.library.content.purchase;
 
 import java.math.BigDecimal;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 
+import javax.persistence.FetchType;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement(name="User")
 public class User {
+	
+	@OneToOne
 	private Address _address;
+	
+	@OneToMany(mappedBy="_users", fetch=FetchType.LAZY)
 	private Set<Orders> _orders;
 	private BigDecimal _totalCost;
 	

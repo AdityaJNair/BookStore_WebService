@@ -1,4 +1,5 @@
 package main.library.content.printcontent;
+import javax.persistence.*;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 
@@ -7,9 +8,15 @@ import main.library.content.purchase.Address;
  * @author adijn
  *
  */
+@Entity
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Publisher {
+	
+	@OneToOne
+	@Column(nullable=false, name="Address")
 	private Address _address;
+	
+	@Column(nullable=false, name="Name")
 	private String _publisherName;
 	
 	public Publisher(){

@@ -19,6 +19,7 @@ import javax.xml.bind.annotation.XmlAccessorType;
 public class Author {
 	
 	@Id
+	@GeneratedValue(generator="ID-GENERATOR")
 	private Long _authorId;
 	
 	@Column(nullable=false, name = "Name")
@@ -28,10 +29,9 @@ public class Author {
 	private int _age;
 	
 	@ElementCollection
-	@CollectionTable(
-			
-			)
-	@Column(name="Books authored")
+	@CollectionTable(name="Books Authored",
+		joinColumns = @JoinColumn(name="Author_iD"))
+	@Column(name="Books")
 	private Set<ContentPrintType> _books;
 	
 	@Column(nullable=false, name="Main genre")

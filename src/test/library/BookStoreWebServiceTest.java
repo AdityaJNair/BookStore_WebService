@@ -23,6 +23,7 @@ import org.xml.sax.SAXException;
 
 import main.library.content.printcontent.Author;
 import main.library.content.printcontent.BookGenre;
+import main.library.content.printcontent.Library;
 import main.library.content.printcontent.Publisher;
 import main.library.content.printcontent.books.ArtBook;
 import main.library.content.printcontent.books.BiographyBook;
@@ -32,7 +33,6 @@ import main.library.content.printcontent.books.GenericBook;
 import main.library.content.printcontent.books.Journal;
 import main.library.content.printcontent.books.Magazine;
 import main.library.content.purchase.Address;
-import main.library.content.purchase.Library;
 import main.library.content.purchase.Orders;
 import main.library.content.purchase.User;
 import main.library.utility.DefaultSchemaOutputResolver;
