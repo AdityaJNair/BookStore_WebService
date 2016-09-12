@@ -117,6 +117,7 @@ public abstract class ContentPrintType {
 		this._genre = _genre;
 	}
 	
+	/*
 	//Do override toString, Equals and hashCode
 	@Override
 	public String toString() {
@@ -129,4 +130,5 @@ public abstract class ContentPrintType {
 	@Override
 	public int hashCode() {
 	}
+	*/
 }

@@ -43,6 +43,7 @@ public class Publisher {
 		this._publisherName = _publisherName;
 	}
 	
+	/*
 	//Do override toString, Equals and hashCode
 	@Override
 	public String toString() {
@@ -55,4 +56,5 @@ public class Publisher {
 	@Override
 	public int hashCode() {
 	}
+	*/
 }

@@ -89,6 +89,7 @@ public class Address {
 		this._zip = _zip;
 	}
 	
+	/*
 	//Do override toString, Equals and hashCode
 	@Override
 	public String toString() {
@@ -101,5 +102,5 @@ public class Address {
 	@Override
 	public int hashCode() {
 	}
-
+	*/
 }

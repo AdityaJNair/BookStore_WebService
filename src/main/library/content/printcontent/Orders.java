@@ -100,6 +100,7 @@ public class Orders {
 	}
 	
 	
+	/*
 	//Do override toString, Equals and hashCode
 	@Override
 	public String toString() {
@@ -112,4 +113,5 @@ public class Orders {
 	@Override
 	public int hashCode() {
 	}
+	*/
 }

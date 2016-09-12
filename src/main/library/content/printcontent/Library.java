@@ -25,6 +25,7 @@ public class Library {
 		_books.add(book);
 	}
 
+	/*
 	//Do override toString, Equals and hashCode
 	@Override
 	public String toString() {
@@ -37,4 +38,5 @@ public class Library {
 	@Override
 	public int hashCode() {
 	}
+	*/
 }

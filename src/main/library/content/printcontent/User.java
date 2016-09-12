@@ -100,6 +100,7 @@ public class User {
 		
 	}
 	
+	/*
 	//Do override toString, Equals and hashCode
 	@Override
 	public String toString() {
@@ -112,4 +113,5 @@ public class User {
 	@Override
 	public int hashCode() {
 	}
+	*/
 }

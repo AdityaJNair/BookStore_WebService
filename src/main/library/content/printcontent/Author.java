@@ -98,6 +98,7 @@ public class Author {
 		this._description = _description;
 	}
 	
+	/*
 	//Do override toString, Equals and hashCode
 	@Override
 	public String toString() {
@@ -110,5 +111,5 @@ public class Author {
 	@Override
 	public int hashCode() {
 	}
-
+	*/
 }
