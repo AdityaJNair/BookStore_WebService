@@ -13,6 +13,8 @@ public class BookStoreApplication extends Application {
 
 	public BookStoreApplication() {
 		singletons.add(new BookResource());
+		singletons.add(new AuthorResource());
+		singletons.add(new UserResource());
 	}
 
 	@Override

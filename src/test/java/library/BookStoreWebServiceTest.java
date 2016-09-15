@@ -47,27 +47,6 @@ public class BookStoreWebServiceTest {
 	private Orders order1;
 	private Book book1;
 	
-
-	@BeforeClass
-	public static void setUpJAXB() throws JAXBException, IOException, SAXException {
-		/*
-		_jaxbCxt = JAXBContext.newInstance(User.class, Ledger.class);
-		_marshaller = _jaxbCxt.createMarshaller();
-		_unmarshaller = _jaxbCxt.createUnmarshaller();
-		_marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-		new File(OUTPUT_PATH).mkdirs();
-		SchemaOutputResolver sor = new DefaultSchemaOutputResolver(
-				OUTPUT_PATH, XML_FILE_SCHEMA);
-		_jaxbCxt.generateSchema(sor);
-		SchemaFactory factory = SchemaFactory
-				.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-		Schema schema = factory
-				.newSchema(new File(OUTPUT_PATH + XML_FILE_SCHEMA));
-		_unmarshaller.setSchema(schema);
-		_unmarshaller.setEventHandler(new DefaultValidationEventHandler());
-		*/
-	}
-
 	@Before
 	public void setUp() throws Exception {
 		//4 authors - 1 has done 2 books
