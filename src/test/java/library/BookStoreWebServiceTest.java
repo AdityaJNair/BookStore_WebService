@@ -3,6 +3,9 @@ package library;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -14,22 +17,19 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.xml.sax.SAXException;
 
-import library.content.printcontent.Address;
-import library.content.printcontent.Author;
-import library.content.printcontent.BookGenre;
-import library.content.printcontent.ContentPrintType;
-import library.content.printcontent.Ledger;
-import library.content.printcontent.Orders;
-import library.content.printcontent.PrintType;
-import library.content.printcontent.Publisher;
-import library.content.printcontent.User;
-import library.content.printcontent.books.ArtBook;
-import library.content.printcontent.books.BiographyBook;
-import library.content.printcontent.books.ComicBook;
-import library.content.printcontent.books.EducationalBook;
-import library.content.printcontent.books.GenericBook;
-import library.content.printcontent.books.Journal;
-import library.content.printcontent.books.Magazine;
+import library.content.dto.BookDTO;
+import library.content.dto.DTOMapper;
+import library.content.dto.UserDTO;
+import library.content.purchase.Address;
+import library.content.purchase.Author;
+import library.content.purchase.Book;
+import library.content.purchase.BookGenre;
+import library.content.purchase.Ledger;
+import library.content.purchase.Orders;
+import library.content.purchase.PrintType;
+import library.content.purchase.Publisher;
+import library.content.purchase.User;
+
 
 public class BookStoreWebServiceTest {
 	private static final String WEB_SERVICE_URI = "http://localhost:10000";
@@ -44,7 +44,7 @@ public class BookStoreWebServiceTest {
 	private Ledger library;
 	private User user;
 	private Orders order1;
-	private ContentPrintType artbook1;
+	private Book book1;
 	
 
 	@BeforeClass
@@ -81,57 +81,43 @@ public class BookStoreWebServiceTest {
 		
 		//address
 		Address addressUser = new Address("21","Ulta Street","Penrose","Auckland","New Zealand", "2502");
-		Address addressPublisher1 = new Address("1","Great Dane Street", "Oval", "Ottowa", "Canada", "1234");
-		Address addressPublisher2 = new Address("666", "Devils Street", "Hells Kitchen", "Hell", "Australia", "6666");
-		
-		//2 publisher
-		Publisher publisher1 = new Publisher(addressPublisher1, "Thompsons publishing");
-		publisher1.set_id((long)1);
-		Publisher publisher2 = new Publisher(addressPublisher2, "Nasty publishing");
-		publisher2.set_id((long)2);
-		//single user
-		user = new User(addressUser);
+				//single user
+		user = new User(addressUser,"Bob");
 		user.set_userId((long)1);
 		
 		//books
-		artbook1 = new ArtBook("A",author1,2016,"book art", new BigDecimal("25.6"), PrintType.E_Book, publisher1);
-		artbook1.set_bookId((long)1);
-		BiographyBook biobook1 = new BiographyBook("B",author1,2013,"book bio", new BigDecimal("325.6"), PrintType.E_Book, publisher1);
-		biobook1.set_bookId((long)2);
-		ComicBook comicbook1 = new ComicBook("C",author1,2316,"book comic", new BigDecimal("225.6"), PrintType.E_Book, publisher1, BookGenre.Comedy);
-		comicbook1.set_bookId((long)3);
-		Journal jbook1 = new Journal("E",author1,3416,"book journal", new BigDecimal("235.6"), PrintType.E_Book, publisher1);
-		jbook1.set_bookId((long)4);
-		Magazine mbook1 = new Magazine("F",author3,2,"book mg", new BigDecimal("255.6"), PrintType.E_Book, publisher1,BookGenre.CookBook);
-		mbook1.set_bookId((long)5);
-		GenericBook gbook1 = new GenericBook("G",author4,123,"book gen", new BigDecimal("125.6"), PrintType.E_Book, publisher2,BookGenre.Comedy);
-		gbook1.set_bookId((long)6);
-		EducationalBook edubook1 = new EducationalBook("D",author2,2116,"book edu", new BigDecimal("25.6"), PrintType.E_Book, publisher2, BookGenre.Essay);
-		edubook1.set_bookId((long)7);
+		Date date = new GregorianCalendar(1997, Calendar.NOVEMBER, 27).getTime();
+		Address address = new Address("27", "McNaughton Street", "Onehunga", "Auckland", "New Zealand", "187154sdaw");
+		Publisher publisher = new Publisher(address, "Thompsons publishing services");
+		Book book = new Book("A",date , "Book description", new BigDecimal("50"), PrintType.HardCover, publisher, BookGenre.Novel, "1231", "English");
+		book.addAuthorToSet(author1);
+		book.addAuthorToSet(author2);
+		book.set_bookId((long)0);
+		book1 = new Book("B",date , "Book description", new BigDecimal("52"), PrintType.HardCover, publisher, BookGenre.Novel, "192.1231.1", "er");
+		book1.set_bookId((long)1);
+		book1.addAuthorToSet(author3);
+		book1.addAuthorToSet(author4);
+		Book book2 = new Book("C",date , "Book description", new BigDecimal("53"), PrintType.HardCover, publisher, BookGenre.Novel, "19223.1", "fd");
+		book2.addAuthorToSet(author3);
+		book2.set_bookId((long)2);
+		Book book3 = new Book("D",date , "Book description", new BigDecimal("54"), PrintType.HardCover, publisher, BookGenre.Novel, "15168.1.1", "fe");
+		book3.addAuthorToSet(author4);
+		book3.set_bookId((long)3);
 		
 		//library -- only has all books
 		library = new Ledger();
-		library.addPrintMedia(artbook1);
-		library.addPrintMedia(biobook1);
-		library.addPrintMedia(comicbook1);
-		library.addPrintMedia(jbook1);
-		library.addPrintMedia(edubook1);
-		library.addPrintMedia(mbook1);
-		library.addPrintMedia(gbook1);
+		library.addPrintMedia(book);
+		library.addPrintMedia(book1);
+		library.addPrintMedia(book2);
+		library.addPrintMedia(book3);
 		
-		author1.addAuthoredBook(artbook1);
-		author1.addAuthoredBook(biobook1);
-		author1.addAuthoredBook(comicbook1);
-		author1.addAuthoredBook(jbook1);
-		author2.addAuthoredBook(edubook1);
-		author3.addAuthoredBook(mbook1);
-		author4.addAuthoredBook(gbook1);
 		
 		//orders -- for a user
 		order1 = new Orders(user);
 		order1.set_id((long)1);
-		order1.addBookToOrder(artbook1);
-		order1.addBookToOrder(biobook1);
+		order1.addBookToOrder(book);
+		order1.addBookToOrder(book2);
+		order1.addBookToOrder(book3);
 		user.addOrder(order1);
 	}
 	
@@ -143,65 +129,52 @@ public class BookStoreWebServiceTest {
 	@Test
 	public void marshalBook() throws JAXBException {
 		
+		BookDTO bookdto = DTOMapper.toBookDTO(book1);
+		
 		File file = new File("file.xml");
-		JAXBContext jaxbContext = JAXBContext.newInstance(Ledger.class);
+		JAXBContext jaxbContext = JAXBContext.newInstance(BookDTO.class);
 		Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
 
 		// output pretty printed
 		jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 
-		jaxbMarshaller.marshal(library, file);
-		jaxbMarshaller.marshal(library, System.out);
+		jaxbMarshaller.marshal(bookdto, file);
+		jaxbMarshaller.marshal(bookdto, System.out);
 		
 		file = new File("file.xml");
-		JAXBContext jaxbContext1 = JAXBContext.newInstance(Ledger.class);
+		JAXBContext jaxbContext1 = JAXBContext.newInstance(BookDTO.class);
 
 		Unmarshaller jaxbUnmarshaller = jaxbContext1.createUnmarshaller();
-		Ledger customer = (Ledger) jaxbUnmarshaller.unmarshal(file);
-		System.out.println(customer);
-		/*
-		for(ContentPrintType a: customer.getBooks()){
-			System.out.println(a.get_title());
-			System.out.println(a.get_year());
-			System.out.println(a.get_description());
-			System.out.println(a.get_author());
-			System.out.println(a.get_bookId());
-			System.out.println(a.get_cost());
-			System.out.println(a.get_genre());
-			System.out.println(a.get_publisher().get_id());
-			System.out.println(a.get_publisher().get_address().get_city());
-			System.out.println(a.get_publisher().get_address().get_country());
-			System.out.println(a.get_publisher().get_address().get_houseNumber());
-			System.out.println(a.get_publisher().get_address().get_street());
-			System.out.println(a.get_publisher().get_address().get_suburb());
-			System.out.println(a.get_publisher().get_address().get_zip());
-			System.out.println(a.get_publisher().get_publisherName());
-			System.out.println(a.get_printType());
-			System.out.println(a.getClass());
-			System.out.println();
-		}
-		*/
+		
+		BookDTO bookMADE = (BookDTO) jaxbUnmarshaller.unmarshal(file);
+		
+		Book bookdomain = DTOMapper.toBookDomain(bookMADE);
+		
 		System.out.println();
 	}
 	
 	@Test
 	public void marshalBook2() throws JAXBException {
 		
+		UserDTO userdto = DTOMapper.toUserDTO(user);
+		
 		File file = new File("file2.xml");
-		JAXBContext jaxbContext = JAXBContext.newInstance(User.class);
+		JAXBContext jaxbContext = JAXBContext.newInstance(UserDTO.class);
 		Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
 
 		// output pretty printed
 		jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 
-		jaxbMarshaller.marshal(user, file);
-		jaxbMarshaller.marshal(user, System.out);
+		jaxbMarshaller.marshal(userdto, file);
+		jaxbMarshaller.marshal(userdto, System.out);
 		
 		file = new File("file2.xml");
-		JAXBContext jaxbContext1 = JAXBContext.newInstance(User.class);
+		JAXBContext jaxbContext1 = JAXBContext.newInstance(UserDTO.class);
 
 		Unmarshaller jaxbUnmarshaller = jaxbContext1.createUnmarshaller();
-		User customer = (User) jaxbUnmarshaller.unmarshal(file);		
+		UserDTO customer = (UserDTO) jaxbUnmarshaller.unmarshal(file);	
+		
+		User usernorm = DTOMapper.toUserDomain(customer);
 		
 	}
 }
