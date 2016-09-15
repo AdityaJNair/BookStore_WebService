@@ -9,7 +9,7 @@ import javax.ws.rs.Path;
  * @author adijn
  *
  */
-@Path("/users")
+@Path("/user")
 public class UserResource {
 
 }

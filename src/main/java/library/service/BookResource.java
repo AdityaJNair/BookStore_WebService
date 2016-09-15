@@ -9,6 +9,7 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.EntityTransaction;
 import javax.persistence.NoResultException;
 import javax.persistence.NonUniqueResultException;
 import javax.persistence.Persistence;
@@ -25,6 +26,8 @@ import javax.ws.rs.core.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import library.content.dto.BookDTO;
+import library.content.dto.DTOMapper;
 import library.content.purchase.Address;
 import library.content.purchase.Author;
 import library.content.purchase.Book;
@@ -104,6 +107,20 @@ public class BookResource {
 		}
 		
 	}
+	
+	@POST
+	@Consumes("application/xml")
+	public void addBook(BookDTO bookdto){
+		Book bookDom = DTOMapper.toBookDomain(bookdto);
+		EntityManagerFactory factory = Persistence.createEntityManagerFactory("bookstorePU");
+		EntityManager em = factory.createEntityManager();
+		EntityTransaction et = em.getTransaction();
+		et.begin();
+		em.persist(bookDom);
+		et.commit();
+		em.close();
+	}
+	
 	
 	
 }
