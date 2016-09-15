@@ -1,7 +1,7 @@
 /**
  * 
  */
-package library.content.printcontent;
+package library.content.purchase;
 
 /**
  * @author adijn

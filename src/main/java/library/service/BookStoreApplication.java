@@ -8,23 +8,20 @@ import javax.ws.rs.core.Application;
 
 @ApplicationPath("/services")
 public class BookStoreApplication extends Application {
-
 	private Set<Object> singletons = new HashSet<Object>();
 	private Set<Class<?>> classes = new HashSet<Class<?>>();
 
 	public BookStoreApplication() {
-		BookStoreResource resource = new BookStoreResource();
-		singletons.add(resource);
-		// classes.add();
-	}
-
-	@Override
-	public Set<Object> getSingletons() {
-		return singletons;
+		singletons.add(new BookResource());
 	}
 
 	@Override
 	public Set<Class<?>> getClasses() {
 		return classes;
+	}
+
+	@Override
+	public Set<Object> getSingletons() {
+		return singletons;
 	}
 }

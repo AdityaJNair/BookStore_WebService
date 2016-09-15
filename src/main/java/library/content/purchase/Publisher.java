@@ -1,4 +1,4 @@
-package library.content.printcontent;
+package library.content.purchase;
 import javax.persistence.*;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -10,24 +10,24 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author adijn
  *
  */
-@Entity
+@Embeddable
 @XmlRootElement(name="Publisher")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Publisher {
 	
-	@XmlID
-	@XmlAttribute(name="xml-id-publisher")
-	private String _xml_id;
-
-	@Id
-	@GeneratedValue(generator="ID-GENERATOR")
-	private long publisher_id;
-	
 	@Embedded
-	@Column(nullable=false, name="Address")
+	 @AttributeOverrides({
+		 	@AttributeOverride(name="houseNumber", column=@Column(name="PUBLISHER_HOUSENUMBER", nullable=false)),
+		 	@AttributeOverride(name="street", column=@Column(name="PUBLISHER_STREET", nullable=false)),
+		 	@AttributeOverride(name="suburb", column=@Column(name="PUBLISHER_SUBURB", nullable=false)),
+		 	@AttributeOverride(name="city", column=@Column(name="PUBLISHER_CITY", nullable=false)),
+		 	@AttributeOverride(name="country", column=@Column(name="PUBLISHER_COUNTRY", nullable=false)),
+		 	@AttributeOverride(name="zip", column=@Column(name="PUBLISHER_ZIP", nullable=false)),
+	    
+	 })
 	private Address address;
 	
-	@Column(nullable=false, name="Name")
+	@Column(nullable=false, name="PUBLISHER_NAME")
 	private String publisherName;
 	
 	public Publisher(){
@@ -49,15 +49,6 @@ public class Publisher {
 	}
 	public void set_publisherName(String _publisherName) {
 		this.publisherName = _publisherName;
-	}
-	public long get_id() {
-		return publisher_id;
-	}
-
-	public void set_id(long _id) {
-		this.publisher_id = _id;
-		this._xml_id = getClass().getName()+_id;
-		
 	}
 	/*
 	//Do override toString, Equals and hashCode

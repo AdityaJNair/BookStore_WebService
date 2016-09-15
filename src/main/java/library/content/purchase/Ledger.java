@@ -1,4 +1,4 @@
-package library.content.printcontent;
+package library.content.purchase;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -15,22 +15,22 @@ public class Ledger {
 	
 	@XmlElementWrapper(name="Books")
 	@XmlElement(name="Book")
-	private Set<ContentPrintType> books;
+	private Set<Book> books;
 	
 
 	public Ledger(){
-		books = new HashSet<ContentPrintType>();
+		books = new HashSet<Book>();
 	}
 	
-	public void addPrintMedia(ContentPrintType book){
+	public void addPrintMedia(Book book){
 		books.add(book);
 	}
 	
-	public Set<ContentPrintType> getBooks() {
+	public Set<Book> getBooks() {
 		return books;
 	}
 
-	public void setBooks(Set<ContentPrintType> books) {
+	public void setBooks(Set<Book> books) {
 		this.books = books;
 	}
 

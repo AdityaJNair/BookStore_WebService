@@ -2,59 +2,52 @@
  * 
  */
 package library.content.dto;
-import javax.persistence.Access;
-import javax.persistence.AccessType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
+import javax.xml.bind.annotation.XmlElement;
 
-import library.content.printcontent.BookGenre;
+import library.content.purchase.BookGenre;
 
 /**
  * @author adijn
  *
  */
-@Entity
 @XmlRootElement(name="Author")
-@Access(AccessType.FIELD)
 @XmlAccessorType(XmlAccessType.FIELD)
-public class Author {
+public class AuthorDTO {
 	
-	@XmlID
-	@XmlAttribute(name="xml-id-author")
-	private String _xml_id;
-	
-	@Id
-	@GeneratedValue(generator="ID-GENERATOR")
 	private Long authorId;
 
-	@Column(nullable=false, name = "Name")
+
 	private String authorName;
-	
-	@Column(nullable=false, name="Age")
+		
+
 	private int authorAge;
 		
-	@Column(nullable=false, name="Main genre")
+
 	private BookGenre mostKnownForGenre;
 	
+	@XmlElementWrapper(name="Author-Review") 
+	@XmlElement(name="review")
+	private Set<ReviewDTO> authorReviews;
+	
 
-	@Column(nullable=false, name="Author_Description")
 	private String authorDescription;
 	
-	public Author(String name, int age, BookGenre mostKnownForGenre, String authorDescription){
+	public AuthorDTO(String name, int age, BookGenre mostKnownForGenre, String authorDescription){
 		this.authorName=name;
 		this.authorAge=age;
 		this.mostKnownForGenre=mostKnownForGenre;
 		this.authorDescription = authorDescription;
+		this.authorReviews = new HashSet<ReviewDTO>();
 	}
 	
-	public Author(){
+	public AuthorDTO(){
 		
 	}
 	
@@ -64,7 +57,6 @@ public class Author {
 	}
 	public void set_authorId(Long _authorId) {
 		this.authorId = _authorId;
-		this._xml_id = getClass().getName()+_authorId;
 	}
 	public String get_name() {
 		return authorName;
@@ -90,6 +82,14 @@ public class Author {
 	public void set_description(String _description) {
 		this.authorDescription = _description;
 	}
+	public Set<ReviewDTO> getAuthorReviews() {
+		return authorReviews;
+	}
+
+	public void setAuthorReviews(Set<ReviewDTO> authorReviews) {
+		this.authorReviews = authorReviews;
+	}
+	
 	/*
 	//Do override toString, Equals and hashCode
 	@Override

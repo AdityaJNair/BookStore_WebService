@@ -1,15 +1,18 @@
-package library.content.printcontent;
+package library.content.purchase;
 
 import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.AttributeOverride;
+import javax.persistence.AttributeOverrides;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -17,7 +20,6 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlID;
-import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @Entity
@@ -33,21 +35,33 @@ public class User {
 	@GeneratedValue(generator="ID-GENERATOR")
 	private Long userId;
 	
+	@Column(name="USER_NAME", nullable=false)
+	private String userName;
+	
 	@Embedded
-	@Column(nullable=false, name="Address")
+	 @AttributeOverrides({
+		 	@AttributeOverride(name="houseNumber", column=@Column(name="USER_HOUSENUMBER", nullable=false)),
+		 	@AttributeOverride(name="street", column=@Column(name="USER_STREET", nullable=false)),
+		 	@AttributeOverride(name="suburb", column=@Column(name="USER_SUBURB", nullable=false)),
+		 	@AttributeOverride(name="city", column=@Column(name="USER_CITY", nullable=false)),
+		 	@AttributeOverride(name="country", column=@Column(name="USER_COUNTRY", nullable=false)),
+		 	@AttributeOverride(name="zip", column=@Column(name="USER_ZIP", nullable=false)),
+	    
+	 })
 	private Address userAddress;
 	
 	@XmlElementWrapper(name="user-orders")
 	@XmlElement(name="orders")
-	@OneToMany(mappedBy="_users", fetch=FetchType.LAZY)
+	@OneToMany(mappedBy="usersOrder", fetch=FetchType.LAZY)
 	private Set<Orders> userOrders;
 	
 	@Column(nullable=false, name="Total_cost")
 	private BigDecimal totalUserCost;
 	
-	public User(Address address){
+	public User(Address address, String name){
 		userAddress=address;
 		userOrders=new HashSet<Orders>();
+		userName = name;
 		calculateCost();
 	}
 	
@@ -86,6 +100,15 @@ public class User {
 		calculateCost();
 	}
 	
+	
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+
 	public Long get_userId() {
 		return userId;
 	}

@@ -1,28 +1,27 @@
 /**
  * 
  */
-package library.content.printcontent;
+package library.content.purchase;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import javax.persistence.CollectionTable;
 import javax.persistence.Column;
-import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlID;
-import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.*;
+import javax.xml.bind.annotation.XmlTransient;
 
 
 /**
@@ -43,42 +42,35 @@ public class Orders {
 	private long order_id;
 	
 	
-	@XmlElementWrapper(name="Ordered-Books")
 	@XmlElement(name="Books")
-	@ElementCollection
-	@CollectionTable(name="Ordered Books")
-	@Column(name = "Books")
-	@org.hibernate.annotations.CollectionId(
-			columns = @Column( name = "Ordered Book_ID" ),
-			type = @org.hibernate.annotations.Type( type = "long"),
-			generator = "ID_GENERATOR")
-	private Collection<ContentPrintType> orderedBooks;
+	@OneToMany
+	@JoinTable(name="ORDERED_BOOKS", joinColumns=@JoinColumn(name="ORDER_ID",nullable=false), inverseJoinColumns=@JoinColumn(name="BOOK_ID", nullable=false))
+	private Collection<Book> orderedBooks;
 	
 	@XmlElement(name="Order_Cost")
-	@Column(nullable=false, name="Order Cost")
+	@Column(nullable=false, name="ORDER_COST")
 	private BigDecimal totalCost;
 	
 	
 	@XmlTransient
 	@ManyToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="USER_ID",nullable=false)
 	private User usersOrder;
-	
+		
+	public Orders(User user){
+		totalCost = new BigDecimal("0");
+		orderedBooks=new ArrayList<Book>();
+		usersOrder = user;
+	}
 	
 	public Orders(){
 		
 	}
 	
-	public Orders(User user){
-		usersOrder = user;
-		totalCost = new BigDecimal("0");
-		orderedBooks=new ArrayList<ContentPrintType>();
-	}
-	
-	
-	public Collection<ContentPrintType> getBooks() {
+	public Collection<Book> getBooks() {
 		return orderedBooks;
 	}
-	public void setBooks(Collection<ContentPrintType> books) {
+	public void setBooks(Collection<Book> books) {
 		this.orderedBooks = books;
 	}
 	public BigDecimal getTotalCost() {
@@ -100,10 +92,10 @@ public class Orders {
 	public void set_user(User _user) {
 		this.usersOrder = _user;
 	}
-	public void addBookToOrder(ContentPrintType item){
+	public void addBookToOrder(Book item){
 		orderedBooks.add(item);
 		totalCost = totalCost.add(item.get_cost());
-	}
+	}	
 	
 	/*
 	//Do override toString, Equals and hashCode

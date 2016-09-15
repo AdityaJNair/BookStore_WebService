@@ -1,19 +1,21 @@
 /**
  * 
  */
-package library.content.printcontent;
+package library.content.purchase;
 import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.Access;
 import javax.persistence.AccessType;
-import javax.persistence.CollectionTable;
 import javax.persistence.Column;
-import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -31,31 +33,24 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Author {
 	
-	@XmlID
-	@XmlAttribute(name="xml-id-author")
-	private String _xml_id;
-	
 	@Id
 	@GeneratedValue(generator="ID-GENERATOR")
 	private Long authorId;
 
-	@Column(nullable=false, name = "Name")
+	@Column(nullable=false, name = "AUTHOR_NAME")
 	private String authorName;
-	
-	@XmlTransient
-	@ElementCollection
-	@CollectionTable(name="Books_Authored",joinColumns = @JoinColumn(name="Author_ID"))
-	@Column(name="Books")
-	private Set<ContentPrintType> authoredBooks;
-	
-	@Column(nullable=false, name="Age")
+		
+	@Column(nullable=false, name="AGE")
 	private int authorAge;
 		
-	@Column(nullable=false, name="Main genre")
+	@Column(nullable=false, name="MAIN_GENRE")
 	private BookGenre mostKnownForGenre;
 	
-
-	@Column(nullable=false, name="Author_Description")
+	@OneToMany
+	@JoinTable(name="COMMENT_AUTHOR", joinColumns=@JoinColumn(name="AUTHOR_ID",nullable=false), inverseJoinColumns=@JoinColumn(name="COMMENT_ID", nullable=false))
+	private Set<Review> authorReviews;
+	
+	@Column(nullable=false, name="AUTHOR_DESCRIPTION")
 	private String authorDescription;
 	
 	public Author(String name, int age, BookGenre mostKnownForGenre, String authorDescription){
@@ -63,7 +58,7 @@ public class Author {
 		this.authorAge=age;
 		this.mostKnownForGenre=mostKnownForGenre;
 		this.authorDescription = authorDescription;
-		this.authoredBooks = new HashSet<ContentPrintType>();
+		this.authorReviews = new HashSet<Review>();
 	}
 	
 	public Author(){
@@ -76,7 +71,6 @@ public class Author {
 	}
 	public void set_authorId(Long _authorId) {
 		this.authorId = _authorId;
-		this._xml_id = getClass().getName()+_authorId;
 	}
 	public String get_name() {
 		return authorName;
@@ -102,17 +96,14 @@ public class Author {
 	public void set_description(String _description) {
 		this.authorDescription = _description;
 	}
-	public Set<ContentPrintType> getAuthoredBooks() {
-		return authoredBooks;
+	public Set<Review> getAuthorReviews() {
+		return authorReviews;
 	}
 
-	public void setAuthoredBooks(Set<ContentPrintType> authoredBooks) {
-		this.authoredBooks = authoredBooks;
+	public void setAuthorReviews(Set<Review> authorReviews) {
+		this.authorReviews = authorReviews;
 	}
 	
-	public void addAuthoredBook(ContentPrintType item){
-		authoredBooks.add(item);
-	}
 	/*
 	//Do override toString, Equals and hashCode
 	@Override

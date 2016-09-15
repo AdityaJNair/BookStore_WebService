@@ -1,202 +1,42 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<Ledger>
-    <Books>
-        <Book xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="comicBook" xml-id-printmedia="library.content.printcontent.books.ComicBook3">
-            <bookId>3</bookId>
-            <title>C</title>
-            <author xml-id-author="library.content.printcontent.Author1">
-                <authorId>1</authorId>
-                <authorName>J.K Rowling</authorName>
-                <authorAge>51</authorAge>
-                <mostKnownForGenre>Fantasy</mostKnownForGenre>
-                <authorDescription>Cool</authorDescription>
-            </author>
-            <year>2316</year>
-            <description>book comic</description>
-            <cost>225.6</cost>
-            <printType>E_Book</printType>
-            <publisher xml-id-publisher="library.content.printcontent.Publisher1">
-                <publisher_id>1</publisher_id>
-                <address>
-                    <houseNumber>1</houseNumber>
-                    <street>Great Dane Street</street>
-                    <suburb>Oval</suburb>
-                    <city>Ottowa</city>
-                    <country>Canada</country>
-                    <zip>1234</zip>
-                </address>
-                <publisherName>Thompsons publishing</publisherName>
-            </publisher>
-            <genre>Comedy</genre>
-            <secondGenre>Comedy</secondGenre>
-        </Book>
-        <Book xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="genericBook" xml-id-printmedia="library.content.printcontent.books.GenericBook6">
-            <bookId>6</bookId>
-            <title>G</title>
-            <author xml-id-author="library.content.printcontent.Author4">
-                <authorId>4</authorId>
-                <authorName>Ernest Hemingway</authorName>
-                <authorAge>61</authorAge>
-                <mostKnownForGenre>Fiction</mostKnownForGenre>
-                <authorDescription>SY</authorDescription>
-            </author>
-            <year>123</year>
-            <description>book gen</description>
-            <cost>125.6</cost>
-            <printType>E_Book</printType>
-            <publisher xml-id-publisher="library.content.printcontent.Publisher2">
-                <publisher_id>2</publisher_id>
-                <address>
-                    <houseNumber>666</houseNumber>
-                    <street>Devils Street</street>
-                    <suburb>Hells Kitchen</suburb>
-                    <city>Hell</city>
-                    <country>Australia</country>
-                    <zip>6666</zip>
-                </address>
-                <publisherName>Nasty publishing</publisherName>
-            </publisher>
-            <genre>Comedy</genre>
-        </Book>
-        <Book xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="magazine" xml-id-printmedia="library.content.printcontent.books.Magazine5">
-            <bookId>5</bookId>
-            <title>F</title>
-            <author xml-id-author="library.content.printcontent.Author3">
-                <authorId>3</authorId>
-                <authorName>Mark Twain</authorName>
-                <authorAge>74</authorAge>
-                <mostKnownForGenre>Novel</mostKnownForGenre>
-                <authorDescription>Amazing</authorDescription>
-            </author>
-            <year>2</year>
-            <description>book mg</description>
-            <cost>255.6</cost>
-            <printType>E_Book</printType>
-            <publisher xml-id-publisher="library.content.printcontent.Publisher1">
-                <publisher_id>1</publisher_id>
-                <address>
-                    <houseNumber>1</houseNumber>
-                    <street>Great Dane Street</street>
-                    <suburb>Oval</suburb>
-                    <city>Ottowa</city>
-                    <country>Canada</country>
-                    <zip>1234</zip>
-                </address>
-                <publisherName>Thompsons publishing</publisherName>
-            </publisher>
-            <genre>CookBook</genre>
-        </Book>
-        <Book xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="journal" xml-id-printmedia="library.content.printcontent.books.Journal4">
-            <bookId>4</bookId>
-            <title>E</title>
-            <author xml-id-author="library.content.printcontent.Author1">
-                <authorId>1</authorId>
-                <authorName>J.K Rowling</authorName>
-                <authorAge>51</authorAge>
-                <mostKnownForGenre>Fantasy</mostKnownForGenre>
-                <authorDescription>Cool</authorDescription>
-            </author>
-            <year>3416</year>
-            <description>book journal</description>
-            <cost>235.6</cost>
-            <printType>E_Book</printType>
-            <publisher xml-id-publisher="library.content.printcontent.Publisher1">
-                <publisher_id>1</publisher_id>
-                <address>
-                    <houseNumber>1</houseNumber>
-                    <street>Great Dane Street</street>
-                    <suburb>Oval</suburb>
-                    <city>Ottowa</city>
-                    <country>Canada</country>
-                    <zip>1234</zip>
-                </address>
-                <publisherName>Thompsons publishing</publisherName>
-            </publisher>
-            <genre>Journal</genre>
-        </Book>
-        <Book xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="artBook" xml-id-printmedia="library.content.printcontent.books.ArtBook1">
-            <bookId>1</bookId>
-            <title>A</title>
-            <author xml-id-author="library.content.printcontent.Author1">
-                <authorId>1</authorId>
-                <authorName>J.K Rowling</authorName>
-                <authorAge>51</authorAge>
-                <mostKnownForGenre>Fantasy</mostKnownForGenre>
-                <authorDescription>Cool</authorDescription>
-            </author>
-            <year>2016</year>
-            <description>book art</description>
-            <cost>25.6</cost>
-            <printType>E_Book</printType>
-            <publisher xml-id-publisher="library.content.printcontent.Publisher1">
-                <publisher_id>1</publisher_id>
-                <address>
-                    <houseNumber>1</houseNumber>
-                    <street>Great Dane Street</street>
-                    <suburb>Oval</suburb>
-                    <city>Ottowa</city>
-                    <country>Canada</country>
-                    <zip>1234</zip>
-                </address>
-                <publisherName>Thompsons publishing</publisherName>
-            </publisher>
-            <genre>Art</genre>
-        </Book>
-        <Book xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="educationalBook" xml-id-printmedia="library.content.printcontent.books.EducationalBook7">
-            <bookId>7</bookId>
-            <title>D</title>
-            <author xml-id-author="library.content.printcontent.Author2">
-                <authorId>2</authorId>
-                <authorName>Stephen King</authorName>
-                <authorAge>68</authorAge>
-                <mostKnownForGenre>Horror</mostKnownForGenre>
-                <authorDescription>Hero</authorDescription>
-            </author>
-            <year>2116</year>
-            <description>book edu</description>
-            <cost>25.6</cost>
-            <printType>E_Book</printType>
-            <publisher xml-id-publisher="library.content.printcontent.Publisher2">
-                <publisher_id>2</publisher_id>
-                <address>
-                    <houseNumber>666</houseNumber>
-                    <street>Devils Street</street>
-                    <suburb>Hells Kitchen</suburb>
-                    <city>Hell</city>
-                    <country>Australia</country>
-                    <zip>6666</zip>
-                </address>
-                <publisherName>Nasty publishing</publisherName>
-            </publisher>
-            <genre>Essay</genre>
-        </Book>
-        <Book xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="biographyBook" xml-id-printmedia="library.content.printcontent.books.BiographyBook2">
-            <bookId>2</bookId>
-            <title>B</title>
-            <author xml-id-author="library.content.printcontent.Author1">
-                <authorId>1</authorId>
-                <authorName>J.K Rowling</authorName>
-                <authorAge>51</authorAge>
-                <mostKnownForGenre>Fantasy</mostKnownForGenre>
-                <authorDescription>Cool</authorDescription>
-            </author>
-            <year>2013</year>
-            <description>book bio</description>
-            <cost>325.6</cost>
-            <printType>E_Book</printType>
-            <publisher xml-id-publisher="library.content.printcontent.Publisher1">
-                <publisher_id>1</publisher_id>
-                <address>
-                    <houseNumber>1</houseNumber>
-                    <street>Great Dane Street</street>
-                    <suburb>Oval</suburb>
-                    <city>Ottowa</city>
-                    <country>Canada</country>
-                    <zip>1234</zip>
-                </address>
-                <publisherName>Thompsons publishing</publisherName>
-            </publisher>
-            <genre>Biography</genre>
-        </Book>
-    </Books>
-</Ledger>
+<Book>
+    <bookId>1</bookId>
+    <title>B</title>
+    <Book-Authors>
+        <authors>
+            <authorId>3</authorId>
+            <authorName>Mark Twain</authorName>
+            <authorAge>74</authorAge>
+            <mostKnownForGenre>Novel</mostKnownForGenre>
+            <Author-Review/>
+            <authorDescription>Amazing</authorDescription>
+        </authors>
+        <authors>
+            <authorId>4</authorId>
+            <authorName>Ernest Hemingway</authorName>
+            <authorAge>61</authorAge>
+            <mostKnownForGenre>Fiction</mostKnownForGenre>
+            <Author-Review/>
+            <authorDescription>SY</authorDescription>
+        </authors>
+    </Book-Authors>
+    <datePublished>1997-11-27T00:00:00+13:00</datePublished>
+    <description>Book description</description>
+    <cost>52</cost>
+    <printType>HardCover</printType>
+    <publisher>
+        <address>
+            <houseNumber>27</houseNumber>
+            <street>McNaughton Street</street>
+            <suburb>Onehunga</suburb>
+            <city>Auckland</city>
+            <country>New Zealand</country>
+            <zip>187154sdaw</zip>
+        </address>
+        <publisherName>Thompsons publishing services</publisherName>
+    </publisher>
+    <genre>Novel</genre>
+    <isbn>192.1231.1</isbn>
+    <language>er</language>
+    <Book-Reviews/>
+</Book>

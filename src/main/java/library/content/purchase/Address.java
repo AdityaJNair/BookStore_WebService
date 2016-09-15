@@ -1,7 +1,7 @@
 /**
  * 
  */
-package library.content.printcontent;
+package library.content.purchase;
 
 import javax.persistence.*;
 import javax.xml.bind.annotation.*;
@@ -14,22 +14,22 @@ import javax.xml.bind.annotation.*;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Address {
 	
-	@Column(nullable=false, name="House_Number")
+	@Column(nullable=false)
 	private String houseNumber;
 	
-	@Column(nullable=false, name="Street_Name")
+	@Column(nullable=false)
 	private String street;
 	
-	@Column(nullable=false, name="Suburb")
+	@Column(nullable=false)
 	private String suburb;
 	
-	@Column(nullable=false, name="City")
+	@Column(nullable=false)
 	private String city;
 	
-	@Column(nullable=false, name="Country")
+	@Column(nullable=false)
 	private String country;
 	
-	@Column(nullable=false, name="Zip_Code")
+	@Column(nullable=false)
 	private String zip;
 	
 	
