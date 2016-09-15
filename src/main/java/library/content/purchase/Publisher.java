@@ -1,11 +1,15 @@
 package library.content.purchase;
-import javax.persistence.*;
+import javax.persistence.AttributeOverride;
+import javax.persistence.AttributeOverrides;
+import javax.persistence.Column;
+import javax.persistence.Embeddable;
+import javax.persistence.Embedded;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlRootElement;
+
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 /**
  * @author adijn
  *
@@ -50,18 +54,34 @@ public class Publisher {
 	public void set_publisherName(String _publisherName) {
 		this.publisherName = _publisherName;
 	}
-	/*
-	//Do override toString, Equals and hashCode
-	@Override
-	public String toString() {
-	}
 	
 	@Override
 	public boolean equals(Object obj) {
+		if (!(obj instanceof Publisher))
+            return false;
+        if (obj == this)
+            return true;
+
+        Publisher rhs = (Publisher) obj;
+        return new EqualsBuilder().
+            append(publisherName, rhs.publisherName).
+            append(address, rhs.address).
+            isEquals();
 	}
 	
 	@Override
 	public int hashCode() {
+		return new HashCodeBuilder(17, 31). 
+	            append(publisherName).
+	            append(address.toString()).
+	            toHashCode();
 	}
-	*/
+	
+	@Override
+	public String toString() {
+		StringBuffer buffer = new StringBuffer();
+		buffer.append(publisherName+" ");
+		buffer.append(address.toString());
+		return buffer.toString();
+	}
 }

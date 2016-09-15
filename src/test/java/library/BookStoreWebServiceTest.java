@@ -129,7 +129,6 @@ public class BookStoreWebServiceTest {
 	 */
 	@Test
 	public void marshalBook() throws JAXBException {
-		
 		BookDTO bookdto = DTOMapper.toBookDTO(book1);
 		
 		File file = new File("file.xml");
@@ -151,7 +150,10 @@ public class BookStoreWebServiceTest {
 		
 		Book bookdomain = DTOMapper.toBookDomain(bookMADE);
 		
-		System.out.println();
+		System.out.println(bookdto.toString());
+		System.out.println(bookMADE.toString());
+		System.out.println(bookdto.toString().equals(bookMADE.toString()));
+		System.out.println(bookdto.equals(bookMADE));
 	}
 	
 	@Test
@@ -175,7 +177,10 @@ public class BookStoreWebServiceTest {
 		Unmarshaller jaxbUnmarshaller = jaxbContext1.createUnmarshaller();
 		UserDTO customer = (UserDTO) jaxbUnmarshaller.unmarshal(file);	
 		
-		User usernorm = DTOMapper.toUserDomain(customer);
+		System.out.println(customer.toString());
+		System.out.println(userdto.toString());
+		System.out.println(customer.toString().equals(userdto.toString()));
+		System.out.println(customer.equals(userdto));
 		
 	}
 	
@@ -200,7 +205,9 @@ public class BookStoreWebServiceTest {
 		Unmarshaller jaxbUnmarshaller = jaxbContext1.createUnmarshaller();
 		OrdersDTO customer = (OrdersDTO) jaxbUnmarshaller.unmarshal(file);	
 		
-		Orders usernorm = DTOMapper.toOrdersDomain(customer);
-		
+		System.out.println(customer.toString());
+		System.out.println(userdto.toString());
+		System.out.println(customer.toString().equals(userdto.toString()));
+		System.out.println(customer.equals(userdto));
 	}
 }

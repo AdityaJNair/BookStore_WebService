@@ -3,17 +3,24 @@ package library.content.dto;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
+
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlElement;
 
+import library.content.purchase.Author;
 import library.content.purchase.BookGenre;
 import library.content.purchase.PrintType;
 import library.content.purchase.Publisher;
+import library.content.purchase.Review;
 
 /**
  * @author adijn
@@ -150,14 +157,74 @@ public class BookDTO {
 		this.bookReviews = bookReviews;
 	}
 
-	//Do override toString, Equals and hashCode
-	/*
 	@Override
-	public boolean equals(Object obj) {
+	public String toString() {
+		StringBuffer buffer = new StringBuffer();
+		buffer.append(bookId+" ");
+		buffer.append(title + " ");
+		for(AuthorDTO a: authors){
+			buffer.append(a.toString()+" ");
+		}
+		buffer.append(datePublished.toString()+ " ");
+		buffer.append(description+" ");
+		buffer.append(cost.toString()+ " ");
+		buffer.append(printType+" ");
+		buffer.append(publisher.toString()+ " ");
+		buffer.append(genre + " ");
+		buffer.append(isbn+ " ");
+		buffer.append(language + " ");
+		for(ReviewDTO r: bookReviews){
+			buffer.append(r.toString()+" ");
+		}
+		return buffer.toString();
 	}
 	
 	@Override
 	public int hashCode() {
+		HashCodeBuilder b = new HashCodeBuilder(17, 31). 
+	            append(bookId).
+	            append(title).
+	            append(description).
+	            append(datePublished).
+		        append(cost).
+		        append(printType).
+		        append(publisher.toString()).
+		        append(genre).
+		        append(isbn).
+		        append(language);
+		Iterator<AuthorDTO> it1 = this.authors.iterator();
+		while (it1.hasNext()) {
+			b.append(it1.next().toString());
+		}
+		Iterator<ReviewDTO> it2 = this.bookReviews.iterator();
+		while (it1.hasNext()) {
+			b.append(it2.next().toString());
+		}
+		return b.hashCode();
 	}
-	*/
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (!(obj instanceof BookDTO))
+			return false;
+		if (obj == this)
+			return true;
+
+		BookDTO rhs = (BookDTO) obj;
+		EqualsBuilder b = new EqualsBuilder().append(bookId, rhs.bookId).append(title, rhs.title)
+				.append(description, rhs.description).append(datePublished, rhs.datePublished).append(cost, rhs.cost)
+						.append(printType, rhs.printType)
+						.append(publisher, rhs.publisher).append(genre, rhs.genre).append(isbn, rhs.isbn).append(language,rhs.language);
+		Iterator<ReviewDTO> it1 = this.getBookReviews().iterator();
+		Iterator<ReviewDTO> it2 = rhs.getBookReviews().iterator();
+		while (it1.hasNext() && it2.hasNext()) {
+			b.append(it1.next(), it2.next());
+		}
+		Iterator<AuthorDTO> it3 = this.get_author().iterator();
+		Iterator<AuthorDTO> it4 = rhs.get_author().iterator();
+		while (it3.hasNext() && it4.hasNext()) {
+			b.append(it3.next(), it4.next());
+		}
+		return b.isEquals();
+	}
 }

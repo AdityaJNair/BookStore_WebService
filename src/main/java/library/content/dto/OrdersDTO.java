@@ -5,26 +5,16 @@ package library.content.dto;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
-import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
-import javax.xml.bind.annotation.XmlElementWrapper;
-import javax.xml.bind.annotation.XmlElement;
+
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 
 /**
@@ -83,18 +73,44 @@ public class OrdersDTO {
 		totalCost = totalCost.add(item.get_cost());
 	}	
 	
-	/*
-	//Do override toString, Equals and hashCode
 	@Override
 	public String toString() {
-	}
-	
-	@Override
-	public boolean equals(Object obj) {
+		StringBuffer buffer = new StringBuffer();
+		buffer.append(order_id+" ");
+		buffer.append(totalCost+" ");
+		buffer.append(usersOrder.toString()+" ");
+		return buffer.toString();
 	}
 	
 	@Override
 	public int hashCode() {
+		HashCodeBuilder b = new HashCodeBuilder(17, 31). 
+	            append(order_id).
+	            append(totalCost).
+	            append(usersOrder.toString());
+		Iterator<BookDTO> it1 = this.getBooks().iterator();
+		while (it1.hasNext()) {
+			b.append(it1.next().toString());
+		}
+		return b.hashCode();
 	}
-	*/
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (!(obj instanceof OrdersDTO))
+			return false;
+		if (obj == this)
+			return true;
+
+		OrdersDTO rhs = (OrdersDTO) obj;
+		EqualsBuilder b = new EqualsBuilder().append(order_id, rhs.order_id).append(totalCost, rhs.totalCost)
+				.append(usersOrder, rhs.usersOrder);
+		Iterator<BookDTO> it1 = this.orderedBooks.iterator();
+		Iterator<BookDTO> it2 = rhs.orderedBooks.iterator();
+		while (it1.hasNext() && it2.hasNext()) {
+			b.append(it1.next(), it2.next());
+		}
+		return b.isEquals();
+	}
+
 }

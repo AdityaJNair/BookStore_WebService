@@ -23,36 +23,29 @@ import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 
 /**
  * @author adijn
  *
  */
 @Entity
-@XmlRootElement(name="Orders")
-@XmlAccessorType(XmlAccessType.FIELD)
 public class Orders {
-	
-	@XmlID
-	@XmlAttribute(name="xml-id-orders")
-	private String _xml_id;
 	
 	@Id
 	@GeneratedValue(generator="ID-GENERATOR")
 	private long order_id;
 	
 	
-	@XmlElement(name="Books")
 	@OneToMany
 	@JoinTable(name="ORDERED_BOOKS", joinColumns=@JoinColumn(name="ORDER_ID",nullable=false), inverseJoinColumns=@JoinColumn(name="BOOK_ID", nullable=false))
 	private Collection<Book> orderedBooks;
 	
-	@XmlElement(name="Order_Cost")
 	@Column(nullable=false, name="ORDER_COST")
 	private BigDecimal totalCost;
 	
 	
-	@XmlTransient
 	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="USER_ID",nullable=false)
 	private User usersOrder;
@@ -84,7 +77,6 @@ public class Orders {
 	}
 	public void set_id(long _id) {
 		this.order_id = _id;
-		this._xml_id = getClass().getName()+_id;
 	}
 	public User get_user() {
 		return usersOrder;
@@ -97,18 +89,35 @@ public class Orders {
 		totalCost = totalCost.add(item.get_cost());
 	}	
 	
-	/*
-	//Do override toString, Equals and hashCode
-	@Override
-	public String toString() {
-	}
-	
 	@Override
 	public boolean equals(Object obj) {
+		if (!(obj instanceof Orders))
+            return false;
+        if (obj == this)
+            return true;
+
+        Orders other = (Orders)obj;
+        return order_id == other.order_id;
 	}
 	
 	@Override
 	public int hashCode() {
+		return new HashCodeBuilder(17, 31). 
+	            append(order_id).
+	            toHashCode();
 	}
-	*/
+
+	@Override
+	public String toString() {
+		StringBuffer buffer = new StringBuffer();
+		buffer.append(order_id+" ");
+		for(Book b: orderedBooks){
+			buffer.append(b.toString()+ " ");
+		}
+		buffer.append(totalCost+" ");
+		buffer.append(usersOrder.toString()+" ");
+		return buffer.toString();
+	}
+	
+
 }

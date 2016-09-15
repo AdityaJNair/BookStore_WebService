@@ -7,20 +7,20 @@
             <title>A</title>
             <Book-Authors>
                 <authors>
-                    <authorId>2</authorId>
-                    <authorName>Stephen King</authorName>
-                    <authorAge>68</authorAge>
-                    <mostKnownForGenre>Horror</mostKnownForGenre>
-                    <Author-Review/>
-                    <authorDescription>Hero</authorDescription>
-                </authors>
-                <authors>
                     <authorId>1</authorId>
                     <authorName>J.K Rowling</authorName>
                     <authorAge>51</authorAge>
                     <mostKnownForGenre>Fantasy</mostKnownForGenre>
                     <Author-Review/>
                     <authorDescription>Cool</authorDescription>
+                </authors>
+                <authors>
+                    <authorId>2</authorId>
+                    <authorName>Stephen King</authorName>
+                    <authorAge>68</authorAge>
+                    <mostKnownForGenre>Horror</mostKnownForGenre>
+                    <Author-Review/>
+                    <authorDescription>Hero</authorDescription>
                 </authors>
             </Book-Authors>
             <datePublished>1997-11-27T00:00:00+13:00</datePublished>
@@ -112,6 +112,7 @@
     </Ordered-Books>
     <totalCost>0</totalCost>
     <usersOrder>
+        <userId>1</userId>
         <userName>Bob</userName>
         <userAddress>
             <houseNumber>21</houseNumber>

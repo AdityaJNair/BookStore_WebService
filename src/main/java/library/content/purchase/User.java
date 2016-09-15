@@ -21,15 +21,14 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlRootElement;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 
 @Entity
 @XmlRootElement(name="User")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class User {
-	
-	@XmlID
-	@XmlAttribute(name="xml-id-user")
-	private String _xml_id;
 	
 	@Id
 	@GeneratedValue(generator="ID-GENERATOR")
@@ -115,7 +114,6 @@ public class User {
 
 	public void set_userId(Long _userId) {
 		this.userId = _userId;
-		this._xml_id = getClass().getName()+_userId;
 	}
 	
 	private void calculateCost(){
@@ -131,18 +129,36 @@ public class User {
 		
 	}
 	
-	/*
-	//Do override toString, Equals and hashCode
+
 	@Override
 	public String toString() {
+		StringBuffer buffer = new StringBuffer();
+		buffer.append(userId.toString() +" ");
+		buffer.append(userName+" ");
+		buffer.append(userAddress.toString()+" ");
+		for(Orders o: userOrders){
+			buffer.append(o.get_id()+" ");
+		}
+		buffer.append(totalUserCost.toString());
+		return buffer.toString();
 	}
 	
 	@Override
 	public boolean equals(Object obj) {
+		if (!(obj instanceof User))
+            return false;
+        if (obj == this)
+            return true;
+        
+        User usr = (User) obj;
+        return userId == usr.userId;
 	}
+	
 	
 	@Override
 	public int hashCode() {
+		return new HashCodeBuilder(17, 31). 
+	            append(userId).
+	            toHashCode();
 	}
-	*/
 }

@@ -2,6 +2,7 @@ package library.content.dto;
 
 import java.math.BigDecimal;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 
 import javax.persistence.AttributeOverride;
@@ -17,42 +18,49 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import library.content.purchase.Address;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-@XmlRootElement(name="User")
+import library.content.purchase.Address;
+import library.content.purchase.Orders;
+
+@XmlRootElement(name = "User")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class UserDTO {
-	
+
 	private Long userId;
-	
+
 	private String userName;
-	
+
 	private Address userAddress;
-	
+
 	private BigDecimal totalUserCost;
-	
-	public UserDTO(Address address, String name){
-		userAddress=address;
+
+	public UserDTO(Address address, String name) {
+		userAddress = address;
 		totalUserCost = new BigDecimal("0");
 		userName = name;
 	}
-	
-	public UserDTO(){
+
+	public UserDTO() {
 	}
-	
-	
+
 	public Address get_address() {
 		return userAddress;
 	}
+
 	public void set_address(Address _address) {
 		this.userAddress = _address;
 	}
+
 	public BigDecimal get_totalCost() {
 		return totalUserCost;
 	}
+
 	public void set_totalCost(BigDecimal _totalCost) {
 		this.totalUserCost = _totalCost;
 	}
+
 	public Long get_userId() {
 		return userId;
 	}
@@ -68,6 +76,35 @@ public class UserDTO {
 	public void setUserName(String userName) {
 		this.userName = userName;
 	}
-	
-	
+
+	@Override
+	public int hashCode() {
+		HashCodeBuilder b = new HashCodeBuilder(17, 31).append(userId).append(userName).append(userAddress.toString())
+				.append(totalUserCost);
+		return b.hashCode();
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (!(obj instanceof UserDTO))
+			return false;
+		if (obj == this)
+			return true;
+
+		UserDTO rhs = (UserDTO) obj;
+		EqualsBuilder b = new EqualsBuilder().append(userId, rhs.get_userId()).append(userName, rhs.getUserName())
+				.append(userAddress, rhs.get_address()).append(totalUserCost, rhs.get_totalCost());
+		return b.isEquals();
+	}
+
+	@Override
+	public String toString() {
+		StringBuffer buffer = new StringBuffer();
+		buffer.append(userId.toString() + " ");
+		buffer.append(userName + " ");
+		buffer.append(userAddress.toString() + " ");
+		buffer.append(totalUserCost.toString());
+		return buffer.toString();
+	}
+
 }

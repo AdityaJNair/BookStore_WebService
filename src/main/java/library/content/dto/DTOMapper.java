@@ -107,6 +107,7 @@ public class DTOMapper {
 	
 	public static UserDTO toUserDTO(User domainUser){
 		UserDTO userDTO = new UserDTO(domainUser.get_address(),domainUser.getUserName());
+		userDTO.set_userId(domainUser.get_userId());
 		return userDTO;
 	}
 	public static User toUserDomain(UserDTO dtoUser){

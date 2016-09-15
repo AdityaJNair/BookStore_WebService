@@ -26,6 +26,8 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 /**
  * @author adijn
  *
@@ -177,15 +179,44 @@ public class Book {
 		this.bookReviews = bookReviews;
 	}
 
-	//Do override toString, Equals and hashCode
-
-	/*
 	@Override
 	public boolean equals(Object obj) {
+		if (!(obj instanceof Book))
+            return false;
+        if (obj == this)
+            return true;
+
+        Book other = (Book)obj;
+        return bookId == other.bookId;
 	}
 	
 	@Override
 	public int hashCode() {
+		return new HashCodeBuilder(17, 31). 
+	            append(bookId).
+	            toHashCode();
 	}
-	*/
+
+	@Override
+	public String toString() {
+		StringBuffer buffer = new StringBuffer();
+		buffer.append(bookId+" ");
+		buffer.append(title + " ");
+		for(Author a: authors){
+			buffer.append(a.toString()+" ");
+		}
+		buffer.append(datePublished.toString()+ " ");
+		buffer.append(description+" ");
+		buffer.append(cost.toString()+ " ");
+		buffer.append(printType+" ");
+		buffer.append(publisher.toString()+ " ");
+		buffer.append(genre + " ");
+		buffer.append(isbn+ " ");
+		buffer.append(language + " ");
+		for(Review r: bookReviews){
+			buffer.append(r.toString()+" ");
+		}
+		return buffer.toString();
+	}
+	
 }

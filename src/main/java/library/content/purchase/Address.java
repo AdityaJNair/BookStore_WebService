@@ -3,8 +3,14 @@
  */
 package library.content.purchase;
 
-import javax.persistence.*;
-import javax.xml.bind.annotation.*;
+import javax.persistence.Column;
+import javax.persistence.Embeddable;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
+
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 /**
  * @author adijn
  *
@@ -83,18 +89,39 @@ public class Address {
 		this.zip = _zip;
 	}
 	
-	/*
-	//Do override toString, Equals and hashCode
 	@Override
-	public String toString() {
+	public int hashCode() {
+		return new HashCodeBuilder(17, 31). 
+	            append(houseNumber).
+	            append(street).
+	            append(suburb).
+	            append(city).
+	            append(country).
+	            append(zip).
+	            toHashCode();
 	}
 	
 	@Override
 	public boolean equals(Object obj) {
+		if (!(obj instanceof Address))
+            return false;
+        if (obj == this)
+            return true;
+        Address ad = (Address) obj;
+        
+        return new EqualsBuilder().append(houseNumber, ad.houseNumber).append(street,ad.street).
+        		append(suburb,ad.suburb).append(city,ad.city).append(country,ad.country).append(zip,ad.zip).isEquals();
 	}
 	
 	@Override
-	public int hashCode() {
+	public String toString() {
+		StringBuffer buffer = new StringBuffer();
+		buffer.append(houseNumber+ " ");
+		buffer.append(street+ " ");
+		buffer.append(suburb+ " ");
+		buffer.append(city+ " ");
+		buffer.append(country+ " ");
+		buffer.append(zip);
+		return buffer.toString();
 	}
-	*/
 }

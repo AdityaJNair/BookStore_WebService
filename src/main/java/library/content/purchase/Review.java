@@ -18,6 +18,8 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 @Entity
 @XmlRootElement(name="Review")
 @Access(AccessType.FIELD)
@@ -26,7 +28,7 @@ public class Review {
 	
 	@Id
 	@GeneratedValue(generator="ID-GENERATOR")
-	private Long user_iD;
+	private Long reviewID;
 	
 	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="USER_ID", nullable=false)
@@ -74,14 +76,42 @@ public class Review {
 	}
 
 	public Long getUser_iD() {
-		return user_iD;
+		return reviewID;
 	}
 
 	public void setUser_iD(Long user_iD) {
-		this.user_iD = user_iD;
+		this.reviewID = user_iD;
 	}
 	
+
+
+	@Override
+	public String toString() {
+		StringBuffer buffer = new StringBuffer();
+		buffer.append(reviewID + " ");
+		buffer.append(reviewRating+ " ");
+		buffer.append(reviewComment+" ");
+		buffer.append(reviewFromUser.toString());
+		return buffer.toString();
+	}
 	
+	@Override
+	public boolean equals(Object obj) {
+		if (!(obj instanceof Review))
+            return false;
+        if (obj == this)
+            return true;
+
+        Review other = (Review)obj;
+        return reviewID == other.reviewID;
+	}
+	
+	@Override
+	public int hashCode() {
+		return new HashCodeBuilder(17, 31). 
+	            append(reviewID).
+	            toHashCode();
+	}
 
 	
 }

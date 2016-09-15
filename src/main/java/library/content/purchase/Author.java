@@ -9,19 +9,16 @@ import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
+
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * @author adijn
@@ -103,19 +100,39 @@ public class Author {
 	public void setAuthorReviews(Set<Review> authorReviews) {
 		this.authorReviews = authorReviews;
 	}
-	
-	/*
-	//Do override toString, Equals and hashCode
+
+
+
 	@Override
 	public String toString() {
+		StringBuffer buffer = new StringBuffer();
+		buffer.append(authorId+" ");
+		buffer.append(authorName+" ");
+		buffer.append(authorAge+" ");
+		buffer.append(mostKnownForGenre+" ");
+		for(Review r: authorReviews){
+			buffer.append(r.toString()+ " ");
+		}
+		buffer.append(authorDescription);
+		return buffer.toString();
 	}
 	
 	@Override
 	public boolean equals(Object obj) {
+		if (!(obj instanceof Author))
+            return false;
+        if (obj == this)
+            return true;
+
+        Author other = (Author)obj;
+        return authorId == other.authorId;
 	}
 	
 	@Override
 	public int hashCode() {
+		return new HashCodeBuilder(17, 31). 
+	            append(authorId).
+	            toHashCode();
 	}
-	*/
+	
 }
