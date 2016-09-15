@@ -1,13 +1,126 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<User>
-    <userName>Bob</userName>
-    <userAddress>
-        <houseNumber>21</houseNumber>
-        <street>Ulta Street</street>
-        <suburb>Penrose</suburb>
-        <city>Auckland</city>
-        <country>New Zealand</country>
-        <zip>2502</zip>
-    </userAddress>
-    <totalUserCost>0</totalUserCost>
-</User>
+<Orders>
+    <order_id>1</order_id>
+    <Ordered-Books>
+        <books>
+            <bookId>0</bookId>
+            <title>A</title>
+            <Book-Authors>
+                <authors>
+                    <authorId>2</authorId>
+                    <authorName>Stephen King</authorName>
+                    <authorAge>68</authorAge>
+                    <mostKnownForGenre>Horror</mostKnownForGenre>
+                    <Author-Review/>
+                    <authorDescription>Hero</authorDescription>
+                </authors>
+                <authors>
+                    <authorId>1</authorId>
+                    <authorName>J.K Rowling</authorName>
+                    <authorAge>51</authorAge>
+                    <mostKnownForGenre>Fantasy</mostKnownForGenre>
+                    <Author-Review/>
+                    <authorDescription>Cool</authorDescription>
+                </authors>
+            </Book-Authors>
+            <datePublished>1997-11-27T00:00:00+13:00</datePublished>
+            <description>Book description</description>
+            <cost>50</cost>
+            <printType>HardCover</printType>
+            <publisher>
+                <address>
+                    <houseNumber>27</houseNumber>
+                    <street>McNaughton Street</street>
+                    <suburb>Onehunga</suburb>
+                    <city>Auckland</city>
+                    <country>New Zealand</country>
+                    <zip>187154sdaw</zip>
+                </address>
+                <publisherName>Thompsons publishing services</publisherName>
+            </publisher>
+            <genre>Novel</genre>
+            <isbn>1231</isbn>
+            <language>English</language>
+            <Book-Reviews/>
+        </books>
+        <books>
+            <bookId>2</bookId>
+            <title>C</title>
+            <Book-Authors>
+                <authors>
+                    <authorId>3</authorId>
+                    <authorName>Mark Twain</authorName>
+                    <authorAge>74</authorAge>
+                    <mostKnownForGenre>Novel</mostKnownForGenre>
+                    <Author-Review/>
+                    <authorDescription>Amazing</authorDescription>
+                </authors>
+            </Book-Authors>
+            <datePublished>1997-11-27T00:00:00+13:00</datePublished>
+            <description>Book description</description>
+            <cost>53</cost>
+            <printType>HardCover</printType>
+            <publisher>
+                <address>
+                    <houseNumber>27</houseNumber>
+                    <street>McNaughton Street</street>
+                    <suburb>Onehunga</suburb>
+                    <city>Auckland</city>
+                    <country>New Zealand</country>
+                    <zip>187154sdaw</zip>
+                </address>
+                <publisherName>Thompsons publishing services</publisherName>
+            </publisher>
+            <genre>Novel</genre>
+            <isbn>19223.1</isbn>
+            <language>fd</language>
+            <Book-Reviews/>
+        </books>
+        <books>
+            <bookId>3</bookId>
+            <title>D</title>
+            <Book-Authors>
+                <authors>
+                    <authorId>4</authorId>
+                    <authorName>Ernest Hemingway</authorName>
+                    <authorAge>61</authorAge>
+                    <mostKnownForGenre>Fiction</mostKnownForGenre>
+                    <Author-Review/>
+                    <authorDescription>SY</authorDescription>
+                </authors>
+            </Book-Authors>
+            <datePublished>1997-11-27T00:00:00+13:00</datePublished>
+            <description>Book description</description>
+            <cost>54</cost>
+            <printType>HardCover</printType>
+            <publisher>
+                <address>
+                    <houseNumber>27</houseNumber>
+                    <street>McNaughton Street</street>
+                    <suburb>Onehunga</suburb>
+                    <city>Auckland</city>
+                    <country>New Zealand</country>
+                    <zip>187154sdaw</zip>
+                </address>
+                <publisherName>Thompsons publishing services</publisherName>
+            </publisher>
+            <genre>Novel</genre>
+            <isbn>15168.1.1</isbn>
+            <language>fe</language>
+            <Book-Reviews/>
+        </books>
+    </Ordered-Books>
+    <totalCost>0</totalCost>
+    <usersOrder>
+        <userName>Bob</userName>
+        <userAddress>
+            <houseNumber>21</houseNumber>
+            <street>Ulta Street</street>
+            <suburb>Penrose</suburb>
+            <city>Auckland</city>
+            <country>New Zealand</country>
+            <zip>2502</zip>
+        </userAddress>
+        <totalUserCost>0</totalUserCost>
+    </usersOrder>
+</Orders>

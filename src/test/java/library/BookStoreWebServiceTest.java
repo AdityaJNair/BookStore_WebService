@@ -19,6 +19,7 @@ import org.xml.sax.SAXException;
 
 import library.content.dto.BookDTO;
 import library.content.dto.DTOMapper;
+import library.content.dto.OrdersDTO;
 import library.content.dto.UserDTO;
 import library.content.purchase.Address;
 import library.content.purchase.Author;
@@ -175,6 +176,31 @@ public class BookStoreWebServiceTest {
 		UserDTO customer = (UserDTO) jaxbUnmarshaller.unmarshal(file);	
 		
 		User usernorm = DTOMapper.toUserDomain(customer);
+		
+	}
+	
+	@Test
+	public void marshalBook3() throws JAXBException {
+		
+		OrdersDTO userdto = DTOMapper.toOrdersDTO(order1);
+		
+		File file = new File("file2.xml");
+		JAXBContext jaxbContext = JAXBContext.newInstance(OrdersDTO.class);
+		Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
+
+		// output pretty printed
+		jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+
+		jaxbMarshaller.marshal(userdto, file);
+		jaxbMarshaller.marshal(userdto, System.out);
+		
+		file = new File("file2.xml");
+		JAXBContext jaxbContext1 = JAXBContext.newInstance(OrdersDTO.class);
+
+		Unmarshaller jaxbUnmarshaller = jaxbContext1.createUnmarshaller();
+		OrdersDTO customer = (OrdersDTO) jaxbUnmarshaller.unmarshal(file);	
+		
+		Orders usernorm = DTOMapper.toOrdersDomain(customer);
 		
 	}
 }

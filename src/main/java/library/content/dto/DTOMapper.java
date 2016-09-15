@@ -3,8 +3,9 @@
  */
 package library.content.dto;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 
 import library.content.purchase.Author;
@@ -74,10 +75,23 @@ public class DTOMapper {
 	public static OrdersDTO toOrdersDTO(Orders domainOrders){
 		OrdersDTO ordersDTO = new OrdersDTO(toUserDTO(domainOrders.get_user()));
 		ordersDTO.set_id(domainOrders.get_id());
+		
+		Collection<BookDTO> bookDTOSet = new ArrayList<BookDTO>();
+		for(Book r : domainOrders.getBooks()){
+			bookDTOSet.add(toBookDTO(r));
+		}
+		ordersDTO.setBooks(bookDTOSet);
+		
 		return ordersDTO;
 	}
 	public static Orders toOrdersDomain(OrdersDTO dtoOrders){
 		Orders domainOrders = new Orders(toUserDomain(dtoOrders.get_user()));
+		
+		Collection<Book> bookSet = new ArrayList<Book>();
+		for(BookDTO r : dtoOrders.getBooks()){
+			bookSet.add(toBookDomain(r));
+		}
+		domainOrders.setBooks(bookSet);
 		return domainOrders;
 	}
 	
