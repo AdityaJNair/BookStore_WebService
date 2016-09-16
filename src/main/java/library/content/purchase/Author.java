@@ -28,9 +28,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  *
  */
 @Entity
-@XmlRootElement(name="Author")
 @Access(AccessType.FIELD)
-@XmlAccessorType(XmlAccessType.FIELD)
 public class Author {
 	
 	@Id
@@ -41,15 +39,12 @@ public class Author {
 	private String authorName;
 	
 	@Temporal(TemporalType.DATE)
-	@Column(nullable=false, name="DATE_OF_BIRTH")
+	@Column(name="DATE_OF_BIRTH",nullable=false)
 	private Date authorAge;
 		
 	@Column(nullable=false, name="MAIN_GENRE")
 	private BookGenre mostKnownForGenre;
-	
-	@Column(nullable=false, name="AUTHOR_DATE_OF_BIRTH")
-	private Date authorBirth;
-	
+		
 	@OneToMany
 	@JoinTable(name="REVIEW_AUTHOR", joinColumns=@JoinColumn(name="AUTHOR_ID",nullable=false), inverseJoinColumns=@JoinColumn(name="REVIEW_ID", nullable=false))
 	private Set<Review> authorReviews;

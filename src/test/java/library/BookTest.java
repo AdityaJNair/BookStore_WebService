@@ -3,8 +3,6 @@
  */
 package library;
 
-import static org.junit.Assert.fail;
-
 import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.Date;
@@ -18,21 +16,21 @@ import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Response;
 
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
+
 import library.content.dto.BookDTO;
 import library.content.dto.DTOMapper;
 import library.content.purchase.Address;
 import library.content.purchase.Author;
 import library.content.purchase.Book;
 import library.content.purchase.BookGenre;
-import library.content.purchase.Ledger;
 import library.content.purchase.Orders;
 import library.content.purchase.PrintType;
 import library.content.purchase.Publisher;
 import library.content.purchase.User;
-
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import library.service.PersistenceManager;
 
 /**
  * @author adijn
@@ -52,9 +50,9 @@ public class BookTest {
 	private Date date = new GregorianCalendar(1997, Calendar.NOVEMBER, 27).getTime();
 	
 	
-	@Before
+/*	@Before
 	public void setUp() throws Exception {
-/*
+
 		//4 authors - 1 has done 2 books
 		Author author1 = new Author("J.K Rowling", date, BookGenre.Fantasy,"Cool");
 		Author author2 = new Author("Stephen King", date, BookGenre.Horror,"Hero");
@@ -82,17 +80,17 @@ public class BookTest {
 		order1.addBookToOrder(book);
 		order1.addBookToOrder(book2);
 		order1.addBookToOrder(book3);
-		user.addOrder(order1);*/
+		user.addOrder(order1);
 	}
-	/**
+	*//**
 	 * One-time setup method that creates a Web service client.
-	 */
+	 *//*
 	@BeforeClass
 	public static void setUpClient() {
 		_client = ClientBuilder.newClient();
 	}
 
-	/*	@Test
+	@Test
 	public void firstTest() {
 		Author author = new Author("Dennis mattheyws", date, BookGenre.Novel,
 				"Heroic and above most amazing");
@@ -153,8 +151,7 @@ public class BookTest {
 	
 	@Test
 	public void secondtest(){
-		EntityManagerFactory emf = Persistence.createEntityManagerFactory("bookstorePU");
-		EntityManager m = emf.createEntityManager();
+		EntityManager m = PersistenceManager.instance().createEntityManager();
 		m.getTransaction().begin();
 		
 		Author author1 = new Author("J.K Rowling", date, BookGenre.Fantasy,"Cool");

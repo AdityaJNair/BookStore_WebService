@@ -35,13 +35,9 @@ public class BookDTO {
 	
 	private String title;
 	
-	@XmlElementWrapper(name="Book-Authors") 
-	@XmlElement(name="authors")
-	private Set<AuthorDTO> authors;
+	private String description;
 	
 	private Date datePublished;
-	
-	private String description;
 	
 	private BigDecimal cost;
 	
@@ -54,6 +50,12 @@ public class BookDTO {
 	private String isbn;
 	
 	private String language;
+	
+	@XmlElementWrapper(name="Book-Authors") 
+	@XmlElement(name="authors")
+	private Set<AuthorDTO> authors;
+	
+
 	
 	@XmlElementWrapper(name="Book-Reviews") 
 	@XmlElement(name="reviews")
@@ -76,6 +78,13 @@ public class BookDTO {
 
 	public BookDTO(){
 		
+	}
+	
+	public Date getdatePublished(){
+		return datePublished;
+	}
+	public void setdatePublished(Date date){
+		datePublished= date;
 	}
 	
 	public Long get_bookId() {

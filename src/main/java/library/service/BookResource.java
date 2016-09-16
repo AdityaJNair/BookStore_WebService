@@ -27,17 +27,16 @@ import org.slf4j.LoggerFactory;
 @Path("/book")
 public class BookResource {
 	private static final Logger _logger = LoggerFactory.getLogger(BookResource.class);
-	private EntityManagerFactory emf = Persistence.createEntityManagerFactory("bookstorePU");
 	
 	//get book
 	/**
 	 * 
 	 */
-	@GET
+	/*@GET
 	@Path("{id}")
 	@Produces({"application/xml","application/json"})
 	public BookDTO getBook(@PathParam("id") long id){
-		EntityManager m = emf.createEntityManager();
+		EntityManager m = PersistenceManager.instance().createEntityManager();
 		m.getTransaction().begin();
 		Book b = m.find(Book.class, id);
 		BookDTO b1 = DTOMapper.toBookDTO(b);
@@ -55,7 +54,7 @@ public class BookResource {
 	@Consumes({"application/xml","application/json"})
 	public Response addBook(BookDTO bookdto){
 		Book domainBook = DTOMapper.toBookDomain(bookdto);
-		EntityManager m = emf.createEntityManager();
+		EntityManager m = PersistenceManager.instance().createEntityManager();
 		m.getTransaction().begin();
 	   try{
 			m.persist(domainBook); 
@@ -66,6 +65,6 @@ public class BookResource {
 		m.getTransaction().commit();
 		m.close();
 		return Response.created(URI.create("/book/" + domainBook.get_bookId())).build();
-	}
+	}*/
 		
 }
