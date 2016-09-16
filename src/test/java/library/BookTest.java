@@ -54,7 +54,7 @@ public class BookTest {
 	
 	@Before
 	public void setUp() throws Exception {
-
+/*
 		//4 authors - 1 has done 2 books
 		Author author1 = new Author("J.K Rowling", date, BookGenre.Fantasy,"Cool");
 		Author author2 = new Author("Stephen King", date, BookGenre.Horror,"Hero");
@@ -82,7 +82,7 @@ public class BookTest {
 		order1.addBookToOrder(book);
 		order1.addBookToOrder(book2);
 		order1.addBookToOrder(book3);
-		user.addOrder(order1);
+		user.addOrder(order1);*/
 	}
 	/**
 	 * One-time setup method that creates a Web service client.
@@ -92,7 +92,7 @@ public class BookTest {
 		_client = ClientBuilder.newClient();
 	}
 
-	@Test
+	/*	@Test
 	public void firstTest() {
 		Author author = new Author("Dennis mattheyws", date, BookGenre.Novel,
 				"Heroic and above most amazing");
@@ -149,42 +149,42 @@ public class BookTest {
 		System.out.println(bb3.toString());
 		System.out.println(bb4.toString());
 		System.out.println(bb5.toString());
-	}
+	}*/
 	
-//	@Test
-//	public void secondtest(){
-//		EntityManagerFactory emf = Persistence.createEntityManagerFactory("bookstorePU");
-//		EntityManager m = emf.createEntityManager();
-//		m.getTransaction().begin();
-//		
-//		Author author1 = new Author("J.K Rowling", date, BookGenre.Fantasy,"Cool");
-//		m.persist(author1);
-//
-//		Address addressUser = new Address("21","Ulta Street","Penrose","Auckland","New Zealand", "2502");
-//		user = new User(addressUser,"Bob",date);
-//		
-//		Address address = new Address("27", "McNaughton Street", "Onehunga", "Auckland", "New Zealand", "187154sdaw");
-//		
-//		Publisher publisher = new Publisher(address, "Thompsons publishing services");
-//		
-//		book = new Book("A",date , "Book description", new BigDecimal("50"), PrintType.HardCover, publisher, BookGenre.Novel, "1231", "English");
-//		book.addAuthorToSet(author1);
-//		m.persist(book);
-//		
-//		book1 = new Book("B",date , "Book description", new BigDecimal("52"), PrintType.HardCover, publisher, BookGenre.Novel, "192.1231.1", "er");
-//		book1.addAuthorToSet(author1);
-//		m.persist(book1);
-//		
-//		book2 = new Book("C",date , "Book description", new BigDecimal("53"), PrintType.HardCover, publisher, BookGenre.Novel, "19223.1", "fd");
-//		book2.addAuthorToSet(author1);
-//		m.persist(book2);
-//		
-//		book3 = new Book("D",date , "Book description", new BigDecimal("54"), PrintType.HardCover, publisher, BookGenre.Novel, "15168.1.1", "fe");
-//		book3.addAuthorToSet(author1);
-//		m.persist(book3);
-//		
-//		m.getTransaction().commit();
-//		m.close();
-//	}
+	@Test
+	public void secondtest(){
+		EntityManagerFactory emf = Persistence.createEntityManagerFactory("bookstorePU");
+		EntityManager m = emf.createEntityManager();
+		m.getTransaction().begin();
+		
+		Author author1 = new Author("J.K Rowling", date, BookGenre.Fantasy,"Cool");
+		m.persist(author1);
+
+		Address addressUser = new Address("21","Ulta Street","Penrose","Auckland","New Zealand", "2502");
+		user = new User(addressUser,"Bob",date);
+		
+		Address address = new Address("27", "McNaughton Street", "Onehunga", "Auckland", "New Zealand", "187154sdaw");
+		
+		Publisher publisher = new Publisher(address, "Thompsons publishing services");
+		
+		book = new Book("A",date , "Book description", new BigDecimal("50"), PrintType.HardCover, publisher, BookGenre.Novel, "1231", "English");
+		book.addAuthorToSet(author1);
+		m.persist(book);
+		
+		book1 = new Book("B",date , "Book description", new BigDecimal("52"), PrintType.HardCover, publisher, BookGenre.Novel, "192.1231.1", "er");
+		book1.addAuthorToSet(author1);
+		m.persist(book1);
+		
+		book2 = new Book("C",date , "Book description", new BigDecimal("53"), PrintType.HardCover, publisher, BookGenre.Novel, "19223.1", "fd");
+		book2.addAuthorToSet(author1);
+		m.persist(book2);
+		
+		book3 = new Book("D",date , "Book description", new BigDecimal("54"), PrintType.HardCover, publisher, BookGenre.Novel, "15168.1.1", "fe");
+		book3.addAuthorToSet(author1);
+		m.persist(book3);
+		
+		m.getTransaction().commit();
+		m.close();
+	}
 
 }
