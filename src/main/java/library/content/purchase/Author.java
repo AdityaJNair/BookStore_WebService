@@ -2,6 +2,7 @@
  * 
  */
 package library.content.purchase;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -14,6 +15,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.OneToMany;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -36,21 +39,25 @@ public class Author {
 
 	@Column(nullable=false, name = "AUTHOR_NAME")
 	private String authorName;
-		
-	@Column(nullable=false, name="AGE")
-	private int authorAge;
+	
+	@Temporal(TemporalType.DATE)
+	@Column(nullable=false, name="DATE_OF_BIRTH")
+	private Date authorAge;
 		
 	@Column(nullable=false, name="MAIN_GENRE")
 	private BookGenre mostKnownForGenre;
 	
+	@Column(nullable=false, name="AUTHOR_DATE_OF_BIRTH")
+	private Date authorBirth;
+	
 	@OneToMany
-	@JoinTable(name="COMMENT_AUTHOR", joinColumns=@JoinColumn(name="AUTHOR_ID",nullable=false), inverseJoinColumns=@JoinColumn(name="COMMENT_ID", nullable=false))
+	@JoinTable(name="REVIEW_AUTHOR", joinColumns=@JoinColumn(name="AUTHOR_ID",nullable=false), inverseJoinColumns=@JoinColumn(name="REVIEW_ID", nullable=false))
 	private Set<Review> authorReviews;
 	
 	@Column(nullable=false, name="AUTHOR_DESCRIPTION")
 	private String authorDescription;
 	
-	public Author(String name, int age, BookGenre mostKnownForGenre, String authorDescription){
+	public Author(String name, Date age, BookGenre mostKnownForGenre, String authorDescription){
 		this.authorName=name;
 		this.authorAge=age;
 		this.mostKnownForGenre=mostKnownForGenre;
@@ -75,10 +82,10 @@ public class Author {
 	public void set_name(String _name) {
 		this.authorName = _name;
 	}
-	public int get_age() {
+	public Date get_age() {
 		return authorAge;
 	}
-	public void set_age(int _age) {
+	public void set_age(Date _age) {
 		this.authorAge = _age;
 	}
 	public BookGenre get_mostKnownForGenre() {
@@ -101,12 +108,12 @@ public class Author {
 		this.authorReviews = authorReviews;
 	}
 
+	
 
 
 	@Override
 	public String toString() {
 		StringBuffer buffer = new StringBuffer();
-		buffer.append(authorId+" ");
 		buffer.append(authorName+" ");
 		buffer.append(authorAge+" ");
 		buffer.append(mostKnownForGenre+" ");
@@ -125,13 +132,14 @@ public class Author {
             return true;
 
         Author other = (Author)obj;
-        return authorId == other.authorId;
+        return authorName.equals(other.authorName) && authorAge.equals(other.authorAge);
 	}
 	
 	@Override
 	public int hashCode() {
 		return new HashCodeBuilder(17, 31). 
-	            append(authorId).
+	            append(authorName).
+	            append(authorAge).
 	            toHashCode();
 	}
 	

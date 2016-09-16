@@ -1,23 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <Book>
-    <bookId>1</bookId>
     <title>B</title>
     <Book-Authors>
         <authors>
-            <authorId>4</authorId>
-            <authorName>Ernest Hemingway</authorName>
-            <authorAge>61</authorAge>
-            <mostKnownForGenre>Fiction</mostKnownForGenre>
+            <authorName>J.K Rowling</authorName>
+            <authorAge>1997-11-27T00:00:00+13:00</authorAge>
+            <mostKnownForGenre>Fantasy</mostKnownForGenre>
             <Author-Review/>
-            <authorDescription>SY</authorDescription>
-        </authors>
-        <authors>
-            <authorId>3</authorId>
-            <authorName>Mark Twain</authorName>
-            <authorAge>74</authorAge>
-            <mostKnownForGenre>Novel</mostKnownForGenre>
-            <Author-Review/>
-            <authorDescription>Amazing</authorDescription>
+            <authorDescription>Cool</authorDescription>
         </authors>
     </Book-Authors>
     <datePublished>1997-11-27T00:00:00+13:00</datePublished>

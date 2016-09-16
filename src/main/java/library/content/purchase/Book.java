@@ -34,8 +34,6 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  */
 
 @Entity
-@XmlRootElement
-@XmlAccessorType(XmlAccessType.FIELD)
 public class Book {
 
 	@Id
@@ -45,7 +43,6 @@ public class Book {
 	@Column(nullable=false,name="BOOK_TITLE")
 	private String title;
 	
-	@Embedded
 	@ManyToMany(cascade=CascadeType.PERSIST)
 	@JoinTable(name="BOOK_AUTHOR", joinColumns=@JoinColumn(name="BOOK_ID", nullable=false), inverseJoinColumns=@JoinColumn(name="AUTHOR_ID", nullable=false))
 	private Set<Author> authors;
@@ -78,7 +75,7 @@ public class Book {
 	private String language;
 	
 	@OneToMany(fetch=FetchType.LAZY)
-	@JoinTable(name="COMMENT_BOOK", joinColumns=@JoinColumn(name="BOOK_ID",nullable=false), inverseJoinColumns=@JoinColumn(name="COMMENT_ID", nullable=false))
+	@JoinTable(name="REVIEW_BOOK", joinColumns=@JoinColumn(name="BOOK_ID",nullable=false), inverseJoinColumns=@JoinColumn(name="REVIEW_ID", nullable=false))
 	private Set<Review> bookReviews;
 	
 
@@ -187,7 +184,7 @@ public class Book {
             return true;
 
         Book other = (Book)obj;
-        return bookId == other.bookId;
+        return isbn.equals(other.isbn);
 	}
 	
 	@Override

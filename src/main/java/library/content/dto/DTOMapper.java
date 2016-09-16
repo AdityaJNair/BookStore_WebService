@@ -106,12 +106,12 @@ public class DTOMapper {
 	}
 	
 	public static UserDTO toUserDTO(User domainUser){
-		UserDTO userDTO = new UserDTO(domainUser.get_address(),domainUser.getUserName());
+		UserDTO userDTO = new UserDTO(domainUser.get_address(),domainUser.getUserName(), domainUser.getUserAge());
 		userDTO.set_userId(domainUser.get_userId());
 		return userDTO;
 	}
 	public static User toUserDomain(UserDTO dtoUser){
-		User domainUser = new User(dtoUser.get_address(),dtoUser.getUserName());
+		User domainUser = new User(dtoUser.get_address(),dtoUser.getUserName(),dtoUser.getUserBirth());
 		return domainUser;
 	}
 		

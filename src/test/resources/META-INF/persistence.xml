@@ -14,21 +14,13 @@
 
 	<persistence-unit name="bookstorePU">
 		<!-- Classes which are to be mapped and therefore persistent. -->
-		<class>main.library.content.printcontent.Author</class>
-		<class>main.library.content.printcontent.Bundle</class>
-		<class>main.library.content.printcontent.Publisher</class>
-		<class>main.library.content.printcontent.books.ArtBook</class>
-		<class>main.library.content.printcontent.books.BioGraphyBook</class>
-		<class>main.library.content.printcontent.books.ComicBook</class>
-		<class>main.library.content.printcontent.books.EducationalBook</class>
-		<class>main.library.content.printcontent.books.GenericBook</class>
-		<class>main.library.content.printcontent.books.Journal</class>
-		<class>main.library.content.printcontent.books.Magazine</class>
-		<class>main.library.content.printcontent.books.ContentPrintType</class>
-		<class>main.library.content.purchase.Address</class>
-		<class>main.library.content.purchase.Orders</class>
-		<class>main.library.content.purchase.User</class>
-
+		<class>library.content.purchase.Author</class>
+		<class>library.content.purchase.User</class>
+		<class>library.content.purchase.Book</class>
+		<class>library.content.purchase.Address</class>
+		<class>library.content.purchase.Publisher</class>
+		<class>library.content.purchase.Review</class>
+		<class>library.content.purchase.Orders</class>
 
 		<properties>
 			<!-- Configure the data source. In this case the embedded H2 database 

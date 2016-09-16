@@ -1,7 +1,6 @@
 package library;
 
 import java.io.File;
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.Date;
@@ -13,9 +12,7 @@ import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
-import org.xml.sax.SAXException;
 
 import library.content.dto.BookDTO;
 import library.content.dto.DTOMapper;
@@ -25,7 +22,6 @@ import library.content.purchase.Address;
 import library.content.purchase.Author;
 import library.content.purchase.Book;
 import library.content.purchase.BookGenre;
-import library.content.purchase.Ledger;
 import library.content.purchase.Orders;
 import library.content.purchase.PrintType;
 import library.content.purchase.Publisher;
@@ -42,70 +38,47 @@ public class BookStoreWebServiceTest {
 	private static Marshaller _marshaller = null;
 	private static Unmarshaller _unmarshaller = null;
 	
-	private Ledger library;
 	private User user;
 	private Orders order1;
+	private Book book;
 	private Book book1;
+	private Book book2;
+	private Book book3;
+	private Date date = new GregorianCalendar(1997, Calendar.NOVEMBER, 27).getTime();
 	
 	@Before
 	public void setUp() throws Exception {
+
 		//4 authors - 1 has done 2 books
-		Author author1 = new Author("J.K Rowling", 51, BookGenre.Fantasy,"Cool");
-		author1.set_authorId((long)1);
-		Author author2 = new Author("Stephen King", 68, BookGenre.Horror,"Hero");
-		author2.set_authorId((long)2);
-		Author author3 = new Author("Mark Twain", 74, BookGenre.Novel,"Amazing");
-		author3.set_authorId((long)3);
-		Author author4 = new Author("Ernest Hemingway", 61, BookGenre.Fiction,"SY");
-		author4.set_authorId((long)4);
+		Author author1 = new Author("J.K Rowling", date, BookGenre.Fantasy,"Cool");
+		Author author2 = new Author("Stephen King", date, BookGenre.Horror,"Hero");
+		Author author3 = new Author("Mark Twain", date, BookGenre.Novel,"Amazing");
+		Author author4 = new Author("Ernest Hemingway", date, BookGenre.Fiction,"SY");
 		
 		//address
 		Address addressUser = new Address("21","Ulta Street","Penrose","Auckland","New Zealand", "2502");
-				//single user
-		user = new User(addressUser,"Bob");
-		user.set_userId((long)1);
+		user = new User(addressUser,"Bob",date);
 		
 		//books
-		Date date = new GregorianCalendar(1997, Calendar.NOVEMBER, 27).getTime();
 		Address address = new Address("27", "McNaughton Street", "Onehunga", "Auckland", "New Zealand", "187154sdaw");
 		Publisher publisher = new Publisher(address, "Thompsons publishing services");
-		Book book = new Book("A",date , "Book description", new BigDecimal("50"), PrintType.HardCover, publisher, BookGenre.Novel, "1231", "English");
+		book = new Book("A",date , "Book description", new BigDecimal("50"), PrintType.HardCover, publisher, BookGenre.Novel, "1231", "English");
 		book.addAuthorToSet(author1);
-		book.addAuthorToSet(author2);
-		book.set_bookId((long)0);
 		book1 = new Book("B",date , "Book description", new BigDecimal("52"), PrintType.HardCover, publisher, BookGenre.Novel, "192.1231.1", "er");
-		book1.set_bookId((long)1);
-		book1.addAuthorToSet(author3);
-		book1.addAuthorToSet(author4);
-		Book book2 = new Book("C",date , "Book description", new BigDecimal("53"), PrintType.HardCover, publisher, BookGenre.Novel, "19223.1", "fd");
-		book2.addAuthorToSet(author3);
-		book2.set_bookId((long)2);
-		Book book3 = new Book("D",date , "Book description", new BigDecimal("54"), PrintType.HardCover, publisher, BookGenre.Novel, "15168.1.1", "fe");
-		book3.addAuthorToSet(author4);
-		book3.set_bookId((long)3);
-		
-		//library -- only has all books
-		library = new Ledger();
-		library.addPrintMedia(book);
-		library.addPrintMedia(book1);
-		library.addPrintMedia(book2);
-		library.addPrintMedia(book3);
-		
+		book1.addAuthorToSet(author1);
+		book2 = new Book("C",date , "Book description", new BigDecimal("53"), PrintType.HardCover, publisher, BookGenre.Novel, "19223.1", "fd");
+		book2.addAuthorToSet(author1);
+		book3 = new Book("D",date , "Book description", new BigDecimal("54"), PrintType.HardCover, publisher, BookGenre.Novel, "15168.1.1", "fe");
+		book3.addAuthorToSet(author1);
 		
 		//orders -- for a user
 		order1 = new Orders(user);
-		order1.set_id((long)1);
 		order1.addBookToOrder(book);
 		order1.addBookToOrder(book2);
 		order1.addBookToOrder(book3);
 		user.addOrder(order1);
 	}
 	
-	/**
-	 * Marshals a Book instance to XML, and directs the XML output to the 
-	 * console.
-	 * 
-	 */
 	@Test
 	public void marshalBook() throws JAXBException {
 		BookDTO bookdto = DTOMapper.toBookDTO(book1);

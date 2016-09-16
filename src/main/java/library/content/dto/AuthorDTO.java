@@ -3,6 +3,7 @@
  */
 package library.content.dto;
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
@@ -30,7 +31,7 @@ public class AuthorDTO {
 
 	private String authorName;
 
-	private int authorAge;
+	private Date authorAge;
 
 	private BookGenre mostKnownForGenre;
 
@@ -40,7 +41,7 @@ public class AuthorDTO {
 
 	private String authorDescription;
 
-	public AuthorDTO(String name, int age, BookGenre mostKnownForGenre, String authorDescription) {
+	public AuthorDTO(String name, Date age, BookGenre mostKnownForGenre, String authorDescription) {
 		this.authorName = name;
 		this.authorAge = age;
 		this.mostKnownForGenre = mostKnownForGenre;
@@ -68,11 +69,11 @@ public class AuthorDTO {
 		this.authorName = _name;
 	}
 
-	public int get_age() {
+	public Date get_age() {
 		return authorAge;
 	}
 
-	public void set_age(int _age) {
+	public void set_age(Date _age) {
 		this.authorAge = _age;
 	}
 
@@ -109,7 +110,7 @@ public class AuthorDTO {
 	            append(mostKnownForGenre);
 		Iterator<ReviewDTO> it1 = this.getAuthorReviews().iterator();
 		while (it1.hasNext()) {
-			b.append(it1.next().toString());
+			b.append(it1.next());
 		}
 		return b.hashCode();
 	}

@@ -1,6 +1,7 @@
 package library.content.purchase;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -12,16 +13,15 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
-import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlRootElement;
-import org.apache.commons.lang3.builder.EqualsBuilder;
+
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 
@@ -36,6 +36,10 @@ public class User {
 	
 	@Column(name="USER_NAME", nullable=false)
 	private String userName;
+	
+	@Temporal(TemporalType.DATE)
+	@Column(name="DATE_OF_BIRTH", nullable=false)
+	private Date userAge;
 	
 	@Embedded
 	 @AttributeOverrides({
@@ -57,10 +61,11 @@ public class User {
 	@Column(nullable=false, name="Total_cost")
 	private BigDecimal totalUserCost;
 	
-	public User(Address address, String name){
+	public User(Address address, String name, Date age){
 		userAddress=address;
 		userOrders=new HashSet<Orders>();
 		userName = name;
+		userAge=age;
 		calculateCost();
 	}
 	
@@ -116,6 +121,14 @@ public class User {
 		this.userId = _userId;
 	}
 	
+
+	public void setUserAge(Date userAge) {
+		this.userAge = userAge;
+	}
+
+	public Date getUserAge() {
+		return userAge;
+	}
 	private void calculateCost(){
 		if(this.userOrders == null || this.userOrders.isEmpty()){
 			totalUserCost = new BigDecimal("0");
@@ -135,6 +148,7 @@ public class User {
 		StringBuffer buffer = new StringBuffer();
 		buffer.append(userId.toString() +" ");
 		buffer.append(userName+" ");
+		buffer.append(userAge+" ");
 		buffer.append(userAddress.toString()+" ");
 		for(Orders o: userOrders){
 			buffer.append(o.get_id()+" ");
@@ -151,14 +165,18 @@ public class User {
             return true;
         
         User usr = (User) obj;
-        return userId == usr.userId;
+        return userName.equals(usr.userName) && userAddress.equals(usr.userAddress) && userAge.equals(usr.userAge);
 	}
 	
 	
 	@Override
 	public int hashCode() {
 		return new HashCodeBuilder(17, 31). 
-	            append(userId).
+	            append(userName).
+	            append(userAddress).
+	            append(userAge).
 	            toHashCode();
 	}
+
+
 }

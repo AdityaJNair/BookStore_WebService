@@ -1,28 +1,16 @@
 package library.content.dto;
 
 import java.math.BigDecimal;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
+import java.util.Date;
 
-import javax.persistence.AttributeOverride;
-import javax.persistence.AttributeOverrides;
-import javax.persistence.Column;
-import javax.persistence.Embedded;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import library.content.purchase.Address;
-import library.content.purchase.Orders;
 
 @XmlRootElement(name = "User")
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -32,14 +20,17 @@ public class UserDTO {
 
 	private String userName;
 
+	private Date userBirth;
+	
 	private Address userAddress;
 
 	private BigDecimal totalUserCost;
 
-	public UserDTO(Address address, String name) {
+	public UserDTO(Address address, String name, Date age) {
 		userAddress = address;
 		totalUserCost = new BigDecimal("0");
 		userName = name;
+		userBirth=age;
 	}
 
 	public UserDTO() {
@@ -76,11 +67,20 @@ public class UserDTO {
 	public void setUserName(String userName) {
 		this.userName = userName;
 	}
+	
+
+	public Date getUserBirth() {
+		return userBirth;
+	}
+
+	public void setUserBirth(Date userBirth) {
+		this.userBirth = userBirth;
+	}
 
 	@Override
 	public int hashCode() {
-		HashCodeBuilder b = new HashCodeBuilder(17, 31).append(userId).append(userName).append(userAddress.toString())
-				.append(totalUserCost);
+		HashCodeBuilder b = new HashCodeBuilder(17, 31).append(userId).append(userName).append(userAddress)
+				.append(totalUserCost).append(userBirth);
 		return b.hashCode();
 	}
 
@@ -93,15 +93,15 @@ public class UserDTO {
 
 		UserDTO rhs = (UserDTO) obj;
 		EqualsBuilder b = new EqualsBuilder().append(userId, rhs.get_userId()).append(userName, rhs.getUserName())
-				.append(userAddress, rhs.get_address()).append(totalUserCost, rhs.get_totalCost());
+				.append(userAddress, rhs.get_address()).append(totalUserCost, rhs.get_totalCost()).append(userBirth,rhs.userBirth);
 		return b.isEquals();
 	}
 
 	@Override
 	public String toString() {
 		StringBuffer buffer = new StringBuffer();
-		buffer.append(userId.toString() + " ");
 		buffer.append(userName + " ");
+		buffer.append(userBirth + " ");
 		buffer.append(userAddress.toString() + " ");
 		buffer.append(totalUserCost.toString());
 		return buffer.toString();
