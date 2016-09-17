@@ -38,12 +38,6 @@ public class DTOMapper {
 			authorDTOSet.add(toAuthorDTO(r));
 		}
 		bookDTO.set_author(authorDTOSet);
-		
-		Set<ReviewDTO> reviewDTOSet = new HashSet<ReviewDTO>();
-		for(Review r : domainBook.getBookReviews()){
-			reviewDTOSet.add(toReviewDTO(r));
-		}
-		bookDTO.setBookReviews(reviewDTOSet);
 		return bookDTO;
 	}
 	public static Book toBookDomain(BookDTO bookDTO){
@@ -57,11 +51,6 @@ public class DTOMapper {
 				bookDTO.get_genre(), 
 				bookDTO.getIsbn(), 
 				bookDTO.getLanguage());
-		Set<Review> reviewSet = new HashSet<Review>();
-		for(ReviewDTO r : bookDTO.getBookReviews()){
-			reviewSet.add(toReviewDomain(r));
-		}
-		domainBook.setBookReviews(reviewSet);
 
 		
 		Set<Author> authorSet = new HashSet<Author>();
@@ -95,15 +84,6 @@ public class DTOMapper {
 		return domainOrders;
 	}
 	
-	public static ReviewDTO toReviewDTO(Review domainReview){
-		ReviewDTO reviewDTO = new ReviewDTO(toUserDTO(domainReview.getReviewFromUser()), domainReview.getReviewComment(), domainReview.getReviewRating());
-		reviewDTO.setUser_iD(domainReview.getUser_iD());
-		return reviewDTO;
-	}
-	public static Review toReviewDomain(ReviewDTO dtoReview){
-		Review domainReview = new Review(toUserDomain(dtoReview.getReviewFromUser()), dtoReview.getReviewComment(), dtoReview.getReviewRating());
-		return domainReview;
-	}
 	
 	public static UserDTO toUserDTO(User domainUser){
 		UserDTO userDTO = new UserDTO(domainUser.get_address(),domainUser.getUserName(), domainUser.getUserAge());
@@ -119,21 +99,12 @@ public class DTOMapper {
 	public static AuthorDTO toAuthorDTO(Author domainAuthor){
 		AuthorDTO authorDTO = new AuthorDTO(domainAuthor.get_name(), domainAuthor.get_age(), domainAuthor.get_mostKnownForGenre(), domainAuthor.get_description());
 		authorDTO.set_authorId(domainAuthor.get_authorId());
-		Set<ReviewDTO> reviewDTOSet = new HashSet<ReviewDTO>();
-		for(Review r : domainAuthor.getAuthorReviews()){
-			reviewDTOSet.add(toReviewDTO(r));
-		}
-		authorDTO.setAuthorReviews(reviewDTOSet);
 		return authorDTO;
 	}
 	
 	public static Author toAuthorDomain(AuthorDTO dtoAuthor){
 		Author authorDomain = new Author(dtoAuthor.get_name(), dtoAuthor.get_age(), dtoAuthor.get_mostKnownForGenre(), dtoAuthor.get_description());
 		Set<Review> reviewDomain = new HashSet<Review>();
-		for(ReviewDTO r : dtoAuthor.getAuthorReviews()){
-			reviewDomain.add(toReviewDomain(r));
-		}
-		authorDomain.setAuthorReviews(reviewDomain);
 		return authorDomain;
 	}
 	

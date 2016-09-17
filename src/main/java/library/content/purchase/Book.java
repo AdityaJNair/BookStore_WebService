@@ -73,11 +73,7 @@ public class Book {
 	
 	@Column(nullable=false, name="LANGUAGE")
 	private String language;
-	
-	@OneToMany(fetch=FetchType.LAZY)
-	@JoinTable(name="REVIEW_BOOK", joinColumns=@JoinColumn(name="BOOK_ID",nullable=false), inverseJoinColumns=@JoinColumn(name="REVIEW_ID", nullable=false))
-	private Set<Review> bookReviews;
-	
+
 
 	public Book(String title, Date year, String description, BigDecimal cost, PrintType printType, Publisher publisher, BookGenre genre, String isbn, String language){
 		this.title=title;
@@ -90,7 +86,6 @@ public class Book {
 		this.genre=genre;
 		this.isbn=isbn;
 		this.language=language;
-		this.bookReviews = new HashSet<Review>();
 	}
 
 	public Book(){
@@ -167,15 +162,6 @@ public class Book {
 		authors.add(a);
 	}
 	
-	
-	public Set<Review> getBookReviews() {
-		return bookReviews;
-	}
-
-	public void setBookReviews(Set<Review> bookReviews) {
-		this.bookReviews = bookReviews;
-	}
-
 	@Override
 	public boolean equals(Object obj) {
 		if (!(obj instanceof Book))
@@ -210,9 +196,6 @@ public class Book {
 		buffer.append(genre + " ");
 		buffer.append(isbn+ " ");
 		buffer.append(language + " ");
-		for(Review r: bookReviews){
-			buffer.append(r.toString()+" ");
-		}
 		return buffer.toString();
 	}
 	

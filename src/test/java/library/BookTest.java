@@ -49,9 +49,16 @@ public class BookTest {
 	private Book book3;
 	private Date date = new GregorianCalendar(1997, Calendar.NOVEMBER, 27).getTime();
 	
-	
-/*	@Before
-	public void setUp() throws Exception {
+	/**
+	 * One-time setup method that creates a Web service client.
+	 */
+	@BeforeClass
+	public static void setUpClient() {
+		_client = ClientBuilder.newClient();
+	}
+
+	@Test
+	public void firstTest() {
 
 		//4 authors - 1 has done 2 books
 		Author author1 = new Author("J.K Rowling", date, BookGenre.Fantasy,"Cool");
@@ -64,8 +71,8 @@ public class BookTest {
 		user = new User(addressUser,"Bob",date);
 		
 		//books
-		Address address = new Address("27", "McNaughton Street", "Onehunga", "Auckland", "New Zealand", "187154sdaw");
-		Publisher publisher = new Publisher(address, "Thompsons publishing services");
+		Address address1 = new Address("27", "McNaughton Street", "Onehunga", "Auckland", "New Zealand", "187154sdaw");
+		Publisher publisher = new Publisher(address1, "Thompsons publishing services");
 		book = new Book("A",date , "Book description", new BigDecimal("50"), PrintType.HardCover, publisher, BookGenre.Novel, "1231", "English");
 		book.addAuthorToSet(author1);
 		book1 = new Book("B",date , "Book description", new BigDecimal("52"), PrintType.HardCover, publisher, BookGenre.Novel, "192.1231.1", "er");
@@ -75,34 +82,12 @@ public class BookTest {
 		book3 = new Book("D",date , "Book description", new BigDecimal("54"), PrintType.HardCover, publisher, BookGenre.Novel, "15168.1.1", "fe");
 		book3.addAuthorToSet(author1);
 		
-		//orders -- for a user
-		order1 = new Orders(user);
-		order1.addBookToOrder(book);
-		order1.addBookToOrder(book2);
-		order1.addBookToOrder(book3);
-		user.addOrder(order1);
-	}
-	*//**
-	 * One-time setup method that creates a Web service client.
-	 *//*
-	@BeforeClass
-	public static void setUpClient() {
-		_client = ClientBuilder.newClient();
-	}
-
-	@Test
-	public void firstTest() {
-		Author author = new Author("Dennis mattheyws", date, BookGenre.Novel,
-				"Heroic and above most amazing");
-		Date date = new GregorianCalendar(1997, Calendar.NOVEMBER, 27)
-				.getTime();
-		Address address = new Address("27", "McNaughton Street", "Onehunga",
-				"Auckland", "New Zealand", "187154sdaw");
-		Publisher publisher = new Publisher(address,
-				"Thompsons publishing services");
-		Book book4 = new Book("Willy wonka", date, "Book description",
-				new BigDecimal("50"), PrintType.HardCover, publisher,
-				BookGenre.Novel, "192.168.1.1", "English");
+	
+		Author author = new Author("Dennis mattheyws", date, BookGenre.Novel,"Heroic and above most amazing");
+		Date date = new GregorianCalendar(1997, Calendar.NOVEMBER, 27).getTime();
+		Address address = new Address("27", "McNaughton Street", "Onehunga","Auckland", "New Zealand", "187154sdaw");
+		Publisher publisher1 = new Publisher(address,"Thompsons publishing services");
+		Book book4 = new Book("Willy wonka", date, "Book description",new BigDecimal("50"), PrintType.HardCover, publisher1,BookGenre.Novel, "192.168.1.1", "English");
 		book4.addAuthorToSet(author);
 		
 		BookDTO b1 = DTOMapper.toBookDTO(book4);
@@ -147,7 +132,7 @@ public class BookTest {
 		System.out.println(bb3.toString());
 		System.out.println(bb4.toString());
 		System.out.println(bb5.toString());
-	}*/
+	}
 	
 	@Test
 	public void secondtest(){

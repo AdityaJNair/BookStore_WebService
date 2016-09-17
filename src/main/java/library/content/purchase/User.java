@@ -8,6 +8,7 @@ import java.util.Set;
 import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -26,8 +27,6 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 
 @Entity
-@XmlRootElement(name="User")
-@XmlAccessorType(XmlAccessType.FIELD)
 public class User {
 	
 	@Id
@@ -41,6 +40,9 @@ public class User {
 	@Column(name="DATE_OF_BIRTH", nullable=false)
 	private Date userAge;
 	
+	@ElementCollection
+	private Set<Review> reviews;
+	
 	@Embedded
 	 @AttributeOverrides({
 		 	@AttributeOverride(name="houseNumber", column=@Column(name="USER_HOUSENUMBER", nullable=false)),
@@ -53,8 +55,6 @@ public class User {
 	 })
 	private Address userAddress;
 	
-	@XmlElementWrapper(name="user-orders")
-	@XmlElement(name="orders")
 	@OneToMany(mappedBy="usersOrder", fetch=FetchType.LAZY)
 	private Set<Orders> userOrders;
 	

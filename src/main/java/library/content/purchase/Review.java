@@ -3,16 +3,11 @@
  */
 package library.content.purchase;
 
-import javax.persistence.Access;
-import javax.persistence.AccessType;
 import javax.persistence.Column;
-import javax.persistence.Entity;
+import javax.persistence.Embeddable;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -20,19 +15,15 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-@Entity
+@Embeddable
 @XmlRootElement(name="Review")
-@Access(AccessType.FIELD)
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Review {
 	
-	@Id
-	@GeneratedValue(generator="ID-GENERATOR")
-	private Long reviewID;
-	
+
+	//@JoinColumn(name="USER_ID", nullable=false)
 	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="USER_ID", nullable=false)
-	private User reviewFromUser;
+	private Book bookReviewed;
 	
 	@Column(name="REVIEW_COMMENT", nullable=false)
 	private String reviewComment;
@@ -45,18 +36,19 @@ public class Review {
 		
 	}
 	
-	public Review(User u,String s, Rating r){
+	public Review(String s, Rating r){
 		this.reviewComment = s;
-		this.reviewFromUser = u;
 		this.reviewRating = r;
 	}
-
-	public User getReviewFromUser() {
-		return reviewFromUser;
+	
+	
+	
+	public Book getBookReviewed() {
+		return bookReviewed;
 	}
 
-	public void setReviewFromUser(User reviewFromUser) {
-		this.reviewFromUser = reviewFromUser;
+	public void setBookReviewed(Book bookReviewed) {
+		this.bookReviewed = bookReviewed;
 	}
 
 	public String getReviewComment() {
@@ -75,26 +67,15 @@ public class Review {
 		this.reviewRating = reviewRating;
 	}
 
-	public Long getUser_iD() {
-		return reviewID;
-	}
-
-	public void setUser_iD(Long user_iD) {
-		this.reviewID = user_iD;
-	}
-	
-
 
 	@Override
 	public String toString() {
 		StringBuffer buffer = new StringBuffer();
-		buffer.append(reviewID + " ");
 		buffer.append(reviewRating+ " ");
 		buffer.append(reviewComment+" ");
-		buffer.append(reviewFromUser.toString());
 		return buffer.toString();
 	}
-	
+	//FIX THIS
 	@Override
 	public boolean equals(Object obj) {
 		if (!(obj instanceof Review))
@@ -103,13 +84,12 @@ public class Review {
             return true;
 
         Review other = (Review)obj;
-        return reviewID == other.reviewID;
+        return false;
 	}
-	
+	//FIX THIS
 	@Override
 	public int hashCode() {
 		return new HashCodeBuilder(17, 31). 
-	            append(reviewID).
 	            toHashCode();
 	}
 

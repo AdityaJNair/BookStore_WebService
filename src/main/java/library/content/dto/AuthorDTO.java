@@ -35,10 +35,6 @@ public class AuthorDTO {
 
 	private BookGenre mostKnownForGenre;
 
-	@XmlElementWrapper(name = "Author-Review")
-	@XmlElement(name = "review")
-	private Set<ReviewDTO> authorReviews;
-
 	private String authorDescription;
 
 	public AuthorDTO(String name, Date age, BookGenre mostKnownForGenre, String authorDescription) {
@@ -46,7 +42,6 @@ public class AuthorDTO {
 		this.authorAge = age;
 		this.mostKnownForGenre = mostKnownForGenre;
 		this.authorDescription = authorDescription;
-		this.authorReviews = new HashSet<ReviewDTO>();
 	}
 
 	public AuthorDTO() {
@@ -93,14 +88,6 @@ public class AuthorDTO {
 		this.authorDescription = _description;
 	}
 
-	public Set<ReviewDTO> getAuthorReviews() {
-		return authorReviews;
-	}
-
-	public void setAuthorReviews(Set<ReviewDTO> authorReviews) {
-		this.authorReviews = authorReviews;
-	}
-
 	@Override
 	public int hashCode() {
 		HashCodeBuilder b = new HashCodeBuilder(17, 31). 
@@ -108,10 +95,6 @@ public class AuthorDTO {
 	            append(authorName).
 	            append(authorAge).
 	            append(mostKnownForGenre);
-		Iterator<ReviewDTO> it1 = this.getAuthorReviews().iterator();
-		while (it1.hasNext()) {
-			b.append(it1.next());
-		}
 		return b.hashCode();
 	}
 	
@@ -125,11 +108,6 @@ public class AuthorDTO {
 		AuthorDTO rhs = (AuthorDTO) obj;
 		EqualsBuilder b = new EqualsBuilder().append(authorId, rhs.get_authorId()).append(authorName, rhs.get_name())
 				.append(authorAge, rhs.get_age()).append(mostKnownForGenre, rhs.get_mostKnownForGenre());
-		Iterator<ReviewDTO> it1 = this.getAuthorReviews().iterator();
-		Iterator<ReviewDTO> it2 = rhs.getAuthorReviews().iterator();
-		while (it1.hasNext() && it2.hasNext()) {
-			b.append(it1.next(), it2.next());
-		}
 		return b.isEquals();
 	}
 
@@ -140,9 +118,6 @@ public class AuthorDTO {
 		buffer.append(authorName + " ");
 		buffer.append(authorAge + " ");
 		buffer.append(mostKnownForGenre + " ");
-		for (ReviewDTO r : authorReviews) {
-			buffer.append(r.toString() + " ");
-		}
 		buffer.append(authorDescription);
 		return buffer.toString();
 	}

@@ -45,10 +45,7 @@ public class Author {
 	@Column(nullable=false, name="MAIN_GENRE")
 	private BookGenre mostKnownForGenre;
 		
-	@OneToMany
-	@JoinTable(name="REVIEW_AUTHOR", joinColumns=@JoinColumn(name="AUTHOR_ID",nullable=false), inverseJoinColumns=@JoinColumn(name="REVIEW_ID", nullable=false))
-	private Set<Review> authorReviews;
-	
+
 	@Column(nullable=false, name="AUTHOR_DESCRIPTION")
 	private String authorDescription;
 	
@@ -57,7 +54,6 @@ public class Author {
 		this.authorAge=age;
 		this.mostKnownForGenre=mostKnownForGenre;
 		this.authorDescription = authorDescription;
-		this.authorReviews = new HashSet<Review>();
 	}
 	
 	public Author(){
@@ -95,15 +91,6 @@ public class Author {
 	public void set_description(String _description) {
 		this.authorDescription = _description;
 	}
-	public Set<Review> getAuthorReviews() {
-		return authorReviews;
-	}
-
-	public void setAuthorReviews(Set<Review> authorReviews) {
-		this.authorReviews = authorReviews;
-	}
-
-	
 
 
 	@Override
@@ -112,9 +99,6 @@ public class Author {
 		buffer.append(authorName+" ");
 		buffer.append(authorAge+" ");
 		buffer.append(mostKnownForGenre+" ");
-		for(Review r: authorReviews){
-			buffer.append(r.toString()+ " ");
-		}
 		buffer.append(authorDescription);
 		return buffer.toString();
 	}

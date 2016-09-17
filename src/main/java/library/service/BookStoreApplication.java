@@ -15,7 +15,7 @@ public class BookStoreApplication extends Application {
 		singletons.add(new BookResource());
 		singletons.add(new AuthorResource());
 		singletons.add(new UserResource());
-		//singletons.add(PersistenceManager.instance());
+		singletons.add(PersistenceManager.instance());
 	}
 
 	@Override

@@ -32,7 +32,7 @@ public class BookResource {
 	/**
 	 * 
 	 */
-	/*@GET
+	@GET
 	@Path("{id}")
 	@Produces({"application/xml","application/json"})
 	public BookDTO getBook(@PathParam("id") long id){
@@ -65,6 +65,6 @@ public class BookResource {
 		m.getTransaction().commit();
 		m.close();
 		return Response.created(URI.create("/book/" + domainBook.get_bookId())).build();
-	}*/
+	}
 		
 }

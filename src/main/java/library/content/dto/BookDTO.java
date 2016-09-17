@@ -54,13 +54,7 @@ public class BookDTO {
 	@XmlElementWrapper(name="Book-Authors") 
 	@XmlElement(name="authors")
 	private Set<AuthorDTO> authors;
-	
 
-	
-	@XmlElementWrapper(name="Book-Reviews") 
-	@XmlElement(name="reviews")
-	private Set<ReviewDTO> bookReviews;
-	
 
 	public BookDTO(String title, Date year, String description, BigDecimal cost, PrintType printType, Publisher publisher, BookGenre genre, String isbn, String language){
 		this.title=title;
@@ -73,7 +67,6 @@ public class BookDTO {
 		this.genre=genre;
 		this.isbn=isbn;
 		this.language=language;
-		this.bookReviews = new HashSet<ReviewDTO>();
 	}
 
 	public BookDTO(){
@@ -157,14 +150,6 @@ public class BookDTO {
 		authors.add(a);
 	}
 	
-	
-	public Set<ReviewDTO> getBookReviews() {
-		return bookReviews;
-	}
-
-	public void setBookReviews(Set<ReviewDTO> bookReviews) {
-		this.bookReviews = bookReviews;
-	}
 
 	@Override
 	public String toString() {
@@ -182,9 +167,6 @@ public class BookDTO {
 		buffer.append(genre + " ");
 		buffer.append(isbn+ " ");
 		buffer.append(language + " ");
-		for(ReviewDTO r: bookReviews){
-			buffer.append(r.toString()+" ");
-		}
 		return buffer.toString();
 	}
 	
@@ -205,10 +187,6 @@ public class BookDTO {
 		while (it1.hasNext()) {
 			b.append(it1.next().toString());
 		}
-		Iterator<ReviewDTO> it2 = this.bookReviews.iterator();
-		while (it1.hasNext()) {
-			b.append(it2.next().toString());
-		}
 		return b.hashCode();
 	}
 	
@@ -224,11 +202,6 @@ public class BookDTO {
 				.append(description, rhs.description).append(datePublished, rhs.datePublished).append(cost, rhs.cost)
 						.append(printType, rhs.printType)
 						.append(publisher, rhs.publisher).append(genre, rhs.genre).append(isbn, rhs.isbn).append(language,rhs.language);
-		Iterator<ReviewDTO> it1 = this.getBookReviews().iterator();
-		Iterator<ReviewDTO> it2 = rhs.getBookReviews().iterator();
-		while (it1.hasNext() && it2.hasNext()) {
-			b.append(it1.next(), it2.next());
-		}
 		Iterator<AuthorDTO> it3 = this.get_author().iterator();
 		Iterator<AuthorDTO> it4 = rhs.get_author().iterator();
 		while (it3.hasNext() && it4.hasNext()) {
