@@ -21,11 +21,11 @@ import library.content.dto.UserDTO;
 import library.content.purchase.Address;
 import library.content.purchase.Author;
 import library.content.purchase.Book;
-import library.content.purchase.BookGenre;
 import library.content.purchase.Orders;
-import library.content.purchase.PrintType;
 import library.content.purchase.Publisher;
 import library.content.purchase.User;
+import library.content.purchase.enums.BookGenre;
+import library.content.purchase.enums.PrintType;
 
 
 public class BookStoreWebServiceTest {
@@ -57,20 +57,19 @@ public class BookStoreWebServiceTest {
 		
 		//address
 		Address addressUser = new Address("21","Ulta Street","Penrose","Auckland","New Zealand", "2502");
-		user = new User(addressUser,"Bob",date);
+		user = new User(addressUser,"Bob",date,"test@gmail.com");
 		
 		//books
 		Address address = new Address("27", "McNaughton Street", "Onehunga", "Auckland", "New Zealand", "187154sdaw");
 		Publisher publisher = new Publisher(address, "Thompsons publishing services");
-		book = new Book("A",date , "Book description", new BigDecimal("50"), PrintType.HardCover, publisher, BookGenre.Novel, "1231", "English");
-		book.addAuthorToSet(author1);
-		book1 = new Book("B",date , "Book description", new BigDecimal("52"), PrintType.HardCover, publisher, BookGenre.Novel, "192.1231.1", "er");
-		book1.addAuthorToSet(author1);
-		book2 = new Book("C",date , "Book description", new BigDecimal("53"), PrintType.HardCover, publisher, BookGenre.Novel, "19223.1", "fd");
-		book2.addAuthorToSet(author1);
-		book3 = new Book("D",date , "Book description", new BigDecimal("54"), PrintType.HardCover, publisher, BookGenre.Novel, "15168.1.1", "fe");
-		book3.addAuthorToSet(author1);
-		
+		book = new Book("A",date ,author1, "Book description", new BigDecimal("50"), PrintType.HardCover, publisher, BookGenre.Novel, "1231", "English");
+
+		book1 = new Book("B",date ,author2, "Book description", new BigDecimal("52"), PrintType.HardCover, publisher, BookGenre.Novel, "192.1231.1", "er");
+
+		book2 = new Book("C",date ,author3, "Book description", new BigDecimal("53"), PrintType.HardCover, publisher, BookGenre.Novel, "19223.1", "fd");
+
+		book3 = new Book("D",date ,author4, "Book description", new BigDecimal("54"), PrintType.HardCover, publisher, BookGenre.Novel, "15168.1.1", "fe");
+
 		//orders -- for a user
 		order1 = new Orders(user);
 		order1.addBookToOrder(book);

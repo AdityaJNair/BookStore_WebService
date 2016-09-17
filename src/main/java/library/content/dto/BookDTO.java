@@ -17,10 +17,10 @@ import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlElement;
 
 import library.content.purchase.Author;
-import library.content.purchase.BookGenre;
-import library.content.purchase.PrintType;
 import library.content.purchase.Publisher;
 import library.content.purchase.Review;
+import library.content.purchase.enums.BookGenre;
+import library.content.purchase.enums.PrintType;
 
 /**
  * @author adijn
@@ -51,14 +51,12 @@ public class BookDTO {
 	
 	private String language;
 	
-	@XmlElementWrapper(name="Book-Authors") 
-	@XmlElement(name="authors")
-	private Set<AuthorDTO> authors;
+	private AuthorDTO author;
 
 
-	public BookDTO(String title, Date year, String description, BigDecimal cost, PrintType printType, Publisher publisher, BookGenre genre, String isbn, String language){
+	public BookDTO(String title, Date year, AuthorDTO a,String description, BigDecimal cost, PrintType printType, Publisher publisher, BookGenre genre, String isbn, String language){
 		this.title=title;
-		this.authors=new HashSet<AuthorDTO>();
+		this.author=a;
 		this.datePublished=year;
 		this.description=description;
 		this.cost=cost;
@@ -92,11 +90,11 @@ public class BookDTO {
 	public void set_title(String _title) {
 		this.title = _title;
 	}
-	public Set<AuthorDTO> get_author() {
-		return authors;
+	public AuthorDTO get_author() {
+		return author;
 	}
-	public void set_author(Set<AuthorDTO> _author) {
-		this.authors = _author;
+	public void set_author(AuthorDTO _author) {
+		this.author = _author;
 	}
 	public Date getDatePublished() {
 		return datePublished;
@@ -146,19 +144,14 @@ public class BookDTO {
 	public void setLanguage(String language) {
 		this.language = language;
 	}
-	public void addAuthorToSet(AuthorDTO a){
-		authors.add(a);
-	}
-	
+
 
 	@Override
 	public String toString() {
 		StringBuffer buffer = new StringBuffer();
 		buffer.append(bookId+" ");
 		buffer.append(title + " ");
-		for(AuthorDTO a: authors){
-			buffer.append(a.toString()+" ");
-		}
+		buffer.append(author+" ");
 		buffer.append(datePublished.toString()+ " ");
 		buffer.append(description+" ");
 		buffer.append(cost.toString()+ " ");
@@ -182,11 +175,7 @@ public class BookDTO {
 		        append(publisher.toString()).
 		        append(genre).
 		        append(isbn).
-		        append(language);
-		Iterator<AuthorDTO> it1 = this.authors.iterator();
-		while (it1.hasNext()) {
-			b.append(it1.next().toString());
-		}
+		        append(language).append(author);
 		return b.hashCode();
 	}
 	
@@ -201,12 +190,7 @@ public class BookDTO {
 		EqualsBuilder b = new EqualsBuilder().append(bookId, rhs.bookId).append(title, rhs.title)
 				.append(description, rhs.description).append(datePublished, rhs.datePublished).append(cost, rhs.cost)
 						.append(printType, rhs.printType)
-						.append(publisher, rhs.publisher).append(genre, rhs.genre).append(isbn, rhs.isbn).append(language,rhs.language);
-		Iterator<AuthorDTO> it3 = this.get_author().iterator();
-		Iterator<AuthorDTO> it4 = rhs.get_author().iterator();
-		while (it3.hasNext() && it4.hasNext()) {
-			b.append(it3.next(), it4.next());
-		}
+						.append(publisher, rhs.publisher).append(genre, rhs.genre).append(isbn, rhs.isbn).append(language,rhs.language).append(author, rhs.author);
 		return b.isEquals();
 	}
 }

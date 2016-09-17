@@ -25,12 +25,17 @@ public class UserDTO {
 	private Address userAddress;
 
 	private BigDecimal totalUserCost;
+	
+	private String email;
 
-	public UserDTO(Address address, String name, Date age) {
+
+
+	public UserDTO(Address address, String name, Date age,String email) {
 		userAddress = address;
 		totalUserCost = new BigDecimal("0");
 		userName = name;
 		userBirth=age;
+		this.email = email;
 	}
 
 	public UserDTO() {
@@ -50,6 +55,13 @@ public class UserDTO {
 
 	public void set_totalCost(BigDecimal _totalCost) {
 		this.totalUserCost = _totalCost;
+	}
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
 	public Long get_userId() {

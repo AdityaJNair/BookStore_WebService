@@ -24,6 +24,7 @@ public class DTOMapper {
 		BookDTO bookDTO = new BookDTO(
 				domainBook.get_title(),  
 				domainBook.getDatePublished(), 
+				toAuthorDTO(domainBook.get_author()), 
 				domainBook.get_description(), 
 				domainBook.get_cost(), 
 				domainBook.get_printType(), 
@@ -32,18 +33,14 @@ public class DTOMapper {
 				domainBook.getIsbn(), 
 				domainBook.getLanguage());
 		bookDTO.set_bookId(domainBook.get_bookId());
-		
-		Set<AuthorDTO> authorDTOSet = new HashSet<AuthorDTO>();
-		for(Author r : domainBook.get_author()){
-			authorDTOSet.add(toAuthorDTO(r));
-		}
-		bookDTO.set_author(authorDTOSet);
+
 		return bookDTO;
 	}
 	public static Book toBookDomain(BookDTO bookDTO){
 		Book domainBook = new Book(
 				bookDTO.get_title(), 
 				bookDTO.getDatePublished(), 
+				toAuthorDomain(bookDTO.get_author()),
 				bookDTO.get_description(), 
 				bookDTO.get_cost(), 
 				bookDTO.get_printType(), 
@@ -51,13 +48,6 @@ public class DTOMapper {
 				bookDTO.get_genre(), 
 				bookDTO.getIsbn(), 
 				bookDTO.getLanguage());
-
-		
-		Set<Author> authorSet = new HashSet<Author>();
-		for(AuthorDTO r : bookDTO.get_author()){
-			authorSet.add(toAuthorDomain(r));
-		}
-		domainBook.set_author(authorSet);
 		return domainBook;
 	}
 	
@@ -65,7 +55,7 @@ public class DTOMapper {
 		OrdersDTO ordersDTO = new OrdersDTO(toUserDTO(domainOrders.get_user()));
 		ordersDTO.set_id(domainOrders.get_id());
 		
-		Collection<BookDTO> bookDTOSet = new ArrayList<BookDTO>();
+		Set<BookDTO> bookDTOSet = new HashSet<BookDTO>();
 		for(Book r : domainOrders.getBooks()){
 			bookDTOSet.add(toBookDTO(r));
 		}
@@ -76,7 +66,7 @@ public class DTOMapper {
 	public static Orders toOrdersDomain(OrdersDTO dtoOrders){
 		Orders domainOrders = new Orders(toUserDomain(dtoOrders.get_user()));
 		
-		Collection<Book> bookSet = new ArrayList<Book>();
+		Set<Book> bookSet = new HashSet<Book>();
 		for(BookDTO r : dtoOrders.getBooks()){
 			bookSet.add(toBookDomain(r));
 		}
@@ -86,12 +76,12 @@ public class DTOMapper {
 	
 	
 	public static UserDTO toUserDTO(User domainUser){
-		UserDTO userDTO = new UserDTO(domainUser.get_address(),domainUser.getUserName(), domainUser.getUserAge());
+		UserDTO userDTO = new UserDTO(domainUser.get_address(),domainUser.getUserName(), domainUser.getUserAge(), domainUser.getEmail());
 		userDTO.set_userId(domainUser.get_userId());
 		return userDTO;
 	}
 	public static User toUserDomain(UserDTO dtoUser){
-		User domainUser = new User(dtoUser.get_address(),dtoUser.getUserName(),dtoUser.getUserBirth());
+		User domainUser = new User(dtoUser.get_address(),dtoUser.getUserName(),dtoUser.getUserBirth(), dtoUser.getEmail());
 		return domainUser;
 	}
 		
@@ -104,7 +94,6 @@ public class DTOMapper {
 	
 	public static Author toAuthorDomain(AuthorDTO dtoAuthor){
 		Author authorDomain = new Author(dtoAuthor.get_name(), dtoAuthor.get_age(), dtoAuthor.get_mostKnownForGenre(), dtoAuthor.get_description());
-		Set<Review> reviewDomain = new HashSet<Review>();
 		return authorDomain;
 	}
 	

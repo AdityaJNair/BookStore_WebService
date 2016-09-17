@@ -3,9 +3,9 @@
  */
 package library.content.dto;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Set;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -29,7 +29,7 @@ public class OrdersDTO {
 	
 	@XmlElementWrapper(name="Ordered-Books") 
 	@XmlElement(name="books")
-	private Collection<BookDTO> orderedBooks;
+	private Set<BookDTO> orderedBooks;
 
 	private BigDecimal totalCost;
 	
@@ -37,17 +37,17 @@ public class OrdersDTO {
 		
 	public OrdersDTO(UserDTO user){
 		totalCost = new BigDecimal("0");
-		orderedBooks=new ArrayList<BookDTO>();
+		orderedBooks=new HashSet<BookDTO>();
 		usersOrder = user;
 	}
 	
 	public OrdersDTO(){
 		
 	}
-	public Collection<BookDTO> getBooks() {
+	public Set<BookDTO> getBooks() {
 		return orderedBooks;
 	}
-	public void setBooks(Collection<BookDTO> books) {
+	public void setBooks(Set<BookDTO> books) {
 		this.orderedBooks = books;
 	}
 	public BigDecimal getTotalCost() {

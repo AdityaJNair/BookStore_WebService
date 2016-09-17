@@ -13,6 +13,7 @@ import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
@@ -23,6 +24,7 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 
@@ -30,7 +32,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 public class User {
 	
 	@Id
-	@GeneratedValue(generator="ID-GENERATOR")
+	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Long userId;
 	
 	@Column(name="USER_NAME", nullable=false)
@@ -39,6 +41,9 @@ public class User {
 	@Temporal(TemporalType.DATE)
 	@Column(name="DATE_OF_BIRTH", nullable=false)
 	private Date userAge;
+	
+	@Column(name="USER_EMAIL", nullable=false, unique=true)
+	private String email;
 	
 	@ElementCollection
 	private Set<Review> reviews;
@@ -61,11 +66,13 @@ public class User {
 	@Column(nullable=false, name="Total_cost")
 	private BigDecimal totalUserCost;
 	
-	public User(Address address, String name, Date age){
+	public User(Address address, String name, Date age, String email){
 		userAddress=address;
 		userOrders=new HashSet<Orders>();
 		userName = name;
 		userAge=age;
+		reviews= new HashSet<Review>();
+		this.email = email;
 		calculateCost();
 	}
 	
@@ -105,6 +112,15 @@ public class User {
 	}
 	
 	
+	
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
 	public String getUserName() {
 		return userName;
 	}
@@ -128,6 +144,19 @@ public class User {
 
 	public Date getUserAge() {
 		return userAge;
+	}
+	
+	
+	public Set<Review> getReviews() {
+		return reviews;
+	}
+
+	public void setReviews(Set<Review> reviews) {
+		this.reviews = reviews;
+	}
+
+	public void addReview(Review r){
+		reviews.add(r);
 	}
 	private void calculateCost(){
 		if(this.userOrders == null || this.userOrders.isEmpty()){
@@ -165,7 +194,7 @@ public class User {
             return true;
         
         User usr = (User) obj;
-        return userName.equals(usr.userName) && userAddress.equals(usr.userAddress) && userAge.equals(usr.userAge);
+        return new EqualsBuilder().append(userName,usr.userName).append(userAddress,usr.userAddress).append(userAge,usr.userAge).isEquals();
 	}
 	
 	
@@ -174,7 +203,7 @@ public class User {
 		return new HashCodeBuilder(17, 31). 
 	            append(userName).
 	            append(userAddress).
-	            append(userAge).
+	            append(userAge.toString()).
 	            toHashCode();
 	}
 

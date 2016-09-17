@@ -1,7 +1,7 @@
 /**
  * 
  */
-package library.content.purchase;
+package library.content.purchase.enums;
 
 /**
  * @author adijn

@@ -2,8 +2,6 @@ package library.content.purchase;
 
 import java.math.BigDecimal;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -15,18 +13,14 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.OneToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlID;
-import javax.xml.bind.annotation.XmlRootElement;
 
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+
+import library.content.purchase.enums.BookGenre;
+import library.content.purchase.enums.PrintType;
 
 /**
  * @author adijn
@@ -43,9 +37,9 @@ public class Book {
 	@Column(nullable=false,name="BOOK_TITLE")
 	private String title;
 	
-	@ManyToMany(cascade=CascadeType.PERSIST)
-	@JoinTable(name="BOOK_AUTHOR", joinColumns=@JoinColumn(name="BOOK_ID", nullable=false), inverseJoinColumns=@JoinColumn(name="AUTHOR_ID", nullable=false))
-	private Set<Author> authors;
+	@ManyToOne(fetch=FetchType.LAZY, cascade=CascadeType.PERSIST)
+	@JoinColumn(name="AUTHOR_ID", nullable=false)
+	private Author author;
 	
 	@Temporal(TemporalType.DATE)
 	@Column(nullable=false,name="DATE_CREATED")
@@ -75,9 +69,9 @@ public class Book {
 	private String language;
 
 
-	public Book(String title, Date year, String description, BigDecimal cost, PrintType printType, Publisher publisher, BookGenre genre, String isbn, String language){
+	public Book(String title, Date year, Author a,String description, BigDecimal cost, PrintType printType, Publisher publisher, BookGenre genre, String isbn, String language){
 		this.title=title;
-		this.authors=new HashSet<Author>();
+		this.author=a;
 		this.datePublished=year;
 		this.description=description;
 		this.cost=cost;
@@ -104,11 +98,11 @@ public class Book {
 	public void set_title(String _title) {
 		this.title = _title;
 	}
-	public Set<Author> get_author() {
-		return authors;
+	public Author get_author() {
+		return author;
 	}
-	public void set_author(Set<Author> _author) {
-		this.authors = _author;
+	public void set_author(Author _author) {
+		this.author = _author;
 	}
 	public Date getDatePublished() {
 		return datePublished;
@@ -158,10 +152,7 @@ public class Book {
 	public void setLanguage(String language) {
 		this.language = language;
 	}
-	public void addAuthorToSet(Author a){
-		authors.add(a);
-	}
-	
+
 	@Override
 	public boolean equals(Object obj) {
 		if (!(obj instanceof Book))
@@ -185,9 +176,7 @@ public class Book {
 		StringBuffer buffer = new StringBuffer();
 		buffer.append(bookId+" ");
 		buffer.append(title + " ");
-		for(Author a: authors){
-			buffer.append(a.toString()+" ");
-		}
+		buffer.append(author+" ");
 		buffer.append(datePublished.toString()+ " ");
 		buffer.append(description+" ");
 		buffer.append(cost.toString()+ " ");

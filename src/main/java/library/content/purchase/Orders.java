@@ -3,9 +3,10 @@
  */
 package library.content.purchase;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -13,15 +14,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlID;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
@@ -38,9 +32,9 @@ public class Orders {
 	private long order_id;
 	
 	
-	@OneToMany
+	@ManyToMany(cascade=CascadeType.PERSIST)
 	@JoinTable(name="ORDERED_BOOKS", joinColumns=@JoinColumn(name="ORDER_ID",nullable=false), inverseJoinColumns=@JoinColumn(name="BOOK_ID", nullable=false))
-	private Collection<Book> orderedBooks;
+	private Set<Book> orderedBooks;
 	
 	@Column(nullable=false, name="ORDER_COST")
 	private BigDecimal totalCost;
@@ -52,7 +46,7 @@ public class Orders {
 		
 	public Orders(User user){
 		totalCost = new BigDecimal("0");
-		orderedBooks=new ArrayList<Book>();
+		orderedBooks=new HashSet<Book>();
 		usersOrder = user;
 	}
 	
@@ -60,10 +54,10 @@ public class Orders {
 		
 	}
 	
-	public Collection<Book> getBooks() {
+	public Set<Book> getBooks() {
 		return orderedBooks;
 	}
-	public void setBooks(Collection<Book> books) {
+	public void setBooks(Set<Book> books) {
 		this.orderedBooks = books;
 	}
 	public BigDecimal getTotalCost() {

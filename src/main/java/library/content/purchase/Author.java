@@ -23,6 +23,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+import library.content.purchase.enums.BookGenre;
+
 /**
  * @author adijn
  *
@@ -35,7 +37,7 @@ public class Author {
 	@GeneratedValue(generator="ID-GENERATOR")
 	private Long authorId;
 
-	@Column(nullable=false, name = "AUTHOR_NAME")
+	@Column(nullable=false, name = "AUTHOR_NAME",unique=true)
 	private String authorName;
 	
 	@Temporal(TemporalType.DATE)
@@ -111,14 +113,13 @@ public class Author {
             return true;
 
         Author other = (Author)obj;
-        return authorName.equals(other.authorName) && authorAge.equals(other.authorAge);
+        return authorName.equals(other.authorName);
 	}
 	
 	@Override
 	public int hashCode() {
 		return new HashCodeBuilder(17, 31). 
 	            append(authorName).
-	            append(authorAge).
 	            toHashCode();
 	}
 	
