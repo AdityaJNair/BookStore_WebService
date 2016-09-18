@@ -3,33 +3,6 @@
     <order_id>0</order_id>
     <Ordered-Books>
         <books>
-            <title>A</title>
-            <description>Book description</description>
-            <datePublished>1997-11-27T00:00:00+13:00</datePublished>
-            <cost>50</cost>
-            <printType>HardCover</printType>
-            <publisher>
-                <address>
-                    <houseNumber>27</houseNumber>
-                    <street>McNaughton Street</street>
-                    <suburb>Onehunga</suburb>
-                    <city>Auckland</city>
-                    <country>New Zealand</country>
-                    <zip>187154sdaw</zip>
-                </address>
-                <publisherName>Thompsons publishing services</publisherName>
-            </publisher>
-            <genre>Novel</genre>
-            <isbn>1231</isbn>
-            <language>English</language>
-            <author>
-                <authorName>J.K Rowling</authorName>
-                <authorAge>1997-11-27T00:00:00+13:00</authorAge>
-                <mostKnownForGenre>Fantasy</mostKnownForGenre>
-                <authorDescription>Cool</authorDescription>
-            </author>
-        </books>
-        <books>
             <title>D</title>
             <description>Book description</description>
             <datePublished>1997-11-27T00:00:00+13:00</datePublished>
@@ -54,6 +27,33 @@
                 <authorAge>1997-11-27T00:00:00+13:00</authorAge>
                 <mostKnownForGenre>Fiction</mostKnownForGenre>
                 <authorDescription>SY</authorDescription>
+            </author>
+        </books>
+        <books>
+            <title>A</title>
+            <description>Book description</description>
+            <datePublished>1997-11-27T00:00:00+13:00</datePublished>
+            <cost>50</cost>
+            <printType>HardCover</printType>
+            <publisher>
+                <address>
+                    <houseNumber>27</houseNumber>
+                    <street>McNaughton Street</street>
+                    <suburb>Onehunga</suburb>
+                    <city>Auckland</city>
+                    <country>New Zealand</country>
+                    <zip>187154sdaw</zip>
+                </address>
+                <publisherName>Thompsons publishing services</publisherName>
+            </publisher>
+            <genre>Novel</genre>
+            <isbn>1231</isbn>
+            <language>English</language>
+            <author>
+                <authorName>J.K Rowling</authorName>
+                <authorAge>1997-11-27T00:00:00+13:00</authorAge>
+                <mostKnownForGenre>Fantasy</mostKnownForGenre>
+                <authorDescription>Cool</authorDescription>
             </author>
         </books>
         <books>

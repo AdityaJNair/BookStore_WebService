@@ -6,22 +6,29 @@ import java.util.List;
 import java.util.Set;
 
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceException;
 import javax.persistence.TypedQuery;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
-import org.hibernate.exception.ConstraintViolationException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import library.content.dto.AuthorDTO;
 import library.content.dto.BookDTO;
 import library.content.dto.DTOMapper;
+import library.content.purchase.Author;
 import library.content.purchase.Book;
+import library.content.purchase.enums.BookGenre;
 
 /**
  * @author adijn
@@ -29,18 +36,21 @@ import library.content.purchase.Book;
  */
 @Path("/author")
 public class AuthorResource {
-	//get book
+
+	private static final Logger _logger = LoggerFactory.getLogger(AuthorResource.class);
 	/**
-	 * 
+	 * Get author from id
+	 * @param id
+	 * @return
 	 */
 	@GET
 	@Path("{id}")
 	@Produces({"application/xml","application/json"})
-	public BookDTO getBook(@PathParam("id") long id){
+	public AuthorDTO getBook(@PathParam("id") long id){
 		EntityManager m = PersistenceManager.instance().createEntityManager();
 		m.getTransaction().begin();
-		Book b = m.find(Book.class, id);
-		BookDTO b1 = DTOMapper.toBookDTO(b);
+		Author b = m.find(Author.class, id);
+		AuthorDTO b1 = DTOMapper.toAuthorDTO(b);
 		m.getTransaction().commit();
 		m.close();
 		if(b==null){
@@ -51,66 +61,98 @@ public class AuthorResource {
 		return b1;
 	}
 	
-/*	@GET
-	@Path("{isbn}")
-	@Produces({"application/xml","application/json"})
-	public BookDTO getBookByUniqueIdentifier(@PathParam("isbn") String isbn){
-		EntityManager m = PersistenceManager.instance().createEntityManager();
-		m.getTransaction().begin();
-		Query bookQuery = m.createQuery("SELECT * FROM FROM BOOK b WHERE b.ISBN=:isbn").setParameter("isbn", isbn);
-		Book bookdomain = (Book)bookQuery.getSingleResult();
-		BookDTO b1 = DTOMapper.toBookDTO(bookdomain);
-		m.getTransaction().commit();
-		m.close();
-		if(bookdomain==null){
-		    throw new WebApplicationException(
-		    	      Response.status(Status.NOT_FOUND)
-		    	        .build());
-		}
-		return b1;
-		
-	}*/
-	
-	
+	/**
+	 * Get a set of authors
+	 * @return
+	 */
 	@GET
 	@Produces({"application/xml","application/json"})
-	public Set<BookDTO> getBooks(){
+	public Set<AuthorDTO> getAuthors(){
 		EntityManager m = PersistenceManager.instance().createEntityManager();
 		m.getTransaction().begin();
-		TypedQuery<Book> bookdto = m.createQuery("SELECT * FROM BOOK ", Book.class);
-		List<Book> listBooks = bookdto.getResultList();
-		Set<BookDTO> listBooksDTO = new HashSet<BookDTO>();
-		for(Book b: listBooks){
-			listBooksDTO.add(DTOMapper.toBookDTO(b));
+		Set<AuthorDTO> authorDTOset = new HashSet<AuthorDTO>();
+		TypedQuery<Author> AuthorQuery = m.createQuery("FROM Author", Author.class);
+		List<Author> listAuthor = AuthorQuery.getResultList();
+		for(Author u: listAuthor){
+			authorDTOset.add(DTOMapper.toAuthorDTO(u));
 		}
 		m.getTransaction().commit();
 		m.close();
-		if(listBooks==null || listBooks.isEmpty()){
-		    throw new WebApplicationException(
-		    	      Response.status(Status.BAD_GATEWAY)
-		    	        .build());
-		}
-		return listBooksDTO;
+		return authorDTOset;
 	}
 	
+	/**
+	 * Post a author
+	 * @param bookdto
+	 * @return
+	 */
 	@POST
 	@Consumes({"application/xml","application/json"})
-	public Response addBook(BookDTO bookdto){
-		Book domainBook = DTOMapper.toBookDomain(bookdto);
+	public Response addAuthor(AuthorDTO bookdto){
+		Author author = DTOMapper.toAuthorDomain(bookdto);
 		EntityManager m = PersistenceManager.instance().createEntityManager();
 		m.getTransaction().begin();
-	   try{
-			m.persist(domainBook); 
-	    }
-	    catch(ConstraintViolationException e){
-	    	
+		try{
+			m.persist(author);
 			m.getTransaction().commit();
+		} catch (PersistenceException p){
+			return Response.status(204).build();
+		} finally {
 			m.close();
-	    }
-		m.getTransaction().commit();
-		m.close();
-		return Response.created(URI.create("/book/" + domainBook.get_bookId())).build();
+		}
+		return Response.created(URI.create("/author/" + author.get_authorId())).status(201).build();
 	}
 		
 
+	/**
+	 * Update author main genre type
+	 */
+	@PUT
+	@Path("{id}/genre")
+	@Consumes({"application/xml","application/json"})
+	public Response updateAuthorGenre(@PathParam("id") long id,BookGenre r){
+		EntityManager m = PersistenceManager.instance().createEntityManager();
+		m.getTransaction().begin();
+		Author author = m.find(Author.class, id);
+		author.set_mostKnownForGenre(r);
+		m.getTransaction().commit();
+		m.close();
+		return Response.status(204).build();
+	}
+	
+	/**
+	 * Update author description
+	 */
+	@PUT
+	@Path("{id}/description")
+	@Consumes({"application/xml","application/json"})
+	public Response updateAuthorDescription(@PathParam("id") long id,String r){
+		EntityManager m = PersistenceManager.instance().createEntityManager();
+		m.getTransaction().begin();
+		Author author = m.find(Author.class, id);
+		author.set_description(r);
+		m.getTransaction().commit();
+		m.close();
+		return Response.status(204).build();
+	}
+	
+	/**
+	 * Get set of all books by author
+	 */
+	@GET
+	@Path("{id}/book")
+	@Produces({"application/xml","application/json"})
+	public Response getAuthorBooks(@PathParam("id") long id){
+		EntityManager m = PersistenceManager.instance().createEntityManager();
+		m.getTransaction().begin();
+		List<Book> bookQuery = m.createQuery("SELECT b FROM Book b WHERE b.author.authorId=:authorid", Book.class).setParameter("authorid", id).getResultList();
+		Set<BookDTO> bSet = new HashSet<BookDTO>();
+		for(Book b: bookQuery){
+			bSet.add(DTOMapper.toBookDTO(b));
+		}
+		GenericEntity<Set<BookDTO>> entity = new GenericEntity<Set<BookDTO>>(bSet){};
+		m.getTransaction().commit();
+		m.close();
+		return Response.ok(entity).build();
+	}
 }

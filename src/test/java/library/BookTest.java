@@ -3,18 +3,16 @@
  */
 package library;
 
-import static org.junit.Assert.*;
-
 import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.List;
+import java.util.Set;
 
-import javax.persistence.EntityManager;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
+import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.Response;
 
 import org.junit.BeforeClass;
@@ -22,6 +20,7 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import library.content.dto.AuthorDTO;
 import library.content.dto.BookDTO;
 import library.content.dto.DTOMapper;
 import library.content.dto.OrdersDTO;
@@ -36,8 +35,6 @@ import library.content.purchase.User;
 import library.content.purchase.enums.BookGenre;
 import library.content.purchase.enums.PrintType;
 import library.content.purchase.enums.Rating;
-import library.service.BookResource;
-import library.service.PersistenceManager;
 
 /**
  * @author adijn
@@ -148,13 +145,14 @@ public class BookTest {
 		BookDTO b6 = DTOMapper.toBookDTO(book5);
 		
 		UserDTO u1 = DTOMapper.toUserDTO(user);
+		UserDTO u2 = DTOMapper.toUserDTO(user1);
 		
 		Response response = _client.target(WEB_SERVICE_URI + "/book").request().post(Entity.xml(b1));
 		_logger.info("Response is :" + response.getStatusInfo());
 		String location = response.getLocation().toString();
 		_logger.info(location);
 		response.close();
-
+		
 		Response response1 = _client.target(WEB_SERVICE_URI + "/book").request().post(Entity.xml(b2));
 		_logger.info("Response is :" + response1.getStatusInfo());
 		String location1 = response1.getLocation().toString();
@@ -185,7 +183,22 @@ public class BookTest {
 		_logger.info(location41);
 		response41.close();
 		
-
+		Response responseu = _client.target(WEB_SERVICE_URI + "/user").request().post(Entity.xml(u1));
+		_logger.info("Response is :" + responseu.getStatusInfo());
+		String locationu = responseu.getLocation().toString();
+		_logger.info(locationu);
+		responseu.close();
+		
+		Response responseu1 = _client.target(WEB_SERVICE_URI + "/user").request().post(Entity.xml(u2));
+		_logger.info("Response is :" + responseu1.getStatusInfo());
+		String locationu1 = responseu1.getLocation().toString();
+		_logger.info(locationu1);
+		responseu1.close();
+		
+		Response responseu11 = _client.target(WEB_SERVICE_URI + "/user").request().post(Entity.xml(u2));
+		_logger.info("Response is :" + responseu11.getStatusInfo() +" " + responseu11.getStatus());
+		responseu11.close();
+		
 		
 		BookDTO bb1 = _client.target(location).request().accept("application/xml").get(BookDTO.class);
 		BookDTO bb2 = _client.target(location1).request().accept("application/xml").get(BookDTO.class);
@@ -195,17 +208,33 @@ public class BookTest {
 		
 		_client.target(location).request().accept("application/xml").delete(BookDTO.class);
 
-		//BookDTO bb7 = _client.target(WEB_SERVICE_URI + "/book/30").request().accept("application/xml").get(BookDTO.class);
-		
-
 		_logger.info(bb1.toString());
 		_logger.info(bb2.toString());
 		_logger.info(bb3.toString());
 		_logger.info(bb4.toString());
 		_logger.info(bb5.toString());
+		
+		AuthorDTO a1 = DTOMapper.toAuthorDTO(author1);
+		AuthorDTO a2 = DTOMapper.toAuthorDTO(author2);
+	
+		Response responsea = _client.target(WEB_SERVICE_URI + "/author").request().post(Entity.xml(a1));
+		_logger.info("Response is :" + responsea.getStatusInfo());
+		responsea.close();
+		
+		Response responseu111 = _client.target(WEB_SERVICE_URI + "/author").request().post(Entity.xml(a2));
+		_logger.info("Response is :" + responseu111.getStatusInfo());
+		String locationu11 = responseu111.getLocation().toString();
+		_logger.info(locationu11);
+		responseu111.close();
+		
+		Set<BookDTO> listbook = _client.target(WEB_SERVICE_URI + "/author/2/book").request().accept("application/xml").get(new GenericType<Set<BookDTO>>() {});
+		for(BookDTO b: listbook){
+			_logger.info(b.toString());
+		}
+		
+			
 
 		//List<BookDTO> bblist = (List<BookDTO>) _client.target(WEB_SERVICE_URI + "/book").request().accept("application/xml").get(BookDTO.class);
-		
 	}
 
 	/*
