@@ -20,7 +20,6 @@
 		<class>library.content.purchase.Address</class>
 		<class>library.content.purchase.Publisher</class>
 		<class>library.content.purchase.Review</class>
-		<class>library.content.purchase.Orders</class>
 
 		<properties>
 			<!-- Configure the data source. In this case the embedded H2 database 

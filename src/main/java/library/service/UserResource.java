@@ -10,7 +10,6 @@ import java.util.Set;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceException;
-import javax.persistence.TransactionRequiredException;
 import javax.persistence.TypedQuery;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -28,15 +27,10 @@ import javax.ws.rs.core.Response.Status;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import library.content.dto.AuthorDTO;
 import library.content.dto.BookDTO;
 import library.content.dto.DTOMapper;
-import library.content.dto.OrdersDTO;
 import library.content.dto.UserDTO;
-import library.content.purchase.Address;
-import library.content.purchase.Author;
 import library.content.purchase.Book;
-import library.content.purchase.Orders;
 import library.content.purchase.Review;
 import library.content.purchase.User;
 
@@ -134,27 +128,38 @@ public class UserResource {
 		return Response.ok().build();
 	}
 	
-
-	
 	/**
-	 * Add an order from a specific user
-	 * @param userid
-	 * @param userAddress
-	 * @return
+	 * add a book to a user
 	 */
 	@PUT
-	@Path("{id}/order")
+	@Path("{id}/order/{bid}")
 	@Consumes({ "application/xml", "application/json" })
-	public Response updateAddUserOrder(@PathParam("id") long userid, OrdersDTO order){
-		Orders ord = DTOMapper.toOrdersDomain(order);
+	public Response addBookOrder(@PathParam("id") long id, @PathParam("bid") long bid){
 		EntityManager m = PersistenceManager.instance().createEntityManager();
 		m.getTransaction().begin();
-		User u = m.find(User.class, userid);
-		ord.set_user(u);
-		u.addOrder(ord);
+		User u = m.find(User.class, id);
+		Book b = m.find(Book.class, bid);
+		u.addBook(b);
 		m.getTransaction().commit();
 		m.close();
 		return Response.ok().build();
+	}
+	
+	/**
+	 * add a book to a user based on isbn
+	 */
+	@PUT
+	@Path("{id}/order/isbn/{isbn}")
+	@Consumes({ "application/xml", "application/json" })
+	public Response addBookOrderUsingISBN(@PathParam("id") long id, @PathParam("isbn") String isbn){
+		EntityManager m = PersistenceManager.instance().createEntityManager();
+		m.getTransaction().begin();
+		Book b = m.createQuery("SELECT b FROM Book b WHERE b.isbn=:isbn", Book.class).setParameter("isbn", isbn).getSingleResult();
+		User u = m.find(User.class, id);
+		u.addBook(b);
+		m.getTransaction().commit();
+		m.close();
+		return Response.status(204).build();
 	}
 	
 	/**
@@ -204,6 +209,23 @@ public class UserResource {
 		}
 		m.close();
 		return Response.status(204).build();
+	}
+	
+	@GET
+	@Path("{id}/books")
+	@Produces({ "application/xml", "application/json" })
+	public Response getBooksBoughtByUser(@PathParam("id") long id){
+		EntityManager m = PersistenceManager.instance().createEntityManager();
+		m.getTransaction().begin();
+		User user = m.find(User.class, id);
+		Set<BookDTO> bookSet = new HashSet<BookDTO>();
+		for(Book b: user.getUsersBooks()){
+			bookSet.add(DTOMapper.toBookDTO(b));
+		}
+		GenericEntity<Set<BookDTO>> entity = new GenericEntity<Set<BookDTO>>(bookSet){};
+		m.getTransaction().commit();
+		m.close();
+		return Response.ok(entity).build();
 	}
 	
 	

@@ -3,7 +3,8 @@
  */
 package library;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.math.BigDecimal;
 import java.util.Calendar;
@@ -25,12 +26,10 @@ import org.slf4j.LoggerFactory;
 import library.content.dto.AuthorDTO;
 import library.content.dto.BookDTO;
 import library.content.dto.DTOMapper;
-import library.content.dto.OrdersDTO;
 import library.content.dto.UserDTO;
 import library.content.purchase.Address;
 import library.content.purchase.Author;
 import library.content.purchase.Book;
-import library.content.purchase.Orders;
 import library.content.purchase.Publisher;
 import library.content.purchase.Review;
 import library.content.purchase.User;
@@ -261,11 +260,9 @@ public class BookTest {
 		
 		//GETTING BOOKS BY ISBN -- ISBN-13:234-1-56619-909-4 -- ISBN-13:673-1-56619-909-4
 		BookDTO dtoBookBook2 = _client.target(WEB_SERVICE_URI+"/book/isbn/"+"ISBN-13:234-1-56619-909-4").request().accept("application/xml").get(BookDTO.class);
-		BookDTO dtoBookBook3 = _client.target(WEB_SERVICE_URI+"/book/isbn/"+"ISBN-13:673-1-56619-909-4").request().accept("application/xml").get(BookDTO.class);
 		
 		//CONVETING THE BOOKS TO DTO BOOKS
 		Book domainUserTestBook2 = DTOMapper.toBookDomain(dtoBookBook2);
-		Book domainUserTestBook3 = DTOMapper.toBookDomain(dtoBookBook3);
 								
 		//CONVERTING USER TO DTOS
 		UserDTO dtoUserUser1 = DTOMapper.toUserDTO(user1);
@@ -305,19 +302,19 @@ public class BookTest {
 		assertTrue(dtoUserGetUser1Email.equals(dtoUserGetUser1));
 						
 		//CREATING REVIEWS FOR THOSE BOOKS
+		_logger.info("Created a review");
 		Review review1 = new Review("good", Rating.FOUR_STARS, "ISBN-13:234-1-56619-909-4");
 		review1.setBookReviewed(domainUserTestBook2);
-		Review review2 = new Review("bad", Rating.ONE_STAR, "ISBN-13:234-1-56619-909-4");
-		review1.setBookReviewed(domainUserTestBook2);
-		Review review3 = new Review("mediocre", Rating.ONE_STAR, "ISBN-13:673-1-56619-909-4");
-		review1.setBookReviewed(domainUserTestBook3);
 				
 		//ADD A REVIEW
-		Response responseAddReview1ToAuthor1 = _client.target(locationUser1+"/review/add").request().accept("application/xml").put(Entity.xml(review1));
-		assertTrue(responseAddReview1ToAuthor1.getStatus() == 204);
-		responseAddReview1ToAuthor1.close();
+		_logger.info("Add a review to user 1");
+		Response responseAddReview1ToUser1 = _client.target(locationUser1+"/review/add").request().accept("application/xml").put(Entity.xml(review1));
+		assertTrue(responseAddReview1ToUser1.getStatus() == 204);
+		responseAddReview1ToUser1.close();
+		
 		//ADD A REVIEW FOR THE SAME BOOK AGAIN ( NOT ALLOWED )
 		Response responseAddReview2ToAuthor1 = _client.target(locationUser1+"/review/add").request().accept("application/xml").put(Entity.xml(review1));
+		_logger.info("Failed review added");
 		assertTrue(responseAddReview2ToAuthor1.getStatus() == 400);
 		responseAddReview2ToAuthor1.close();		
 		
@@ -326,19 +323,23 @@ public class BookTest {
 		assertTrue(deleteUser1.getStatus() == 200);
 		deleteUser1.close();
 		
-		//ORDERS
-		Orders order = new Orders(user1);
-		order.addBookToOrder(domainUserTestBook2);
-		order.addBookToOrder(domainUserTestBook3);
-		OrdersDTO orderdto = DTOMapper.toOrdersDTO(order);
+		//ADD ORDER TO USER -- means they purchased book.
+		_logger.info("ADDING BOOKS TO USER2 USING ISBN");
+		Response responseAddOrderToUser2 = _client.target(locationUser2+"/order/isbn/"+book3.getIsbn()).request().accept("application/xml").put(null);
+		assertTrue(responseAddOrderToUser2.getStatus() == 204);
+		responseAddOrderToUser2.close();
+
+		Response responseAddOrder2ToUser2 = _client.target(locationUser2+"/order/isbn/"+book2.getIsbn()).request().accept("application/xml").put(null);
+		assertTrue(responseAddOrder2ToUser2.getStatus() == 204);
+		responseAddOrder2ToUser2.close();
 		
-		//ADD ORDER TO USER
-		Response responseAddOrderToUser1 = _client.target(locationUser1+"/order").request().accept("application/xml").put(Entity.xml(orderdto));
-		//assertTrue(responseAddOrderToUser1.getStatus() == 400);
-		responseAddOrderToUser1.close();		
-		
-		
-		
-		
+		//GET ALL BOOKS FOR USER2
+		Set<BookDTO> bookListUser2 = _client.target(locationUser2 + "/books").request().accept("application/xml").get(new GenericType<Set<BookDTO>>() {});
+		for(BookDTO b: bookListUser2){
+			_logger.info(b.toString());
+		}
+		assertTrue(bookListUser2.size() == 2);
+
+		//END
 	}
 }
