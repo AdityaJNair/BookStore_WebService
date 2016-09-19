@@ -20,6 +20,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import library.content.purchase.enums.BookGenre;
 
 /**
+ * dto object for author class that is sent across the wire
  * @author adijn
  *
  */

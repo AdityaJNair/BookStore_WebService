@@ -6,6 +6,7 @@ package library.content.purchase.enums;
 import javax.xml.bind.annotation.XmlEnum;
 
 /**
+ * Print type for a particular book
  * @author adijn
  *
  */

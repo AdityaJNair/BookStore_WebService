@@ -11,6 +11,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 /**
+ * Publisher is an embeddable for a book.
  * @author adijn
  *
  */
@@ -19,6 +20,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Publisher {
 	
+	//publisher address
 	@Embedded
 	 @AttributeOverrides({
 		 	@AttributeOverride(name="houseNumber", column=@Column(name="PUBLISHER_HOUSENUMBER", nullable=false)),
@@ -31,6 +33,7 @@ public class Publisher {
 	 })
 	private Address address;
 	
+	//publishers name
 	@Column(nullable=false, name="PUBLISHER_NAME")
 	private String publisherName;
 	

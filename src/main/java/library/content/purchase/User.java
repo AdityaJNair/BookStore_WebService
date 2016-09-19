@@ -22,27 +22,35 @@ import javax.persistence.TemporalType;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-
+/**
+ * User class for 'users' in the online book store
+ */
 @Entity
 public class User {
 	
+	//ID for user
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Long userId;
 	
+	//name for user
 	@Column(name="USER_NAME", nullable=false)
 	private String userName;
 	
+	//birth date
 	@Temporal(TemporalType.DATE)
 	@Column(name="DATE_OF_BIRTH", nullable=false)
 	private Date userAge;
 	
+	//unique email for user
 	@Column(name="USER_EMAIL", nullable=false, unique=true)
 	private String email;
 	
+	//reviews the user makes for the books
 	@ElementCollection
 	private Set<Review> reviews;
 	
+	//User address
 	@Embedded
 	 @AttributeOverrides({
 		 	@AttributeOverride(name="houseNumber", column=@Column(name="USER_HOUSENUMBER", nullable=false)),
@@ -55,14 +63,13 @@ public class User {
 	 })
 	private Address userAddress;
 	
+	//Set of all books the user purchased
 	@OneToMany(fetch=FetchType.LAZY)
 	private Set<Book> usersBooks;
 	
+	//Total purchase account cost for this user
 	@Column(nullable=false, name="Total_cost")
 	private BigDecimal totalUserCost;
-	
-	
-	
 	
 	
 	public User(Address address, String name, Date age, String email){

@@ -12,6 +12,12 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import library.content.purchase.Address;
 
+/**
+ * DTO object for a user. This object is sent over the wire
+ * 
+ * @author Aditya
+ *
+ */
 @XmlRootElement(name = "User")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class UserDTO {

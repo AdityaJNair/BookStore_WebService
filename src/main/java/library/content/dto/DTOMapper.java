@@ -8,11 +8,17 @@ import library.content.purchase.Book;
 import library.content.purchase.User;
 
 /**
+ * Mapper class for converting domain objects to dto objects
  * @author adijn
  *
  */
 public class DTOMapper {
 
+	/**
+	 * Converts domain books to dto books
+	 * @param domainBook
+	 * @return
+	 */
 	public static BookDTO toBookDTO(Book domainBook){
 		BookDTO bookDTO = new BookDTO(
 				domainBook.get_title(),  
@@ -29,6 +35,12 @@ public class DTOMapper {
 
 		return bookDTO;
 	}
+	
+	/**
+	 * Converts a dto book to a domain book
+	 * @param bookDTO
+	 * @return
+	 */
 	public static Book toBookDomain(BookDTO bookDTO){
 		Book domainBook = new Book(
 				bookDTO.get_title(), 
@@ -44,24 +56,43 @@ public class DTOMapper {
 		return domainBook;
 	}
 	
-	
+	/**
+	 * Converts a domain user to a dto user
+	 * @param domainUser
+	 * @return
+	 */
 	public static UserDTO toUserDTO(User domainUser){
 		UserDTO userDTO = new UserDTO(domainUser.get_address(),domainUser.getUserName(), domainUser.getUserAge(), domainUser.getEmail());
 		userDTO.set_userId(domainUser.get_userId());
 		return userDTO;
 	}
+	
+	/**
+	 * converts a dto user to a domain user
+	 * @param dtoUser
+	 * @return
+	 */
 	public static User toUserDomain(UserDTO dtoUser){
 		User domainUser = new User(dtoUser.get_address(),dtoUser.getUserName(),dtoUser.getUserBirth(), dtoUser.getEmail());
 		return domainUser;
 	}
 		
-	
+	/**
+	 * converts a domain author to a dto author
+	 * @param domainAuthor
+	 * @return
+	 */
 	public static AuthorDTO toAuthorDTO(Author domainAuthor){
 		AuthorDTO authorDTO = new AuthorDTO(domainAuthor.get_name(), domainAuthor.get_age(), domainAuthor.get_mostKnownForGenre(), domainAuthor.get_description());
 		authorDTO.set_authorId(domainAuthor.get_authorId());
 		return authorDTO;
 	}
 	
+	/**
+	 * converts a dto author to a domain author
+	 * @param dtoAuthor
+	 * @return
+	 */
 	public static Author toAuthorDomain(AuthorDTO dtoAuthor){
 		Author authorDomain = new Author(dtoAuthor.get_name(), dtoAuthor.get_age(), dtoAuthor.get_mostKnownForGenre(), dtoAuthor.get_description());
 		return authorDomain;

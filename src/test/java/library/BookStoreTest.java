@@ -38,11 +38,16 @@ import library.content.purchase.enums.PrintType;
 import library.content.purchase.enums.Rating;
 
 /**
+ * Test class for the REST api
+ * THE DATABASE IS NOT INITIALISED PREVIOUSLY
+ * ALL OBJECTS ARE ADDED AND WORKED ON IN THE TEST METHOD. SINCE TESTS CAN OCCUR IN ANY ORDER THAT IS WHY I USED ONE TEST METHOD.
+ * IF I DID A PRE-INITIALISED DATABASE I WOULD HAVE SEPARATE METHODS, BUT I FELT THAT THIS SHOWS A TRUER REPRESENTATION OF THE MODEL.
+ * TEST METHOD HAS ASSERTS AFTER EVERY TEST IMPLEMENTATION
  * @author adijn
  *
  */
-public class BookTest {
-	private static final Logger _logger = LoggerFactory.getLogger(BookTest.class);
+public class BookStoreTest {
+	private static final Logger _logger = LoggerFactory.getLogger(BookStoreTest.class);
 	private static final String WEB_SERVICE_URI = "http://localhost:10000/services";
 	private static Client _client;
 
@@ -56,8 +61,11 @@ public class BookTest {
 		_client = ClientBuilder.newClient();
 	}
 
+	/**
+	 * Main test case
+	 */
 	@Test
-	public void firstTest() {
+	public void testREST() {
 		
 		/*
 		 * Initialise domain objects that are going to be used.

@@ -6,6 +6,7 @@ package library.content.purchase.enums;
 import javax.xml.bind.annotation.XmlEnum;
 
 /**
+ * Genre types for a book and also the main genre for an Author
  * @author adijn
  *
  */

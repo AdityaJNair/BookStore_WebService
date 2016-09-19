@@ -26,6 +26,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import library.content.purchase.enums.BookGenre;
 
 /**
+ * 
+ * Author entity that is stored in the database.
  * @author adijn
  *
  */
@@ -33,21 +35,25 @@ import library.content.purchase.enums.BookGenre;
 @Access(AccessType.FIELD)
 public class Author {
 	
+	//id for author
 	@Id
 	@GeneratedValue(generator="ID-GENERATOR")
 	private Long authorId;
 
+	//name of author, is unique
 	@Column(nullable=false, name = "AUTHOR_NAME",unique=true)
 	private String authorName;
 	
+	//birth date for author
 	@Temporal(TemporalType.DATE)
 	@Column(name="DATE_OF_BIRTH",nullable=false)
 	private Date authorAge;
-		
+	
+	//most known genre for author
 	@Column(nullable=false, name="MAIN_GENRE")
 	private BookGenre mostKnownForGenre;
 		
-
+	//description for author
 	@Column(nullable=false, name="AUTHOR_DESCRIPTION")
 	private String authorDescription;
 	

@@ -12,6 +12,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 /**
+ * Embeddable Address class, stores the address information.
  * @author adijn
  *
  */
@@ -20,21 +21,26 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Address {
 	
+	//house number 
 	@Column(nullable=false)
 	private String houseNumber;
 	
+	//street name
 	@Column(nullable=false)
 	private String street;
 	
+	//suburb 
 	@Column(nullable=false)
 	private String suburb;
 	
+	//city
 	@Column(nullable=false)
 	private String city;
 	
 	@Column(nullable=false)
 	private String country;
 	
+	//zip code
 	@Column(nullable=false)
 	private String zip;
 	

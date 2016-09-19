@@ -35,6 +35,7 @@ import library.content.purchase.Review;
 import library.content.purchase.User;
 
 /**
+ * Resource class for Users. Able to create users, delete users, read users and put book orders into a user class
  * @author adijn
  *
  */
@@ -211,6 +212,11 @@ public class UserResource {
 		return Response.status(204).build();
 	}
 	
+	/**
+	 * Get the books that have been purchased by this user
+	 * @param id
+	 * @return
+	 */
 	@GET
 	@Path("{id}/books")
 	@Produces({ "application/xml", "application/json" })

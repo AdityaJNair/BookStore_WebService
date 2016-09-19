@@ -23,6 +23,7 @@ import library.content.purchase.enums.BookGenre;
 import library.content.purchase.enums.PrintType;
 
 /**
+ * A dto for the Book class that is sent across the wire
  * @author adijn
  *
  */

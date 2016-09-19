@@ -31,7 +31,8 @@ import library.content.purchase.Book;
 import library.content.purchase.enums.BookGenre;
 
 /**
- * Resource class for Authors. Able to create, read, update and delete (CRUD) items inside the Author.
+ * Resource class for Authors.
+ * Unable to delete an author object, as meaning would imply deleting all books associated which is not correct.
  * @author adijn
  *
  */

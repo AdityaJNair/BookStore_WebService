@@ -44,7 +44,9 @@ public class BookResource {
 	private static final Logger _logger = LoggerFactory.getLogger(BookResource.class);
 
 	/**
-	 * 
+	 * Get a book based on id
+	 * @param id
+	 * @return
 	 */
 	@GET
 	@Path("{id}")
@@ -83,6 +85,11 @@ public class BookResource {
 		return b1;
 	}
 	
+	/**
+	 * post a book to the database
+	 * @param bookdto
+	 * @return
+	 */
 	@POST
 	@Consumes({ "application/xml", "application/json" })
 	public Response addBook(BookDTO bookdto) {
@@ -107,7 +114,12 @@ public class BookResource {
 		}
 		return Response.created(URI.create("/book/" + domainBook.get_bookId())).build();
 	}
-			
+		
+	/**
+	 * Delete book from database based on id value
+	 * @param id
+	 * @return
+	 */
 	@DELETE
 	@Path("{id}")
 	@Consumes({ "application/xml", "application/json" })
@@ -143,7 +155,7 @@ public class BookResource {
 	}
 	
 	/**
-	 * Get all books
+	 * Get all books from the database
 	 * @return
 	 */
 	@GET
@@ -164,7 +176,7 @@ public class BookResource {
 	}
 	
 	/**
-	 * Get publisher
+	 * Get publisher for a book
 	 * @param bookid
 	 * @return
 	 */

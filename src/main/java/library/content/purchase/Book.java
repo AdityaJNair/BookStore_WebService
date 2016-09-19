@@ -23,6 +23,8 @@ import library.content.purchase.enums.BookGenre;
 import library.content.purchase.enums.PrintType;
 
 /**
+ * 
+ * Book class that has an author inside of it. It is an entity class and is persisted with the database
  * @author adijn
  *
  */
@@ -30,41 +32,53 @@ import library.content.purchase.enums.PrintType;
 @Entity
 public class Book {
 
+	//id for book
 	@Id
 	@GeneratedValue(generator="ID-GENERATOR")
 	private Long bookId;
 	
+	//title for book
 	@Column(nullable=false,name="BOOK_TITLE")
 	private String title;
 	
+	//Author for this book
 	@ManyToOne(fetch=FetchType.LAZY, cascade=CascadeType.PERSIST)
 	@JoinColumn(name="AUTHOR_ID", nullable=false)
 	private Author author;
 	
+	//Date this book is published
 	@Temporal(TemporalType.DATE)
 	@Column(nullable=false,name="DATE_CREATED")
 	private Date datePublished;
 	
+	//Description for this book
 	@Column(nullable=false, name="BOOK_DESCRIPTION")
 	private String description;
 	
+	
+	//Cost of this book
 	@Column(nullable=false, name="BOOK_COST")
 	private BigDecimal cost;
 	
+	//Print type for this book, hardcover, paperback
 	@Enumerated(EnumType.STRING)
 	@Column(nullable=false, name="PRINT_TYPE")
 	private PrintType printType;
 	
+	//publisher for the book
 	@Embedded
 	private Publisher publisher;
 	
+	//Genre for the book
 	@Enumerated(EnumType.STRING)
 	@Column(nullable=false, name="GENRE")
 	private BookGenre genre;
 	
+	//Unique isbn string for this book
 	@Column(nullable=false, name="ISBN", unique=true)
 	private String isbn;
 	
+	//language book is in
 	@Column(nullable=false, name="LANGUAGE")
 	private String language;
 

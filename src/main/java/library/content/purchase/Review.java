@@ -16,24 +16,31 @@ import javax.xml.bind.annotation.XmlRootElement;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import library.content.purchase.enums.Rating;
-
+/**
+ * Review class that is an embeddable - A user can make a review, and this class links to Books entity class. Users can make reviews to 
+ * books and then give them a comment and rating
+ * @author Aditya
+ *
+ */
 @Embeddable
 @XmlRootElement(name="Review")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Review {
 	
-
-	//@JoinColumn(name="USER_ID", nullable=false)
+	//book reviewed
 	@ManyToOne(fetch=FetchType.LAZY)
 	private Book bookReviewed;
 	
+	//comment for the review
 	@Column(name="REVIEW_COMMENT", nullable=false)
 	private String reviewComment;
 	
+	//review rating
 	@Enumerated(EnumType.STRING)
 	@Column(name="REVIEW_RATING", nullable=false)
 	private Rating reviewRating;
 	
+	//unique isbn representation of the book reviewed
 	@Column(nullable=false, name="REVIEW_ISBN", unique=true)
 	private String isbn;
 	
