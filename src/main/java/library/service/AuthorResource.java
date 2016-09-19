@@ -31,6 +31,7 @@ import library.content.purchase.Book;
 import library.content.purchase.enums.BookGenre;
 
 /**
+ * Resource class for Authors. Able to create, read, update and delete (CRUD) items inside the Author.
  * @author adijn
  *
  */
@@ -38,10 +39,33 @@ import library.content.purchase.enums.BookGenre;
 public class AuthorResource {
 
 	private static final Logger _logger = LoggerFactory.getLogger(AuthorResource.class);
+	
 	/**
-	 * Get author from id
+	 * Get author dto object from name field
 	 * @param id
-	 * @return
+	 * @return AuthorDTO object
+	 */
+	@GET
+	@Path("name/{name}")
+	@Produces({"application/xml","application/json"})
+	public AuthorDTO getBook(@PathParam("name") String name){
+		EntityManager m = PersistenceManager.instance().createEntityManager();
+		m.getTransaction().begin();
+		Author a = m.createQuery("SELECT a FROM Author a WHERE a.authorName=:name", Author.class).setParameter("name", name).getSingleResult();
+		AuthorDTO adto = DTOMapper.toAuthorDTO(a);
+		m.getTransaction().commit();
+		m.close();
+		if (a == null) {
+			throw new WebApplicationException(Response.status(Status.NOT_FOUND).build());
+		}
+		return adto;
+	}
+	
+	
+	/**
+	 * Get author dto object from id value
+	 * @param id
+	 * @return AuthorDTO object
 	 */
 	@GET
 	@Path("{id}")
@@ -62,12 +86,12 @@ public class AuthorResource {
 	}
 	
 	/**
-	 * Get a set of authors
+	 * Get a set of authorDTOs from the database
 	 * @return
 	 */
 	@GET
 	@Produces({"application/xml","application/json"})
-	public Set<AuthorDTO> getAuthors(){
+	public Response getAuthors(){
 		EntityManager m = PersistenceManager.instance().createEntityManager();
 		m.getTransaction().begin();
 		Set<AuthorDTO> authorDTOset = new HashSet<AuthorDTO>();
@@ -76,13 +100,14 @@ public class AuthorResource {
 		for(Author u: listAuthor){
 			authorDTOset.add(DTOMapper.toAuthorDTO(u));
 		}
+		GenericEntity<Set<AuthorDTO>> entity = new GenericEntity<Set<AuthorDTO>>(authorDTOset){};
 		m.getTransaction().commit();
 		m.close();
-		return authorDTOset;
+		return Response.ok(entity).build();
 	}
 	
 	/**
-	 * Post a author
+	 * Post a authorDTOs to the database
 	 * @param bookdto
 	 * @return
 	 */
@@ -96,32 +121,16 @@ public class AuthorResource {
 			m.persist(author);
 			m.getTransaction().commit();
 		} catch (PersistenceException p){
-			return Response.status(204).build();
+			return Response.status(409).build();
 		} finally {
 			m.close();
 		}
 		return Response.created(URI.create("/author/" + author.get_authorId())).status(201).build();
 	}
 		
-
-	/**
-	 * Update author main genre type
-	 */
-	@PUT
-	@Path("{id}/genre")
-	@Consumes({"application/xml","application/json"})
-	public Response updateAuthorGenre(@PathParam("id") long id,BookGenre r){
-		EntityManager m = PersistenceManager.instance().createEntityManager();
-		m.getTransaction().begin();
-		Author author = m.find(Author.class, id);
-		author.set_mostKnownForGenre(r);
-		m.getTransaction().commit();
-		m.close();
-		return Response.status(204).build();
-	}
 	
 	/**
-	 * Update author description
+	 * Update author description based on its id of the author
 	 */
 	@PUT
 	@Path("{id}/description")
@@ -137,7 +146,7 @@ public class AuthorResource {
 	}
 	
 	/**
-	 * Get set of all books by author
+	 * Get set of all books by author based on the id of the author
 	 */
 	@GET
 	@Path("{id}/book")

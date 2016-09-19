@@ -85,7 +85,6 @@ public class OrdersDTO {
 	@Override
 	public int hashCode() {
 		HashCodeBuilder b = new HashCodeBuilder(17, 31). 
-	            append(order_id).
 	            append(totalCost).
 	            append(usersOrder.toString());
 		Iterator<BookDTO> it1 = this.getBooks().iterator();
@@ -103,7 +102,7 @@ public class OrdersDTO {
 			return true;
 
 		OrdersDTO rhs = (OrdersDTO) obj;
-		EqualsBuilder b = new EqualsBuilder().append(order_id, rhs.order_id).append(totalCost, rhs.totalCost)
+		EqualsBuilder b = new EqualsBuilder().append(totalCost, rhs.totalCost)
 				.append(usersOrder, rhs.usersOrder);
 		Iterator<BookDTO> it1 = this.orderedBooks.iterator();
 		Iterator<BookDTO> it2 = rhs.orderedBooks.iterator();

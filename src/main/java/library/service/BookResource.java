@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Set;
 
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceException;
 import javax.persistence.TypedQuery;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -15,6 +16,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
@@ -31,10 +33,16 @@ import library.content.purchase.Publisher;
 import library.content.purchase.User;
 
 @Path("/book")
+/**
+ * Resource class for Books.
+ * Only able to GET books, DELETE books and POST books.
+ * No Put methods as once a book is added, nothing changes (own constraint)
+ * @author Aditya
+ *
+ */
 public class BookResource {
 	private static final Logger _logger = LoggerFactory.getLogger(BookResource.class);
 
-	// get book
 	/**
 	 * 
 	 */
@@ -54,7 +62,27 @@ public class BookResource {
 		return b1;
 	}
 
-
+	/**
+	 * Get Book from unique isbn
+	 * @param isbn
+	 * @return
+	 */
+	@GET
+	@Path("/isbn/{isbn}")
+	@Produces({ "application/xml", "application/json" })
+	public BookDTO getBookByUniqueIdentifier(@PathParam("isbn") String isbn) {
+		EntityManager m = PersistenceManager.instance().createEntityManager();
+		m.getTransaction().begin();
+		Book b = m.createQuery("SELECT b FROM Book b WHERE b.isbn=:isbn", Book.class).setParameter("isbn", isbn).getSingleResult();
+		BookDTO b1 = DTOMapper.toBookDTO(b);
+		m.getTransaction().commit();
+		m.close();
+		if (b == null) {
+			throw new WebApplicationException(Response.status(Status.NOT_FOUND).build());
+		}
+		return b1;
+	}
+	
 	@POST
 	@Consumes({ "application/xml", "application/json" })
 	public Response addBook(BookDTO bookdto) {
@@ -67,15 +95,16 @@ public class BookResource {
 		for (Author a : listAuthors) {
 			if (domainBook.get_author().equals(a)) {
 				domainBook.set_author(a);
-				m.persist(domainBook);
-				m.getTransaction().commit();
-				m.close();
-				return Response.created(URI.create("/book/" + domainBook.get_bookId())).status(201).build();
 			}
 		}
-		m.persist(domainBook);
-		m.getTransaction().commit();
-		m.close();
+		try{
+			m.persist(domainBook);
+			m.getTransaction().commit();
+		} catch (PersistenceException e){
+			return Response.status(409).build();
+		}finally{
+			m.close();
+		}
 		return Response.created(URI.create("/book/" + domainBook.get_bookId())).build();
 	}
 			
@@ -89,21 +118,10 @@ public class BookResource {
 		m.remove(b);
 		m.getTransaction().commit();
 		m.close();
-		return Response.status(204).build();
+		return Response.ok().build();
 	}
 	
-	/**
-	 * Get Book from unique isbn
-	 * @param isbn
-	 * @return
-	 */
-	@GET
-	@Path("/isbn/{isbn}")
-	@Produces({ "application/xml", "application/json" })
-	public BookDTO getBookByUniqueIdentifier(@PathParam("isbn") String isbn) {
-		return null;
 
-	}
 	
 	/**
 	 * Get author object for a book
@@ -112,24 +130,25 @@ public class BookResource {
 	 * @return
 	 */
 	@GET
-	@Path("{id}/author/{aid}")
+	@Path("{id}/author")
 	@Produces({ "application/xml", "application/json" })
-	public AuthorDTO getBookAuthor(@PathParam("id") long bookid, @PathParam("aid") long authorId){
+	public AuthorDTO getBookAuthor(@PathParam("id") long bookid){
 		EntityManager m = PersistenceManager.instance().createEntityManager();
 		m.getTransaction().begin();
-		Author bookauthor = m.find(Author.class, authorId);
-		AuthorDTO authorDTO = DTOMapper.toAuthorDTO(bookauthor);
+		Book bookauthor = m.find(Book.class, bookid);
+		AuthorDTO authorDTO = DTOMapper.toAuthorDTO(bookauthor.get_author());
 		m.getTransaction().commit();
 		m.close();
 		return authorDTO;
 	}
+	
 	/**
 	 * Get all books
 	 * @return
 	 */
 	@GET
 	@Produces({ "application/xml", "application/json" })
-	public Set<BookDTO> getBooks(){
+	public Response getBooks(){
 		EntityManager m = PersistenceManager.instance().createEntityManager();
 		m.getTransaction().begin();
 		Set<BookDTO> bookDTOset = new HashSet<BookDTO>();
@@ -138,9 +157,10 @@ public class BookResource {
 		for(Book u: listBook){
 			bookDTOset.add(DTOMapper.toBookDTO(u));
 		}
+		GenericEntity<Set<BookDTO>> entity = new GenericEntity<Set<BookDTO>>(bookDTOset){};
 		m.getTransaction().commit();
 		m.close();
-		return bookDTOset;
+		return Response.ok(entity).build();
 	}
 	
 	/**

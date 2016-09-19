@@ -41,10 +41,10 @@ public class Review {
 		
 	}
 	
-	public Review(String s, Rating r,String bookname){
+	public Review(String s, Rating r,String isbn){
 		this.reviewComment = s;
 		this.reviewRating = r;
-		this.isbn=bookname;
+		this.isbn=isbn;
 	}
 	
 	

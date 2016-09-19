@@ -3,6 +3,8 @@
  */
 package library;
 
+import static org.junit.Assert.*;
+
 import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.Date;
@@ -57,245 +59,286 @@ public class BookTest {
 
 	@Test
 	public void firstTest() {
+		
+		/*
+		 * Initialise domain objects that are going to be used.
+		 */
+		
+		//Initialise Dates to be used 
 		Date date = new GregorianCalendar(1964, Calendar.JUNE, 22).getTime();
 		Date date1 = new GregorianCalendar(1899, Calendar.JULY, 21).getTime();
 		Date date2 = new GregorianCalendar(1965, Calendar.JULY, 31).getTime();
 		Date date3 = new GregorianCalendar(1835, Calendar.NOVEMBER, 30).getTime();
 		Date date4 = new GregorianCalendar(1947, Calendar.SEPTEMBER, 21).getTime();
-		Date date5 = new GregorianCalendar(1995, Calendar.NOVEMBER, 27).getTime();
-		Date date6 = new GregorianCalendar(1890, Calendar.NOVEMBER, 1).getTime();
 		
-		// 5 authors - 1 has done 2 books
-		Author author = new Author("Dan Brown", date, BookGenre.Mystery, "Dan has worked extremly...");
-		Author author1 = new Author("J.K Rowling", date2, BookGenre.Fantasy, "One of the greats...");
-		Author author2 = new Author("Stephen King", date4, BookGenre.Horror, "RUN!!....");
-		Author author3 = new Author("Mark Twain", date3, BookGenre.Fiction, "Amazing...");
-		Author author4 = new Author("Ernest Hemingway", date1, BookGenre.Fiction, "I have no response...");
+		// 3 different authors for each book authors
+		Author author1 = new Author("Dan Brown", date, BookGenre.Mystery, "Dan has worked extremly...");
+		Author author2 = new Author("J.K Rowling", date2, BookGenre.Fantasy, "One of the greats...");
+		Author author3 = new Author("Stephen King", date4, BookGenre.Horror, "RUN!!....");
+		
 
-		// address
-		Address addressUser = new Address("21", "Parliment House Street", "Wellington", "Auckland", "New Zealand", "2502");
-		Address addressUser2 = new Address("23", "Parliment House Street", "Wellington", "Auckland", "New Zealand", "2502");
-		Address address1 = new Address("152", "Dove Street", "Darby", "London", "England", "156-198-19");
-		Address address = new Address("2", "McNaughton Street", "Onehunga", "Auckland", "New Zealand", "1432");
+		// address for users and publishers
+		Address addressPublisher1 = new Address("152", "Dove Street", "Darby", "London", "England", "156-198-19");
+		Address addressPublisher2 = new Address("2", "McNaughton Street", "Onehunga", "Auckland", "New Zealand", "1432");
 		
-		Publisher publisher = new Publisher(address1, "Thompsons publishing services");
-		Publisher publisher1 = new Publisher(address, "Brandons publishing services");
+		Publisher publisher1 = new Publisher(addressPublisher1, "Thompsons publishing services");
+		Publisher publisher2 = new Publisher(addressPublisher2, "Brandons publishing services");
 		
 		// books
-		Book book = new Book("Inferno", date, author1, "Book description", new BigDecimal("12.50"), PrintType.Other, publisher,
-				BookGenre.Novel, "ISBN-13: 152-1-56619-909-4", "Russian");
+		Book book1 = new Book("Inferno", date, author1, "Book description", new BigDecimal("12.50"), PrintType.Other, publisher1,
+				BookGenre.Novel, "ISBN-13:152-1-56619-909-4", "Russian");
 
-		Book book1 = new Book("Harry Potter", date1, author1, "Book description", new BigDecimal("52.60"), PrintType.HardCover, publisher,
-				BookGenre.Speech, "ISBN-13: 673-1-56619-909-4", "Maori");
+		Book book2 = new Book("Harry Potter", date1, author2, "Book description", new BigDecimal("52.60"), PrintType.HardCover, publisher2,
+				BookGenre.Speech, "ISBN-13:673-1-56619-909-4", "Maori");
 
-		Book book2 = new Book("The Shinning", date2, author1, "Book description", new BigDecimal("23.00"), PrintType.E_Book, publisher,
-				BookGenre.NonFiction, "ISBN-13: 234-1-56619-909-4", "Dutch");
+		Book book3 = new Book("The Shinning", date2, author3, "Book description", new BigDecimal("23.00"), PrintType.E_Book, publisher1,
+				BookGenre.NonFiction, "ISBN-13:234-1-56619-909-4", "Dutch");
 
-		Book book3 = new Book("Tom Sawyer", date3, author1, "Book description", new BigDecimal("104.00"), PrintType.Paperback, publisher,
-				BookGenre.CookBook, "ISBN-13: 666-1-56619-909-4", "French");
 
-		Book book4 = new Book("Old man and the sea", date4, author1, "Book description", new BigDecimal("265.00"),
-				PrintType.HardCover, publisher1, BookGenre.Crime, "ISBN-13: 001-1-56619-909-4", "English");
-		
-		Book book5 = new Book("Dutchman", date4, author1, "Book description", new BigDecimal("5.00"),
-				PrintType.HardCover, publisher1, BookGenre.Article, "ISBN-13: 999-1-56619-909-4", "Japanese");
-		
-		User user = new User(addressUser, "Adi", date5,"testing@gmail.com");
-		
-		User user1 = new User(addressUser2, "Tim", date6,"testing@yahoo.com");
+		//Map the domain books to the dto books
+		BookDTO bookDTOBook1 = DTOMapper.toBookDTO(book1);
+		BookDTO bookDTOBook2 = DTOMapper.toBookDTO(book2);
+		BookDTO bookDTOBook3 = DTOMapper.toBookDTO(book3);	
 
-		Orders order = new Orders(user);
-		order.addBookToOrder(book);
-		order.addBookToOrder(book1);
-		order.addBookToOrder(book2);
-		order.addBookToOrder(book3);
-		order.addBookToOrder(book4);
+		/*
+		 * ||=========================================================================================================================================================||
+		 * 																				BOOK TESTING
+		 * ||=========================================================================================================================================================||
+		 */
 		
-		OrdersDTO orderdto = DTOMapper.toOrdersDTO(order);
+		//POST BOOKS TO THE DATABASE, implicitly creates the AUTHORS USED IN THESE BOOKs -- Cascade.persist
+		//Add book 1
+		Response responseBook1 = _client.target(WEB_SERVICE_URI + "/book").request().post(Entity.xml(bookDTOBook1));
+		_logger.info("Response is :" + responseBook1.getStatusInfo());
+		String locationBook1 = responseBook1.getLocation().toString();
+		_logger.info(locationBook1);
+		assertTrue(responseBook1.getStatus() == 201);
+		responseBook1.close();
 		
-		Review r = new Review("good", Rating.FOUR_STARS, "ISBN-13: 152-1-56619-909-4");
-		r.setBookReviewed(book);
-		Review r1 = new Review("bad", Rating.ONE_STAR, "ISBN-13: 673-1-56619-909-4");
-		r.setBookReviewed(book1);
-		Review r2 = new Review("mediocre", Rating.ONE_STAR, "ISBN-13: 234-1-56619-909-4");
-		r.setBookReviewed(book2);
-		Review r3 = new Review("meh", Rating.TWO_STARS, "ISBN-13: 666-1-56619-909-4");
-		r.setBookReviewed(book3);
-		Review r4 = new Review("amazing", Rating.FIVE_STARS, "ISBN-13: 001-1-56619-909-4");
-		r.setBookReviewed(book4);
-		
-		user.addReview(r);
-		user.addReview(r1);
-		user.addReview(r2);
-		user.addReview(r3);
-		user.addReview(r4);
-		
-		user1.addReview(r);
-		user1.addReview(r1);
-		user1.addReview(r2);
-		user1.addReview(r3);
-		user1.addReview(r4);
-				
+		//Add book 2
+		Response responseBook2 = _client.target(WEB_SERVICE_URI + "/book").request().post(Entity.xml(bookDTOBook2));
+		_logger.info("Response is :" + responseBook2.getStatusInfo());
+		String locationBook2 = responseBook2.getLocation().toString();
+		_logger.info(locationBook2);
+		assertTrue(responseBook2.getStatus() == 201);
+		responseBook2.close();
 
-		BookDTO b1 = DTOMapper.toBookDTO(book);
-		BookDTO b2 = DTOMapper.toBookDTO(book1);
-		BookDTO b3 = DTOMapper.toBookDTO(book2);
-		BookDTO b4 = DTOMapper.toBookDTO(book3);
-		BookDTO b5 = DTOMapper.toBookDTO(book4);
-		BookDTO b6 = DTOMapper.toBookDTO(book5);
-		
-		UserDTO u1 = DTOMapper.toUserDTO(user);
-		UserDTO u2 = DTOMapper.toUserDTO(user1);
-		
-		Response response = _client.target(WEB_SERVICE_URI + "/book").request().post(Entity.xml(b1));
-		_logger.info("Response is :" + response.getStatusInfo());
-		String location = response.getLocation().toString();
-		_logger.info(location);
-		response.close();
-		
-		Response response1 = _client.target(WEB_SERVICE_URI + "/book").request().post(Entity.xml(b2));
-		_logger.info("Response is :" + response1.getStatusInfo());
-		String location1 = response1.getLocation().toString();
-		_logger.info(location1);
-		response1.close();
+		//Add book 3
+		Response responseBook3 = _client.target(WEB_SERVICE_URI + "/book").request().post(Entity.xml(bookDTOBook3));
+		_logger.info("Response is :" + responseBook3.getStatusInfo());
+		String locationBook3 = responseBook3.getLocation().toString();
+		_logger.info(locationBook3);
+		assertTrue(responseBook3.getStatus() == 201);		
+		responseBook3.close();
 
-		Response response2 = _client.target(WEB_SERVICE_URI + "/book").request().post(Entity.xml(b3));
-		_logger.info("Response is :" + response2.getStatusInfo());
-		String location2 = response2.getLocation().toString();
-		_logger.info(location2);
-		response2.close();
-
-		Response response3 = _client.target(WEB_SERVICE_URI + "/book").request().post(Entity.xml(b4));
-		_logger.info("Response is :" + response3.getStatusInfo());
-		String location3 = response3.getLocation().toString();
-		_logger.info(location3);
-		response3.close();
-
-		Response response4 = _client.target(WEB_SERVICE_URI + "/book").request().post(Entity.xml(b5));
-		_logger.info("Response is :" + response4.getStatusInfo());
-		String location4 = response4.getLocation().toString();
-		_logger.info(location4);
-		response4.close();
+		//GET THE BOOKDTO FROM THE ADDRESS GIVEN
+		BookDTO dtoBookGetBook3 = _client.target(locationBook3).request().accept("application/xml").get(BookDTO.class);
 		
-		Response response41 = _client.target(WEB_SERVICE_URI + "/book").request().post(Entity.xml(b6));
-		_logger.info("Response is :" + response41.getStatusInfo());
-		String location41 = response41.getLocation().toString();
-		_logger.info(location41);
-		response41.close();
+		//GET THE BOOK USING THE ISBN FOR THAT BOOK
+		BookDTO dtoBookGetISBNBook3 = _client.target(WEB_SERVICE_URI+"/book/isbn/"+book3.getIsbn()).request().accept("application/xml").get(BookDTO.class);
+		_logger.info("dtoBookGetISBNBook3 has field:" + dtoBookGetISBNBook3.toString());
+		_logger.info("dtoBookGetBook3 has field:" + dtoBookGetBook3.toString());
+		assertTrue(dtoBookGetISBNBook3.equals(dtoBookGetBook3));
 		
-		Response responseu = _client.target(WEB_SERVICE_URI + "/user").request().post(Entity.xml(u1));
-		_logger.info("Response is :" + responseu.getStatusInfo());
-		String locationu = responseu.getLocation().toString();
-		_logger.info(locationu);
-		responseu.close();
+		//GET AUTHOR FOR BOOK1
+		AuthorDTO dtoAuthorGetAuthorForBook1 = _client.target(locationBook1+"/author").request().accept("application/xml").get(AuthorDTO.class);
+		AuthorDTO realAuthorDTOBook1 = bookDTOBook1.get_author();
+		_logger.info("dtoAuthorGetAuthorForBook1 has field:" + dtoAuthorGetAuthorForBook1.toString());
+		_logger.info("realAuthorDTOBook1 has field:" + realAuthorDTOBook1.toString());
+		assertTrue(dtoAuthorGetAuthorForBook1.equals(realAuthorDTOBook1));
 		
-		Response responseu1 = _client.target(WEB_SERVICE_URI + "/user").request().post(Entity.xml(u2));
-		_logger.info("Response is :" + responseu1.getStatusInfo());
-		String locationu1 = responseu1.getLocation().toString();
-		_logger.info(locationu1);
-		responseu1.close();
+		//GET PUBLISHER -- book2 has publisher2
+		Publisher book2PublisherFromDatabase = _client.target(locationBook2+"/publisher").request().accept("application/xml").get(Publisher.class);
+		_logger.info("book2PublisherFromDatabase has field:" + book2PublisherFromDatabase.toString());
+		_logger.info("Publisher2 has field:" + publisher2.toString());
+		assertTrue(book2PublisherFromDatabase.equals(publisher2));
 		
-		Response responseu11 = _client.target(WEB_SERVICE_URI + "/user").request().post(Entity.xml(u2));
-		_logger.info("Response is :" + responseu11.getStatusInfo() +" " + responseu11.getStatus());
-		responseu11.close();
-		
-		
-		BookDTO bb1 = _client.target(location).request().accept("application/xml").get(BookDTO.class);
-		BookDTO bb2 = _client.target(location1).request().accept("application/xml").get(BookDTO.class);
-		BookDTO bb3 = _client.target(location2).request().accept("application/xml").get(BookDTO.class);
-		BookDTO bb4 = _client.target(location3).request().accept("application/xml").get(BookDTO.class);
-		BookDTO bb5 = _client.target(location41).request().accept("application/xml").get(BookDTO.class);
-		
-		_client.target(location).request().accept("application/xml").delete(BookDTO.class);
-
-		_logger.info(bb1.toString());
-		_logger.info(bb2.toString());
-		_logger.info(bb3.toString());
-		_logger.info(bb4.toString());
-		_logger.info(bb5.toString());
-		
-		AuthorDTO a1 = DTOMapper.toAuthorDTO(author1);
-		AuthorDTO a2 = DTOMapper.toAuthorDTO(author2);
-	
-		Response responsea = _client.target(WEB_SERVICE_URI + "/author").request().post(Entity.xml(a1));
-		_logger.info("Response is :" + responsea.getStatusInfo());
-		responsea.close();
-		
-		Response responseu111 = _client.target(WEB_SERVICE_URI + "/author").request().post(Entity.xml(a2));
-		_logger.info("Response is :" + responseu111.getStatusInfo());
-		String locationu11 = responseu111.getLocation().toString();
-		_logger.info(locationu11);
-		responseu111.close();
-		
-		Set<BookDTO> listbook = _client.target(WEB_SERVICE_URI + "/author/2/book").request().accept("application/xml").get(new GenericType<Set<BookDTO>>() {});
-		for(BookDTO b: listbook){
+		//GET ALL BOOKS IN THE DATABASE
+		Set<BookDTO> dataBaseSetOfBooks = _client.target(WEB_SERVICE_URI + "/book").request().accept("application/xml").get(new GenericType<Set<BookDTO>>() {});
+		for(BookDTO b: dataBaseSetOfBooks){
 			_logger.info(b.toString());
 		}
+		assertTrue(dataBaseSetOfBooks.size() == 3);
+				
+		//DELETE THE FIRST BOOK -- CHECK IF AUTHOR WAS DELETED FOR BOOK 1
+		Response deleteBook1 = _client.target(locationBook1).request().accept("application/xml").delete();
+		assertTrue(deleteBook1.getStatus() == 200);
+		deleteBook1.close();
 		
-			
+		Set<BookDTO> dataBaseSetOfBookTest2 = _client.target(WEB_SERVICE_URI + "/book").request().accept("application/xml").get(new GenericType<Set<BookDTO>>() {});
+		for(BookDTO b: dataBaseSetOfBookTest2){
+			_logger.info(b.toString());
+		}
+		assertTrue(dataBaseSetOfBookTest2.size() == 2);
+		
+		
+		//DUPLICATE ADD IN BOOK2 WITH SAME AUTHOR -- should return 409 conflict
+		Response responseBook2Duplicate = _client.target(WEB_SERVICE_URI + "/book").request().post(Entity.xml(bookDTOBook2));
+		if(responseBook2Duplicate.getStatus()!=409){
+			_logger.error("Duplicate entry added with a post message of "+ responseBook2Duplicate.getStatusInfo() + " " +responseBook2Duplicate.getStatus());
+			fail();
+		} 
+		assertTrue(responseBook2Duplicate.getStatus()==409);
+		responseBook2Duplicate.close();
+		
+		/*
+		 * ||=========================================================================================================================================================||
+		 * 																				AUTHOR TESTING
+		 * ||=========================================================================================================================================================||
+		 */
 
-		//List<BookDTO> bblist = (List<BookDTO>) _client.target(WEB_SERVICE_URI + "/book").request().accept("application/xml").get(BookDTO.class);
+		//INITIALISE NEW AUTHORS
+		Author author4 = new Author("Mark Twain", date3, BookGenre.Fiction, "Amazing...");
+		Author author5 = new Author("Ernest Hemingway", date1, BookGenre.Fiction, "I have no response...");
+		
+		//AUTHOR DTO NEW ENTRIES
+		AuthorDTO authorDTOauthor4 = DTOMapper.toAuthorDTO(author4);
+		AuthorDTO authorDTOauthor5 = DTOMapper.toAuthorDTO(author5);
+	
+		//POSTING THE TWO AUTHORS 		
+		Response responseAuthor4 = _client.target(WEB_SERVICE_URI + "/author").request().post(Entity.xml(authorDTOauthor4));
+		_logger.info("Response is :" + responseAuthor4.getStatusInfo());
+		String locationAuthor4 = responseAuthor4.getLocation().toString();
+		_logger.info(locationAuthor4);
+		assertTrue(responseAuthor4.getStatus() == 201);
+		responseAuthor4.close();
+		
+		Response responseAuthor5 = _client.target(WEB_SERVICE_URI + "/author").request().post(Entity.xml(authorDTOauthor5));
+		_logger.info("Response is :" + responseAuthor5.getStatusInfo());
+		String locationAuthor5 = responseAuthor5.getLocation().toString();
+		_logger.info(locationAuthor5);
+		assertTrue(responseAuthor5.getStatus() == 201);
+		responseAuthor5.close();
+		
+		//GET A SET OF BOOKS FROM THE AUTHOR - AUTHOR 4 (SHOULD BE 0 AS JUST ADDED)
+		Set<BookDTO> listbook = _client.target(locationAuthor4+"/book").request().accept("application/xml").get(new GenericType<Set<BookDTO>>() {});
+		_logger.info("length of new author book list is = "+listbook.size());
+		assertTrue(listbook.size()==0);
+		
+		//ADDING A DUPLICATE AUTHOR
+		Response responseDuplicateAuthor5 = _client.target(WEB_SERVICE_URI + "/author").request().post(Entity.xml(authorDTOauthor5));
+		assertTrue(responseDuplicateAuthor5.getStatus() == 409);
+		responseDuplicateAuthor5.close();		
+		
+		//GET AUTHOR FROM NAME -- Author Mark Twain which is author4
+		AuthorDTO dtoAuthorMarkTwainNAMEGET = _client.target(WEB_SERVICE_URI+"/author/name/"+ "Mark Twain").request().accept("application/xml").get(AuthorDTO.class);
+		AuthorDTO dtoAuthorMarkTwainIDGET = _client.target(locationAuthor4).request().accept("application/xml").get(AuthorDTO.class);
+		assertTrue(dtoAuthorMarkTwainNAMEGET.equals(dtoAuthorMarkTwainIDGET));
+		
+		//GET SET OF ALL AUTHORS -- ADDED 5 IN TOTAL (3 FROM BOOK + 2 IN THIS PART TOF TEST)
+		Set<AuthorDTO> listAuthor = _client.target(WEB_SERVICE_URI+"/author").request().accept("application/xml").get(new GenericType<Set<AuthorDTO>>() {});
+		_logger.info("length of authors in database is = "+listAuthor.size());
+		for(AuthorDTO a: listAuthor){
+			_logger.info(a.toString());
+		}
+		assertTrue(listAuthor.size()==5);
+		
+		//UPDATE AUTHOR DESCRIPTION
+		_logger.info("Description for Author4 " +dtoAuthorMarkTwainIDGET.get_description());
+		Response responsePutAuthor4Description = _client.target(locationAuthor4+"/description").request().accept("application/xml").put(Entity.xml(new String("BELIEVE ME PLEASE, I AM A REAL AUTHOR. BUY MY BOOKS!!.")));
+		responsePutAuthor4Description.close();
+		AuthorDTO dtoUpdatedDescriptionAuthor4 = _client.target(locationAuthor4).request().accept("application/xml").get(AuthorDTO.class);
+		_logger.info("updated description for Author4 " +dtoUpdatedDescriptionAuthor4.get_description());
+		assertTrue(!dtoAuthorMarkTwainIDGET.get_description().equals(dtoUpdatedDescriptionAuthor4.get_description()));
+		
+		/*
+		 * ||=========================================================================================================================================================||
+		 * 																				USER TESTING
+		 * ||=========================================================================================================================================================||
+		 */
+		
+		//USER BIRTH DATES
+		Date dateUser1 = new GregorianCalendar(2000, Calendar.MARCH, 31).getTime();
+		Date dateUser2 = new GregorianCalendar(1900, Calendar.SEPTEMBER, 21).getTime();
+		
+		//USER ADDRESSES
+		Address addressUser = new Address("21", "Parliment House Street", "Wellington", "Auckland", "New Zealand", "2502");
+		Address addressUser2 = new Address("23", "Parliment House Street", "Wellington", "Auckland", "New Zealand", "2502");
+		
+		//USERS
+		User user1 = new User(addressUser, "Adi", dateUser1,"testingADI@gmail.com");
+		User user2 = new User(addressUser2, "Tim", dateUser2,"testingTIM@yahoo.com");
+		
+		//GETTING BOOKS BY ISBN -- ISBN-13:234-1-56619-909-4 -- ISBN-13:673-1-56619-909-4
+		BookDTO dtoBookBook2 = _client.target(WEB_SERVICE_URI+"/book/isbn/"+"ISBN-13:234-1-56619-909-4").request().accept("application/xml").get(BookDTO.class);
+		BookDTO dtoBookBook3 = _client.target(WEB_SERVICE_URI+"/book/isbn/"+"ISBN-13:673-1-56619-909-4").request().accept("application/xml").get(BookDTO.class);
+		
+		//CONVETING THE BOOKS TO DTO BOOKS
+		Book domainUserTestBook2 = DTOMapper.toBookDomain(dtoBookBook2);
+		Book domainUserTestBook3 = DTOMapper.toBookDomain(dtoBookBook3);
+								
+		//CONVERTING USER TO DTOS
+		UserDTO dtoUserUser1 = DTOMapper.toUserDTO(user1);
+		UserDTO dtoUserUser2 = DTOMapper.toUserDTO(user2);
+		
+		//POST USERS
+		Response responsePostUser1 = _client.target(WEB_SERVICE_URI + "/user").request().post(Entity.xml(dtoUserUser1));
+		_logger.info("Response is :" + responsePostUser1.getStatusInfo());
+		String locationUser1 = responsePostUser1.getLocation().toString();
+		_logger.info(locationUser1);
+		assertTrue(responsePostUser1.getStatus() == 201);
+		responsePostUser1.close();
+		
+		Response responsePostUser2 = _client.target(WEB_SERVICE_URI + "/user").request().post(Entity.xml(dtoUserUser2));
+		_logger.info("Response is :" + responsePostUser2.getStatusInfo());
+		String locationUser2 = responsePostUser2.getLocation().toString();
+		_logger.info(locationUser2);
+		assertTrue(responsePostUser2.getStatus() == 201);
+		responsePostUser2.close();	
+		
+		//GET A SET OF ALL USERS IN THE DATABASE
+		Set<UserDTO> listUsers = _client.target(WEB_SERVICE_URI+"/user").request().accept("application/xml").get(new GenericType<Set<UserDTO>>() {});
+		_logger.info("length of user database list is = "+listUsers.size());
+		assertTrue(listUsers.size()==2);
+		for(UserDTO a : listUsers){
+			_logger.info(a.toString());
+		}
+		
+		//GET A SINGLE USER
+		_logger.info("Get a single user by id");
+		UserDTO dtoUserGetUser1 = _client.target(locationUser1).request().accept("application/xml").get(UserDTO.class);
+		assertTrue(dtoUserGetUser1.equals(dtoUserUser1));
+		
+		//GET A USER BY THIER EMAIL
+		_logger.info("Get a single user by email");
+		UserDTO dtoUserGetUser1Email = _client.target(WEB_SERVICE_URI+"/user/email/"+user1.getEmail()).request().accept("application/xml").get(UserDTO.class);
+		assertTrue(dtoUserGetUser1Email.equals(dtoUserGetUser1));
+						
+		//CREATING REVIEWS FOR THOSE BOOKS
+		Review review1 = new Review("good", Rating.FOUR_STARS, "ISBN-13:234-1-56619-909-4");
+		review1.setBookReviewed(domainUserTestBook2);
+		Review review2 = new Review("bad", Rating.ONE_STAR, "ISBN-13:234-1-56619-909-4");
+		review1.setBookReviewed(domainUserTestBook2);
+		Review review3 = new Review("mediocre", Rating.ONE_STAR, "ISBN-13:673-1-56619-909-4");
+		review1.setBookReviewed(domainUserTestBook3);
+				
+		//ADD A REVIEW
+		Response responseAddReview1ToAuthor1 = _client.target(locationUser1+"/review/add").request().accept("application/xml").put(Entity.xml(review1));
+		assertTrue(responseAddReview1ToAuthor1.getStatus() == 204);
+		responseAddReview1ToAuthor1.close();
+		//ADD A REVIEW FOR THE SAME BOOK AGAIN ( NOT ALLOWED )
+		Response responseAddReview2ToAuthor1 = _client.target(locationUser1+"/review/add").request().accept("application/xml").put(Entity.xml(review1));
+		assertTrue(responseAddReview2ToAuthor1.getStatus() == 400);
+		responseAddReview2ToAuthor1.close();		
+		
+		//DELETE A USER --  that has a review
+		Response deleteUser1 = _client.target(locationUser1).request().accept("application/xml").delete();
+		assertTrue(deleteUser1.getStatus() == 200);
+		deleteUser1.close();
+		
+		//ORDERS
+		Orders order = new Orders(user1);
+		order.addBookToOrder(domainUserTestBook2);
+		order.addBookToOrder(domainUserTestBook3);
+		OrdersDTO orderdto = DTOMapper.toOrdersDTO(order);
+		
+		//ADD ORDER TO USER
+		Response responseAddOrderToUser1 = _client.target(locationUser1+"/order").request().accept("application/xml").put(Entity.xml(orderdto));
+		//assertTrue(responseAddOrderToUser1.getStatus() == 400);
+		responseAddOrderToUser1.close();		
+		
+		
+		
+		
 	}
-
-	/*
-	 * @Test public void secondtest(){ EntityManager m =
-	 * PersistenceManager.instance().createEntityManager();
-	 * m.getTransaction().begin();
-	 * 
-	 * 
-	 * //orders -- for a user order1 = new Orders(user);
-	 * order1.addBookToOrder(book); order1.addBookToOrder(book2);
-	 * order1.addBookToOrder(book3); user.addOrder(order1);
-	 * 
-	 * 
-	 * 
-	 * Author author2 = new Author("Stephen King", date,
-	 * BookGenre.Horror,"Hero"); m.persist(author2); Author author3 = new
-	 * Author("Mark Twain", date, BookGenre.Novel,"Amazing");
-	 * m.persist(author3); Author author4 = new Author("Ernest Hemingway", date,
-	 * BookGenre.Fiction,"SY"); m.persist(author4);
-	 * 
-	 * Author author1 = new Author("J.K Rowling", date,
-	 * BookGenre.Fantasy,"Cool"); m.persist(author1);
-	 * 
-	 * Address addressUser1 = new
-	 * Address("21","Ulta Street","Penrose","Auckland","New Zealand", "2502");
-	 * user = new User(addressUser1,"Bob",date); m.persist(user);
-	 * 
-	 * User user1 = new User(addressUser1,"Tom",date); m.persist(user1);
-	 * 
-	 * _logger.info("comparing user1 with user "+user1.equals(user)); Address
-	 * address = new Address("27", "McNaughton Street", "Onehunga", "Auckland",
-	 * "New Zealand", "187154sdaw");
-	 * 
-	 * Publisher publisher = new Publisher(address,
-	 * "Thompsons publishing services");
-	 * 
-	 * book = new Book("A",date , "Book description", new BigDecimal("50"),
-	 * PrintType.HardCover, publisher, BookGenre.Novel, "1231", "English");
-	 * m.persist(book); book.addAuthorToSet(author1);
-	 * book.addAuthorToSet(author2);
-	 * 
-	 * book1 = new Book("B",date , "Book description", new BigDecimal("52"),
-	 * PrintType.HardCover, publisher, BookGenre.Novel, "192.1231.1", "er");
-	 * book1.addAuthorToSet(author1); m.persist(book1);
-	 * 
-	 * book2 = new Book("C",date , "Book description", new BigDecimal("53"),
-	 * PrintType.HardCover, publisher, BookGenre.Novel, "19223.1", "fd");
-	 * book2.addAuthorToSet(author1); m.persist(book2);
-	 * 
-	 * book3 = new Book("D",date , "Book description", new BigDecimal("54"),
-	 * PrintType.HardCover, publisher, BookGenre.Novel, "15168.1.1", "fe");
-	 * book3.addAuthorToSet(author1); m.persist(book3);
-	 * 
-	 * 
-	 * Review r = new Review("BAD",Rating.FIVE_STARS,"1231"); user.addReview(r);
-	 * r.setBookReviewed(book);
-	 * 
-	 * Review r1 = new Review("BAAD",Rating.FIVE_STARS,"192.1231.1");
-	 * user.addReview(r1); r1.setBookReviewed(book1);
-	 * 
-	 * 
-	 * m.getTransaction().commit(); m.close(); }
-	 */
 }

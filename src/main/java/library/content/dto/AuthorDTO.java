@@ -91,7 +91,6 @@ public class AuthorDTO {
 	@Override
 	public int hashCode() {
 		HashCodeBuilder b = new HashCodeBuilder(17, 31). 
-	            append(authorId).
 	            append(authorName).
 	            append(authorAge).
 	            append(mostKnownForGenre);
@@ -106,7 +105,7 @@ public class AuthorDTO {
 			return true;
 
 		AuthorDTO rhs = (AuthorDTO) obj;
-		EqualsBuilder b = new EqualsBuilder().append(authorId, rhs.get_authorId()).append(authorName, rhs.get_name())
+		EqualsBuilder b = new EqualsBuilder().append(authorName, rhs.get_name())
 				.append(authorAge, rhs.get_age()).append(mostKnownForGenre, rhs.get_mostKnownForGenre());
 		return b.isEquals();
 	}
@@ -114,7 +113,6 @@ public class AuthorDTO {
 	@Override
 	public String toString() {
 		StringBuffer buffer = new StringBuffer();
-		buffer.append(authorId + " ");
 		buffer.append(authorName + " ");
 		buffer.append(authorAge + " ");
 		buffer.append(mostKnownForGenre + " ");

@@ -3,6 +3,8 @@
  */
 package library.content.purchase.enums;
 
+import javax.xml.bind.annotation.XmlEnum;
+
 /**
  * @author adijn
  *

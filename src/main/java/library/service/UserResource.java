@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Set;
 
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceException;
 import javax.persistence.TransactionRequiredException;
 import javax.persistence.TypedQuery;
 import javax.ws.rs.Consumes;
@@ -20,17 +21,22 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import library.content.dto.AuthorDTO;
+import library.content.dto.BookDTO;
 import library.content.dto.DTOMapper;
 import library.content.dto.OrdersDTO;
 import library.content.dto.UserDTO;
 import library.content.purchase.Address;
 import library.content.purchase.Author;
+import library.content.purchase.Book;
+import library.content.purchase.Orders;
 import library.content.purchase.Review;
 import library.content.purchase.User;
 
@@ -66,6 +72,28 @@ public class UserResource {
 	}
 	
 	/**
+	 * Get user dto object from email field
+	 * @param id
+	 * @return AuthorDTO object
+	 */
+	@GET
+	@Path("email/{email}")
+	@Produces({"application/xml","application/json"})
+	public UserDTO getBook(@PathParam("email") String email){
+		EntityManager m = PersistenceManager.instance().createEntityManager();
+		m.getTransaction().begin();
+		User u = m.createQuery("SELECT u FROM User u WHERE u.email=:email", User.class).setParameter("email", email).getSingleResult();
+		UserDTO udto = DTOMapper.toUserDTO(u);
+		m.getTransaction().commit();
+		m.close();
+		if (u == null) {
+			throw new WebApplicationException(Response.status(Status.NOT_FOUND).build());
+		}
+		return udto;
+	}
+	
+	
+	/**
 	 * Add a user
 	 * @param userdto
 	 * @return
@@ -99,59 +127,14 @@ public class UserResource {
 	public Response deleteUser(@PathParam("id") long id){
 		EntityManager m = PersistenceManager.instance().createEntityManager();
 		m.getTransaction().begin();
-		try{
-			User b = m.find(User.class, id);
-			m.remove(b);
-		} catch (IllegalArgumentException e){
-			m.getTransaction().commit();
-			m.close();
-			return Response.status(404).build();
-		} catch (TransactionRequiredException e2){
-			m.getTransaction().commit();
-			m.close();
-			return Response.status(404).build();
-		}
+		User u = m.find(User.class, id);
+		m.remove(u);
 		m.getTransaction().commit();
 		m.close();
-		return Response.status(204).build();
+		return Response.ok().build();
 	}
 	
-	/**
-	 * Update address
-	 * @param id
-	 * @param userAddress
-	 * @return
-	 */
-	@PUT
-	@Path("{id}/address")
-	@Consumes({ "application/xml", "application/json" })
-	public Response updateUserAddress(@PathParam("id") long id, Address userAddress){
-		EntityManager m = PersistenceManager.instance().createEntityManager();
-		m.getTransaction().begin();
-		User user = m.find(User.class, id);
-		user.set_address(userAddress);
-		m.getTransaction().commit();
-		m.close();
-		return Response.status(204).build();
-	}
-	/**
-	 * Add a review for a book
-	 * @param id
-	 * @param bookId
-	 * @return
-	 */
-	@PUT
-	@Path("{id}/review/{bid}")
-	@Consumes({ "application/xml", "application/json" })
-	public Response updateAddUserReview(@PathParam("id") long id, Review r){
-		EntityManager m = PersistenceManager.instance().createEntityManager();
-		m.getTransaction().begin();
-		User user = m.find(User.class, id);
-		user.addReview(r);
-		m.getTransaction().commit();
-		m.close();
-		return Response.status(204).build();
-	}
+
 	
 	/**
 	 * Add an order from a specific user
@@ -162,9 +145,16 @@ public class UserResource {
 	@PUT
 	@Path("{id}/order")
 	@Consumes({ "application/xml", "application/json" })
-	public Response updateAddUserOrder(@PathParam("id") long userid, OrdersDTO userAddress){
-		
-		return null;
+	public Response updateAddUserOrder(@PathParam("id") long userid, OrdersDTO order){
+		Orders ord = DTOMapper.toOrdersDomain(order);
+		EntityManager m = PersistenceManager.instance().createEntityManager();
+		m.getTransaction().begin();
+		User u = m.find(User.class, userid);
+		ord.set_user(u);
+		u.addOrder(ord);
+		m.getTransaction().commit();
+		m.close();
+		return Response.ok().build();
 	}
 	
 	/**
@@ -173,7 +163,7 @@ public class UserResource {
 	 */
 	@GET
 	@Produces({"application/xml","application/json"})
-	public Set<UserDTO> getUserList(){
+	public Response getUserList(){
 		EntityManager m = PersistenceManager.instance().createEntityManager();
 		m.getTransaction().begin();
 		Set<UserDTO> userDTOset = new HashSet<UserDTO>();
@@ -182,9 +172,38 @@ public class UserResource {
 		for(User u: listUser){
 			userDTOset.add(DTOMapper.toUserDTO(u));
 		}
+		GenericEntity<Set<UserDTO>> entity = new GenericEntity<Set<UserDTO>>(userDTOset){};
 		m.getTransaction().commit();
 		m.close();
-		return userDTOset;
+		return Response.ok(entity).build();
+	}
+	
+	/**
+	 * Add a review for a book
+	 * @param id
+	 * @param bookId
+	 * @return
+	 */
+	@PUT
+	@Path("{id}/review/add")
+	@Consumes({ "application/xml", "application/json" })
+	public Response updateAddUserReview(@PathParam("id") long id, Review r){
+		EntityManager m = PersistenceManager.instance().createEntityManager();
+		m.getTransaction().begin();
+		User user = m.find(User.class, id);
+		Book b = m.createQuery("SELECT b FROM Book b WHERE b.isbn=:isbn", Book.class).setParameter("isbn", r.getIsbn()).getSingleResult();
+		if(b==null){
+			return Response.status(400).build();
+		}
+		r.setBookReviewed(b);
+		try{
+			user.addReview(r);
+			m.getTransaction().commit();
+		} catch (PersistenceException e){
+			return Response.status(400).build();
+		}
+		m.close();
+		return Response.status(204).build();
 	}
 	
 	

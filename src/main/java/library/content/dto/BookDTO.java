@@ -149,7 +149,6 @@ public class BookDTO {
 	@Override
 	public String toString() {
 		StringBuffer buffer = new StringBuffer();
-		buffer.append(bookId+" ");
 		buffer.append(title + " ");
 		buffer.append(author+" ");
 		buffer.append(datePublished.toString()+ " ");
@@ -166,7 +165,6 @@ public class BookDTO {
 	@Override
 	public int hashCode() {
 		HashCodeBuilder b = new HashCodeBuilder(17, 31). 
-	            append(bookId).
 	            append(title).
 	            append(description).
 	            append(datePublished).
@@ -187,7 +185,7 @@ public class BookDTO {
 			return true;
 
 		BookDTO rhs = (BookDTO) obj;
-		EqualsBuilder b = new EqualsBuilder().append(bookId, rhs.bookId).append(title, rhs.title)
+		EqualsBuilder b = new EqualsBuilder().append(title, rhs.title)
 				.append(description, rhs.description).append(datePublished, rhs.datePublished).append(cost, rhs.cost)
 						.append(printType, rhs.printType)
 						.append(publisher, rhs.publisher).append(genre, rhs.genre).append(isbn, rhs.isbn).append(language,rhs.language).append(author, rhs.author);

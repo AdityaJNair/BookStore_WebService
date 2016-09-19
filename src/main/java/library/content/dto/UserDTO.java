@@ -91,7 +91,7 @@ public class UserDTO {
 
 	@Override
 	public int hashCode() {
-		HashCodeBuilder b = new HashCodeBuilder(17, 31).append(userId).append(userName).append(userAddress)
+		HashCodeBuilder b = new HashCodeBuilder(17, 31).append(userName).append(userAddress)
 				.append(totalUserCost).append(userBirth);
 		return b.hashCode();
 	}
@@ -104,7 +104,7 @@ public class UserDTO {
 			return true;
 
 		UserDTO rhs = (UserDTO) obj;
-		EqualsBuilder b = new EqualsBuilder().append(userId, rhs.get_userId()).append(userName, rhs.getUserName())
+		EqualsBuilder b = new EqualsBuilder().append(userName, rhs.getUserName())
 				.append(userAddress, rhs.get_address()).append(totalUserCost, rhs.get_totalCost()).append(userBirth,rhs.userBirth);
 		return b.isEquals();
 	}
