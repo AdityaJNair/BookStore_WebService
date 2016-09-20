@@ -1,7 +1,7 @@
 /**
  * 
  */
-package library.content.purchase;
+package library.content.domain;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;

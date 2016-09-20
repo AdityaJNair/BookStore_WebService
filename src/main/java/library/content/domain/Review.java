@@ -1,7 +1,7 @@
 /**
  * 
  */
-package library.content.purchase;
+package library.content.domain;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
@@ -15,7 +15,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-import library.content.purchase.enums.Rating;
+import library.content.domain.enums.Rating;
 /**
  * Review class that is an embeddable - A user can make a review, and this class links to Books entity class. Users can make reviews to 
  * books and then give them a comment and rating
@@ -23,8 +23,6 @@ import library.content.purchase.enums.Rating;
  *
  */
 @Embeddable
-@XmlRootElement(name="Review")
-@XmlAccessorType(XmlAccessType.FIELD)
 public class Review {
 	
 	//book reviewed

@@ -16,11 +16,11 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlElement;
 
-import library.content.purchase.Author;
-import library.content.purchase.Publisher;
-import library.content.purchase.Review;
-import library.content.purchase.enums.BookGenre;
-import library.content.purchase.enums.PrintType;
+import library.content.domain.Author;
+import library.content.domain.Publisher;
+import library.content.domain.Review;
+import library.content.domain.enums.BookGenre;
+import library.content.domain.enums.PrintType;
 
 /**
  * A dto for the Book class that is sent across the wire

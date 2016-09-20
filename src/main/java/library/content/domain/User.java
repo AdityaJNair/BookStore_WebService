@@ -1,4 +1,4 @@
-package library.content.purchase;
+package library.content.domain;
 
 import java.math.BigDecimal;
 import java.util.Date;

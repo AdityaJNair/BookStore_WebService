@@ -1,7 +1,7 @@
 /**
  * 
  */
-package library.content.purchase;
+package library.content.domain;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -23,7 +23,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-import library.content.purchase.enums.BookGenre;
+import library.content.domain.enums.BookGenre;
 
 /**
  * 

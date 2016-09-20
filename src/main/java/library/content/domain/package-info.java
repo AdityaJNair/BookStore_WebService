@@ -6,5 +6,5 @@
  *
  */
 @GenericGenerator(name = "ID-GENERATOR", strategy = "enhanced-sequence")
-package library.content.purchase;
+package library.content.domain;
 import org.hibernate.annotations.GenericGenerator;

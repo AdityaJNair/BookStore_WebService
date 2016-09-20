@@ -35,12 +35,12 @@ import javax.ws.rs.core.UriInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import library.content.domain.Book;
+import library.content.domain.Review;
+import library.content.domain.User;
 import library.content.dto.BookDTO;
 import library.content.dto.DTOMapper;
 import library.content.dto.UserDTO;
-import library.content.purchase.Book;
-import library.content.purchase.Review;
-import library.content.purchase.User;
 
 /**
  * Resource class for Users. Able to create users, delete users, read users and put book orders into a user class

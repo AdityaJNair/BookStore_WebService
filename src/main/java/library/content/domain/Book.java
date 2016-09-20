@@ -1,4 +1,4 @@
-package library.content.purchase;
+package library.content.domain;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -19,8 +19,8 @@ import javax.persistence.TemporalType;
 
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-import library.content.purchase.enums.BookGenre;
-import library.content.purchase.enums.PrintType;
+import library.content.domain.enums.BookGenre;
+import library.content.domain.enums.PrintType;
 
 /**
  * 

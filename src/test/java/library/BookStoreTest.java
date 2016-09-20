@@ -27,26 +27,23 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import library.content.domain.Address;
+import library.content.domain.Author;
+import library.content.domain.Book;
+import library.content.domain.Publisher;
+import library.content.domain.Review;
+import library.content.domain.User;
+import library.content.domain.enums.BookGenre;
+import library.content.domain.enums.PrintType;
+import library.content.domain.enums.Rating;
 import library.content.dto.AuthorDTO;
 import library.content.dto.BookDTO;
 import library.content.dto.DTOMapper;
 import library.content.dto.UserDTO;
-import library.content.purchase.Address;
-import library.content.purchase.Author;
-import library.content.purchase.Book;
-import library.content.purchase.Publisher;
-import library.content.purchase.Review;
-import library.content.purchase.User;
-import library.content.purchase.enums.BookGenre;
-import library.content.purchase.enums.PrintType;
-import library.content.purchase.enums.Rating;
 
 /**
  * Test class for the REST api
- * THE DATABASE IS NOT INITIALISED PREVIOUSLY
- * ALL OBJECTS ARE ADDED AND WORKED ON IN THE TEST METHOD. SINCE TESTS CAN OCCUR IN ANY ORDER THAT IS WHY I USED ONE TEST METHOD.
- * IF I DID A PRE-INITIALISED DATABASE I WOULD HAVE SEPARATE METHODS, BUT I FELT THAT THIS SHOWS A TRUER REPRESENTATION OF THE MODEL.
- * TEST METHOD HAS ASSERTS AFTER EVERY TEST IMPLEMENTATION
+ * THE DATABASE IS INITIALISED PREVIOUSLY
  * @author adijn
  *
  */
@@ -69,6 +66,11 @@ public class BookStoreTest {
 																			BOOK TESTING
  * ||=========================================================================================================================================================||
  */
+	/**
+	 * Test books by creating a domain book, converting it to a dto and then posting it.
+	 * Test getting the posted book.
+	 * Delete the book and try getting it from the database (should fail)
+	 */
 	@Test
 	public void testPOSTnGETnDELETEforBook(){
 		//Initialise Dates to be used 
@@ -115,6 +117,10 @@ public class BookStoreTest {
 		
 	}
 	
+	/**
+	 * Test for a book with an id that does not exist
+	 * Should get a 404
+	 */
 	@Test
 	public void testFailGetBook(){
 		Response dtoBookGetBook3123 = _client.target(WEB_SERVICE_URI + "/book/1231123125").request().accept("application/xml").get();
@@ -127,6 +133,9 @@ public class BookStoreTest {
 		}
 	}
 	
+	/**
+	 * Test getting a book already in the database using query parameters
+	 */
 	@Test
 	public void testGetBookFromQueryParam(){
 		//GET BASED ON QUERY PARAMETERS
@@ -136,7 +145,9 @@ public class BookStoreTest {
 		assertEquals(dtoBookGetBasedOnNameandLanguage.getLanguage(), "Russian");		
 	}
 	
-	
+	/**
+	 * Test getting the author and publisher of a book
+	 */
 	@Test
 	public void testAuthorAndPublisherForBook(){
 		//GET THE BOOK USING THE ISBN FOR THAT BOOK -- The Shinning by Stephen King
@@ -159,6 +170,11 @@ public class BookStoreTest {
 		
 	}
 	
+	/**
+	 * Get a set of books using the range call which allows the user to set a start-end Id range for books.
+	 * For this case the range is huge enough to get all possible books in the database and compared with the normal
+	 * call to get all books in the database.
+	 */
 	@Test
 	public void getSetofBooks(){
 		//GET BOOKS FROM A RANGE BASED ON ID
@@ -178,6 +194,9 @@ public class BookStoreTest {
 		assertTrue(dataFullBaseSetOfBooks.size()== dataBaseSetOfBooks.size());
 	}
 
+	/**
+	 * Adding a duplicate book that have been got by a GET
+	 */
 	@Test
 	public void addDuplicateBook(){
 		//GET HARRY POTTER BOOK ALREADY IN DATABASE
@@ -195,21 +214,15 @@ public class BookStoreTest {
 		responseBook2Duplicate.close();
 	}
 	
-	@Test
-	public void checkBookRangeIndatabase(){
-		//HATEOAS AND QUERYPARAMETERS TESTING
-		Response responseGetBookFromSetQueryParam = _client.target(WEB_SERVICE_URI + "/book/range" + "?start=0&end=1000").request().get();
-		Set<BookDTO> dataBaseSetOfBooks = responseGetBookFromSetQueryParam.readEntity(new GenericType<Set<BookDTO>>() {});
-		for(BookDTO b: dataBaseSetOfBooks){
-			_logger.info(b.toString());
-		}
-		responseGetBookFromSetQueryParam.close();
-	}
-	
 	 /* ||=========================================================================================================================================================||
 	 * 																				AUTHOR TESTING
 	 * ||=========================================================================================================================================================||
 	*/
+	
+	/**
+	 * Test POST for an author and get it. Also tests HATEOAS links as through the get we can get links to update
+	 * description, list of books they have authored. Test also sees if they are updated
+	 */
 	@Test
 	public void testPOSTnGETforAuthor(){
 		//INITIALISE NEW AUTHORS
@@ -251,6 +264,9 @@ public class BookStoreTest {
 		assertTrue(listbook.size()==0);
 	}
 	
+	/**
+	 * Get author by name
+	 */
 	@Test
 	public void getAuthorByName(){
 		//GET AUTHOR FROM NAME -- Author Mark Twain which is author4
@@ -264,6 +280,9 @@ public class BookStoreTest {
 		assertTrue(listbook.size()==1);
 	}
 	
+	/**
+	 * Get a non existing author with a non exisitng id or non existing name
+	 */
 	@Test
 	public void getNonExistingAuthor(){
 		//GET A NON EXISTING AUTHOR
@@ -274,7 +293,7 @@ public class BookStoreTest {
 		}
 		getNonExistingAuthor.close();
 		
-		_logger.info("Get a non existing user with id - 651981651618");
+		_logger.info("Get a non existing user with name Tommy FakeAuthor");
 		Response getNonExistingAuthor2 = _client.target(WEB_SERVICE_URI + "/author/name/Tommy FakeAuthor").request().accept("application/xml").get();
 		if(getNonExistingAuthor2.getStatus() != 404){
 			fail();
@@ -282,6 +301,10 @@ public class BookStoreTest {
 		getNonExistingAuthor2.close();
 	}
 	
+	/**
+	 * Get a set of authors, add a new author to the database. Get a set of authors again and comapre size to see if updated. Highlights
+	 * correctness of the get the set of authors GET crud method.
+	 */
 	@Test
 	public void failAddDuplicateToDatabaseAuthor(){
 		Date date1 = new GregorianCalendar(1425, Calendar.FEBRUARY, 2).getTime();
@@ -326,6 +349,10 @@ public class BookStoreTest {
 			 * 																				USER TESTING
 	 * ||=========================================================================================================================================================||*/
 	
+	/**
+	 * Tests adding a user, logging in, checking if user exists and using the cookie to delete it. To delete the game one needs to have been logged in.
+	 * Prevents non logged in users to not have access to the user api calls.
+	 */
 	@Test
 	public void testUserPOSTnGETnDELETE(){
 		Date dateUser1 = new GregorianCalendar(1960, Calendar.MARCH, 4).getTime();
@@ -394,6 +421,9 @@ public class BookStoreTest {
 		
 	}
 	
+	/**
+	 * Add a review for a author using HATEOAS links. Needs cookies to add review.
+	 */
 	@Test
 	public void addReviewForBook(){
 		Date dateUser1 = new GregorianCalendar(1911, Calendar.MARCH, 1).getTime();
@@ -451,7 +481,7 @@ public class BookStoreTest {
 		assertTrue(responseAddReview2ToAuthor1.getStatus() == 201);
 		responseAddReview2ToAuthor1.close();		
 				
-		//CAN ONLY DELETE USING THE COOKIE OF A VALID USER
+		//CAN ONLY DELETE USING THE COOKIE OF A VALID USER - REMOVES COMMENTS TOO
 		Response deleteUser1WithCookie = _client.target(locationUser1).request().cookie(cookieUser1).delete();
 		if(deleteUser1WithCookie.getStatus() == 200){
 			_logger.info("Successfull delete");
@@ -461,6 +491,9 @@ public class BookStoreTest {
 		deleteUser1WithCookie.close();
 	}
 	
+	/**
+	 * Check based on the initial database that with the 2 users (as all other users in tests are deleted) we can use the range functionality
+	 */
 	@Test
 	public void checkuserDataBase(){
 		//HATEOAS AND QUERYPARAMETERS TESTING
@@ -500,6 +533,9 @@ public class BookStoreTest {
 		responseGetUserNext2.close();
 	}
 	
+	/**
+	 * Get non existing user based on id and email
+	 */
 	@Test
 	public void getNonExistingUser(){
 		//GET A NON EXISTING USER
@@ -517,6 +553,9 @@ public class BookStoreTest {
 		}
 		dtoUserGetUser1Email.close();
 	}
+	/**
+	 * Check the size of the database for number of users
+	 */
 	
 	@Test
 	public void checkSizeOfUserDatabase(){
@@ -591,7 +630,6 @@ public class BookStoreTest {
 		assertTrue(responseAddOrder2ToUser2.getStatus() == 201);
 		responseAddOrder2ToUser2.close();
 		
-
 		//GET ALL BOOKS FOR USER2
 		Set<BookDTO> bookListUser2 = _client.target(toUserBooksForUser1).request().cookie(cookieUser1).accept("application/xml").get(new GenericType<Set<BookDTO>>() {});
 		for(BookDTO b: bookListUser2){

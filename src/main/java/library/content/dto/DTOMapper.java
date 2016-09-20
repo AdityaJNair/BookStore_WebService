@@ -3,9 +3,9 @@
  */
 package library.content.dto;
 
-import library.content.purchase.Author;
-import library.content.purchase.Book;
-import library.content.purchase.User;
+import library.content.domain.Author;
+import library.content.domain.Book;
+import library.content.domain.User;
 
 /**
  * Mapper class for converting domain objects to dto objects

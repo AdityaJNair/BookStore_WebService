@@ -11,13 +11,13 @@ import javax.persistence.EntityManager;
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
 
-import library.content.purchase.Address;
-import library.content.purchase.Author;
-import library.content.purchase.Book;
-import library.content.purchase.Publisher;
-import library.content.purchase.User;
-import library.content.purchase.enums.BookGenre;
-import library.content.purchase.enums.PrintType;
+import library.content.domain.Address;
+import library.content.domain.Author;
+import library.content.domain.Book;
+import library.content.domain.Publisher;
+import library.content.domain.User;
+import library.content.domain.enums.BookGenre;
+import library.content.domain.enums.PrintType;
 
 @ApplicationPath("/services")
 public class BookStoreApplication extends Application {

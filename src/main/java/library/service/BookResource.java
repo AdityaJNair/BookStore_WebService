@@ -33,12 +33,12 @@ import javax.ws.rs.core.Response.Status;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import library.content.domain.Author;
+import library.content.domain.Book;
+import library.content.domain.Publisher;
 import library.content.dto.AuthorDTO;
 import library.content.dto.BookDTO;
 import library.content.dto.DTOMapper;
-import library.content.purchase.Author;
-import library.content.purchase.Book;
-import library.content.purchase.Publisher;
 
 @Path("/book")
 /**

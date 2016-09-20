@@ -17,7 +17,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-import library.content.purchase.enums.BookGenre;
+import library.content.domain.enums.BookGenre;
 
 /**
  * dto object for author class that is sent across the wire

@@ -10,7 +10,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-import library.content.purchase.Address;
+import library.content.domain.Address;
 
 /**
  * DTO object for a user. This object is sent over the wire

@@ -1,7 +1,7 @@
 /**
  * 
  */
-package library.content.purchase.enums;
+package library.content.domain.enums;
 
 import javax.xml.bind.annotation.XmlEnum;
 
