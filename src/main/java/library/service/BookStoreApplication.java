@@ -17,6 +17,8 @@ public class BookStoreApplication extends Application {
 		singletons.add(new UserResource());
 		singletons.add(new WebExceptionMapper());
 		singletons.add(PersistenceManager.instance());
+		
+		databaseInit();
 	}
 
 	@Override
@@ -27,5 +29,11 @@ public class BookStoreApplication extends Application {
 	@Override
 	public Set<Object> getSingletons() {
 		return singletons;
+	}
+	
+	static void databaseInit(){
+		
+		
+		
 	}
 }

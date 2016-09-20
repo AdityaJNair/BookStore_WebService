@@ -505,6 +505,8 @@ public class BookStoreTest {
 		}
 		assertTrue(bookListUser2.size() == 2);
 		
+		_client.target(WEB_SERVICE_URI+"/reset").request().delete();
+		
 		
 
 		
