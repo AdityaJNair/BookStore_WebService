@@ -5,6 +5,7 @@ package library.content.dto;
 
 import library.content.domain.Author;
 import library.content.domain.Book;
+import library.content.domain.Review;
 import library.content.domain.User;
 
 /**
@@ -97,6 +98,19 @@ public class DTOMapper {
 		Author authorDomain = new Author(dtoAuthor.get_name(), dtoAuthor.get_age(), dtoAuthor.get_mostKnownForGenre(), dtoAuthor.get_description());
 		return authorDomain;
 	}
+	
+	public static Review toReviewDomain(ReviewDTO dtoReview){
+		Review reviewDomain = new Review(dtoReview.getReviewComment(), dtoReview.getReviewRating(), dtoReview.getIsbn());
+		reviewDomain.setBookReviewed(DTOMapper.toBookDomain(dtoReview.getBookReviewed()));
+		return reviewDomain;
+	}
+	
+	public static ReviewDTO toReviewDTO(Review domainReview){
+		ReviewDTO dtoReview = new ReviewDTO(domainReview.getReviewComment(), domainReview.getReviewRating(), domainReview.getIsbn());
+		dtoReview.setBookReviewed(DTOMapper.toBookDTO(domainReview.getBookReviewed()));
+		return dtoReview;
+	}
+	
 	
 
 }

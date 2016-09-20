@@ -39,6 +39,7 @@ import library.content.domain.enums.Rating;
 import library.content.dto.AuthorDTO;
 import library.content.dto.BookDTO;
 import library.content.dto.DTOMapper;
+import library.content.dto.ReviewDTO;
 import library.content.dto.UserDTO;
 
 /**
@@ -460,10 +461,11 @@ public class BookStoreTest {
 		_logger.info("Created a review");
 		Review review1 = new Review("good", Rating.FOUR_STARS, "ISBN-13:234-1-56619-909-4");
 		review1.setBookReviewed(DTOMapper.toBookDomain(dtoBookBook2));
+		ReviewDTO rdto = DTOMapper.toReviewDTO(review1);
 				
 		//ADD A REVIEW -- FROM USER 1 WHO HAS NOT LOGGED IN -- (ONLY USERS THAT ARE LOGGED IN CAN ADD REVIEWS)
 		_logger.info("Add a review to user 1");
-		Response responseAddReview1ToUser1 = _client.target(toUserReviewForUser1).request().accept("application/xml").put(Entity.xml(review1));
+		Response responseAddReview1ToUser1 = _client.target(toUserReviewForUser1).request().accept("application/xml").put(Entity.xml(rdto));
 		assertTrue(responseAddReview1ToUser1.getStatus() == 401);
 		responseAddReview1ToUser1.close();
 		
@@ -476,11 +478,19 @@ public class BookStoreTest {
 		_logger.info(cookieUser1.toString());
 
 		//ADD A REVIEW FOR THE SAME BOOK AGAIN ( THIS TIME LOGGED IN)
-		Response responseAddReview2ToAuthor1 = _client.target(toUserReviewForUser1).request().cookie(cookieUser1).accept("application/xml").put(Entity.xml(review1));
+		Response responseAddReview = _client.target(toUserReviewForUser1).request().cookie(cookieUser1).accept("application/xml").put(Entity.xml(rdto));
 		_logger.info("Failed review added");
-		assertTrue(responseAddReview2ToAuthor1.getStatus() == 201);
-		responseAddReview2ToAuthor1.close();		
-				
+		assertTrue(responseAddReview.getStatus() == 201);
+		responseAddReview.close();		
+		
+		//CHECK TO SEE IF REVIEW IS ADDED
+		Response responseToSeeIfReviewAdded =  _client.target(toUserReviewForUser1).request().accept("application/xml").get();
+		Set<ReviewDTO> reviewDTOSet = responseToSeeIfReviewAdded.readEntity(new GenericType<Set<ReviewDTO>>() {});
+		for(ReviewDTO b: reviewDTOSet){
+			_logger.info("Check reviews of user "+ b.toString());
+		}
+		assertTrue(reviewDTOSet.size() == 1);
+		
 		//CAN ONLY DELETE USING THE COOKIE OF A VALID USER - REMOVES COMMENTS TOO
 		Response deleteUser1WithCookie = _client.target(locationUser1).request().cookie(cookieUser1).delete();
 		if(deleteUser1WithCookie.getStatus() == 200){
@@ -737,14 +747,14 @@ public class BookStoreTest {
 		Client clientReceiver = ClientBuilder.newClient( );
 		
 		//subscribe for getting notification
-		Future<BookDTO> target = clientReceiver.target(WEB_SERVICE_URI + "book/sub").request().async().get(new InvocationCallback<BookDTO>() { 
+		Future<BookDTO> clientTarget = clientReceiver.target(WEB_SERVICE_URI + "book/sub").request().async().get(new InvocationCallback<BookDTO>() { 
 			public void completed(BookDTO book) {  
 				//check if the book is the same as the dto sent
 				org.junit.Assert.assertTrue(book.equals(book1DTO));
 				_logger.info(book.toString());
 			}                  
 			public void failed(Throwable t) { 
-				fail("Failed to test asynchronous");
+				fail();
 			}            
 		});
 		

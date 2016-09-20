@@ -19,16 +19,14 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
-import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.container.AsyncResponse;
 import javax.ws.rs.container.Suspended;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.Link;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.core.Response.ResponseBuilder;
-import javax.ws.rs.core.Response.Status;
+import javax.ws.rs.core.UriInfo;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,9 +34,12 @@ import org.slf4j.LoggerFactory;
 import library.content.domain.Author;
 import library.content.domain.Book;
 import library.content.domain.Publisher;
+import library.content.domain.Review;
+import library.content.domain.User;
 import library.content.dto.AuthorDTO;
 import library.content.dto.BookDTO;
 import library.content.dto.DTOMapper;
+import library.content.dto.ReviewDTO;
 
 @Path("/book")
 /**

@@ -92,10 +92,12 @@ public class Review {
 		StringBuffer buffer = new StringBuffer();
 		buffer.append(reviewRating+ " ");
 		buffer.append(reviewComment+" ");
-		buffer.append(bookReviewed.get_bookId());
+		buffer.append(bookReviewed.get_bookId()+" ");
+		buffer.append(isbn);
 		return buffer.toString();
 	}
-/*	//FIX THIS
+	
+	
 	@Override
 	public boolean equals(Object obj) {
 		if (!(obj instanceof Review))
@@ -104,14 +106,15 @@ public class Review {
             return true;
 
         Review other = (Review)obj;
-        return bookReviewed.equals(other.getBookReviewed()) && reviewComment.equals(other.reviewComment) && reviewRating.equals(other.reviewRating);
+        return bookReviewed.equals(other.getBookReviewed()) && reviewComment.equals(other.reviewComment) && reviewRating.equals(other.reviewRating) && isbn.equals(other.isbn);
 	}
-	//FIX THIS
+
 	@Override
 	public int hashCode() {
-		return new HashCodeBuilder(17, 31). 
+		return new HashCodeBuilder(17, 31).
+				append(bookReviewed).append(reviewComment).append(reviewRating).append(isbn).
 	            toHashCode();
-	}*/
+	}
 
 	
 }

@@ -40,6 +40,7 @@ import library.content.domain.Review;
 import library.content.domain.User;
 import library.content.dto.BookDTO;
 import library.content.dto.DTOMapper;
+import library.content.dto.ReviewDTO;
 import library.content.dto.UserDTO;
 
 /**
@@ -257,10 +258,11 @@ public class UserResource {
 	@PUT
 	@Path("{id}/review")
 	@Consumes({ "application/xml", "application/json" })
-	public Response updateAddUserReview(@PathParam("id") long id, Review r, @CookieParam("username") Cookie name){
+	public Response updateAddUserReview(@PathParam("id") long id, ReviewDTO rr, @CookieParam("username") Cookie name){
 		if(name==null){
 			return Response.status(401).build();
 		}
+		Review r = DTOMapper.toReviewDomain(rr);
 		EntityManager m = PersistenceManager.instance().createEntityManager();
 		m.getTransaction().begin();
 		User user = m.find(User.class, id);
@@ -287,8 +289,29 @@ public class UserResource {
 			m.close();
 			return Response.status(401).build();
 		}
-		
 	}
+	
+	@GET
+	@Path("{id}/review")
+	@Produces({ "application/xml", "application/json" })
+	public Response getReviewsByUser(@PathParam("id") long id){
+		EntityManager m = PersistenceManager.instance().createEntityManager();
+		m.getTransaction().begin();
+		User user = m.find(User.class, id);
+		if(user==null){
+			return Response.status(404).build();
+		}
+		Set<ReviewDTO> review = new HashSet<ReviewDTO>();
+		for(Review r: user.getReviews()){
+			review.add(DTOMapper.toReviewDTO(r));
+		}
+		
+		GenericEntity<Set<ReviewDTO>> entity = new GenericEntity<Set<ReviewDTO>>(review){};
+		m.getTransaction().commit();
+		m.close();
+		return Response.ok(entity).build();		
+	}
+	
 	
 	/**
 	 * Get the books that have been purchased by this user
