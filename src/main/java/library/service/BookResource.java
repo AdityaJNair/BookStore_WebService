@@ -1,23 +1,33 @@
 package library.service;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import javax.persistence.EntityManager;
+import javax.persistence.EntityNotFoundException;
 import javax.persistence.PersistenceException;
 import javax.persistence.TypedQuery;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.container.AsyncResponse;
+import javax.ws.rs.container.Suspended;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.GenericEntity;
+import javax.ws.rs.core.Link;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
+import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.core.Response.Status;
 
 import org.slf4j.Logger;
@@ -26,11 +36,9 @@ import org.slf4j.LoggerFactory;
 import library.content.dto.AuthorDTO;
 import library.content.dto.BookDTO;
 import library.content.dto.DTOMapper;
-import library.content.dto.UserDTO;
 import library.content.purchase.Author;
 import library.content.purchase.Book;
 import library.content.purchase.Publisher;
-import library.content.purchase.User;
 
 @Path("/book")
 /**
@@ -42,6 +50,7 @@ import library.content.purchase.User;
  */
 public class BookResource {
 	private static final Logger _logger = LoggerFactory.getLogger(BookResource.class);
+	protected List<AsyncResponse> asyncResponses = new ArrayList<AsyncResponse>();
 
 	/**
 	 * Get a book based on id
@@ -55,12 +64,35 @@ public class BookResource {
 		EntityManager m = PersistenceManager.instance().createEntityManager();
 		m.getTransaction().begin();
 		Book b = m.find(Book.class, id);
+		if (b == null) {
+			throw new EntityNotFoundException();
+		}
 		BookDTO b1 = DTOMapper.toBookDTO(b);
 		m.getTransaction().commit();
 		m.close();
+		return b1;
+	}
+	
+	/**
+	 * Get a book based on the title and the language
+	 * @param title
+	 * @param language
+	 * @return
+	 */
+	@GET
+	@Path("name")
+	@Produces({ "application/xml", "application/json" })
+	public BookDTO getBookBasedOnAdditionalInfo(@DefaultValue("") @QueryParam("title") String title, @DefaultValue("") @QueryParam("language") String language){
+		EntityManager m = PersistenceManager.instance().createEntityManager();
+		m.getTransaction().begin();
+		Book b = m.createQuery("SELECT b FROM Book b WHERE b.title=:title AND b.language=:language", Book.class).setParameter("title", title).setParameter("language",language).getSingleResult();
 		if (b == null) {
-			throw new WebApplicationException(Response.status(Status.NOT_FOUND).build());
+			throw new EntityNotFoundException();
 		}
+		BookDTO b1 = DTOMapper.toBookDTO(b);
+		m.getTransaction().commit();
+		m.close();
+
 		return b1;
 	}
 
@@ -76,12 +108,13 @@ public class BookResource {
 		EntityManager m = PersistenceManager.instance().createEntityManager();
 		m.getTransaction().begin();
 		Book b = m.createQuery("SELECT b FROM Book b WHERE b.isbn=:isbn", Book.class).setParameter("isbn", isbn).getSingleResult();
+		if (b == null) {
+			throw new EntityNotFoundException();
+		}
 		BookDTO b1 = DTOMapper.toBookDTO(b);
 		m.getTransaction().commit();
 		m.close();
-		if (b == null) {
-			throw new WebApplicationException(Response.status(Status.NOT_FOUND).build());
-		}
+
 		return b1;
 	}
 	
@@ -107,6 +140,11 @@ public class BookResource {
 		try{
 			m.persist(domainBook);
 			m.getTransaction().commit();
+			// Notifying subscribers
+			for (AsyncResponse response : asyncResponses) {
+				response.resume(bookdto);
+			}
+			asyncResponses.clear();
 		} catch (PersistenceException e){
 			return Response.status(409).build();
 		}finally{
@@ -127,6 +165,9 @@ public class BookResource {
 		EntityManager m = PersistenceManager.instance().createEntityManager();
 		m.getTransaction().begin();
 		Book b = m.find(Book.class, id);
+		if (b == null) {
+			return Response.status(404).build();
+		}
 		m.remove(b);
 		m.getTransaction().commit();
 		m.close();
@@ -148,11 +189,57 @@ public class BookResource {
 		EntityManager m = PersistenceManager.instance().createEntityManager();
 		m.getTransaction().begin();
 		Book bookauthor = m.find(Book.class, bookid);
+		if (bookauthor == null) {
+			throw new EntityNotFoundException();
+		}
 		AuthorDTO authorDTO = DTOMapper.toAuthorDTO(bookauthor.get_author());
 		m.getTransaction().commit();
 		m.close();
 		return authorDTO;
 	}
+	
+	/**
+	 * Get books where id is start value and between end value.
+	 * Using query params and HATEOAS gives the next link to the queries.
+	 * @return
+	 */
+	@GET
+	@Path("range")
+	@Produces({ "application/xml", "application/json" })
+	public Response getBooksFromRange(@DefaultValue("1") @QueryParam("start") long start, 
+			@DefaultValue("1") @QueryParam("end")long end, @Context UriInfo uriInfo){
+		
+		URI uri = uriInfo.getAbsolutePath();
+		Link next = null;
+		
+		EntityManager m = PersistenceManager.instance().createEntityManager();
+		m.getTransaction().begin();
+		Set<BookDTO> bookDTOset = new HashSet<BookDTO>();
+		TypedQuery<Book> BookQuery = m.createQuery("SELECT b FROM Book b WHERE b.bookId BETWEEN :start AND :end", Book.class).setParameter("start", start).setParameter("end", end);
+		List<Book> listBook = BookQuery.getResultList();
+		if(listBook==null || listBook.isEmpty()){
+			return Response.status(404).build();
+		} else {
+			_logger.info("Making NEXT link");
+			next = Link.fromUri(uri + "?start={start}&end={end}")
+					.rel("next")
+					.build(end+1, end+(end-start)+1);
+		}
+		for(Book b : listBook){
+			bookDTOset.add(DTOMapper.toBookDTO(b));
+		}
+		GenericEntity<Set<BookDTO>> entity = new GenericEntity<Set<BookDTO>>(bookDTOset){};
+		m.getTransaction().commit();
+		m.close();
+		
+ 		ResponseBuilder builder = Response.ok(entity);
+ 		if(next != null) {
+ 			builder.links(next);
+ 		}
+ 		Response response = builder.build();
+		return response;
+	}
+	
 	
 	/**
 	 * Get all books from the database
@@ -166,7 +253,10 @@ public class BookResource {
 		Set<BookDTO> bookDTOset = new HashSet<BookDTO>();
 		TypedQuery<Book> BookQuery = m.createQuery("FROM Book", Book.class);
 		List<Book> listBook = BookQuery.getResultList();
-		for(Book u: listBook){
+		if (listBook == null||listBook.isEmpty()) {
+			throw new EntityNotFoundException();
+		}
+		for(Book u : listBook){
 			bookDTOset.add(DTOMapper.toBookDTO(u));
 		}
 		GenericEntity<Set<BookDTO>> entity = new GenericEntity<Set<BookDTO>>(bookDTOset){};
@@ -174,6 +264,7 @@ public class BookResource {
 		m.close();
 		return Response.ok(entity).build();
 	}
+	
 	
 	/**
 	 * Get publisher for a book
@@ -187,10 +278,26 @@ public class BookResource {
 		EntityManager m = PersistenceManager.instance().createEntityManager();
 		m.getTransaction().begin();
 		Book b = m.find(Book.class , bookid);
+		if (b == null) {
+			throw new EntityNotFoundException();
+		}
 		Publisher publisher = b.get_publisher();
 		m.getTransaction().commit();
 		m.close();
 		return publisher;
 	}
+	
+	//-------------------------------------------------------------------------------------------------------------------
+	
+	/**
+	 * Subscribe method for async responses
+	 */
+	@GET
+	@Path("/subscribe")
+	@Produces({"application/xml","application/json"})
+	public void subscribeToPage(@Suspended AsyncResponse response) {
+		asyncResponses.add(response);
+	}
+	
 		
 }

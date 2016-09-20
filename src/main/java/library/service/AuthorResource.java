@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Set;
 
 import javax.persistence.EntityManager;
+import javax.persistence.EntityNotFoundException;
 import javax.persistence.PersistenceException;
 import javax.persistence.TypedQuery;
 import javax.ws.rs.Consumes;
@@ -16,8 +17,12 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.GenericEntity;
+import javax.ws.rs.core.Link;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
+import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.core.Response.Status;
 
 import org.slf4j.Logger;
@@ -53,12 +58,12 @@ public class AuthorResource {
 		EntityManager m = PersistenceManager.instance().createEntityManager();
 		m.getTransaction().begin();
 		Author a = m.createQuery("SELECT a FROM Author a WHERE a.authorName=:name", Author.class).setParameter("name", name).getSingleResult();
+		if (a == null) {
+			throw new EntityNotFoundException();
+		}
 		AuthorDTO adto = DTOMapper.toAuthorDTO(a);
 		m.getTransaction().commit();
 		m.close();
-		if (a == null) {
-			throw new WebApplicationException(Response.status(Status.NOT_FOUND).build());
-		}
 		return adto;
 	}
 	
@@ -71,19 +76,23 @@ public class AuthorResource {
 	@GET
 	@Path("{id}")
 	@Produces({"application/xml","application/json"})
-	public AuthorDTO getBook(@PathParam("id") long id){
+	public Response getBook(@PathParam("id") long id, @Context UriInfo uriInfo){
+		URI uri = uriInfo.getAbsolutePath();
+
 		EntityManager m = PersistenceManager.instance().createEntityManager();
 		m.getTransaction().begin();
 		Author b = m.find(Author.class, id);
+		if (b == null) {
+			throw new EntityNotFoundException();
+		}
 		AuthorDTO b1 = DTOMapper.toAuthorDTO(b);
 		m.getTransaction().commit();
 		m.close();
-		if(b==null){
-		    throw new WebApplicationException(
-		    	      Response.status(Status.NOT_FOUND)
-		    	        .build());
-		}
-		return b1;
+		Link description = Link.fromUri(uri + "/description").rel("description").build();
+		Link book = Link.fromUri(uri + "/book").rel("book").build();
+		ResponseBuilder builder = Response.ok(b1);
+		builder.links(description,book);
+		return builder.build();
 	}
 	
 	/**
@@ -98,6 +107,9 @@ public class AuthorResource {
 		Set<AuthorDTO> authorDTOset = new HashSet<AuthorDTO>();
 		TypedQuery<Author> AuthorQuery = m.createQuery("FROM Author", Author.class);
 		List<Author> listAuthor = AuthorQuery.getResultList();
+		if (listAuthor == null) {
+			return Response.status(404).build();
+		}
 		for(Author u: listAuthor){
 			authorDTOset.add(DTOMapper.toAuthorDTO(u));
 		}
@@ -140,6 +152,9 @@ public class AuthorResource {
 		EntityManager m = PersistenceManager.instance().createEntityManager();
 		m.getTransaction().begin();
 		Author author = m.find(Author.class, id);
+		if (author == null) {
+			throw new EntityNotFoundException();
+		}
 		author.set_description(r);
 		m.getTransaction().commit();
 		m.close();
@@ -156,6 +171,9 @@ public class AuthorResource {
 		EntityManager m = PersistenceManager.instance().createEntityManager();
 		m.getTransaction().begin();
 		List<Book> bookQuery = m.createQuery("SELECT b FROM Book b WHERE b.author.authorId=:authorid", Book.class).setParameter("authorid", id).getResultList();
+		if(bookQuery == null){
+			return Response.status(404).build();
+		}
 		Set<BookDTO> bSet = new HashSet<BookDTO>();
 		for(Book b: bookQuery){
 			bSet.add(DTOMapper.toBookDTO(b));
