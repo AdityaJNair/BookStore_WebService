@@ -24,6 +24,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.Cookie;
 import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.Link;
 import javax.ws.rs.core.NewCookie;
@@ -88,7 +89,13 @@ public class UserResource {
 	public UserDTO getBook(@PathParam("email") String email){
 		EntityManager m = PersistenceManager.instance().createEntityManager();
 		m.getTransaction().begin();
-		User u = m.createQuery("SELECT u FROM User u WHERE u.email=:email", User.class).setParameter("email", email).getSingleResult();
+		User u = null;
+		try{
+			u = m.createQuery("SELECT u FROM User u WHERE u.email=:email", User.class).setParameter("email", email).getSingleResult();
+
+		}catch(PersistenceException e){
+			throw new EntityNotFoundException();
+		}
 		if(u==null){
 		    throw new EntityNotFoundException();
 		}
@@ -129,7 +136,7 @@ public class UserResource {
 	@DELETE
 	@Path("{id}")
 	@Consumes({ "application/xml", "application/json" })
-	public Response deleteUser(@PathParam("id") long id, @CookieParam("username") String name){
+	public Response deleteUser(@PathParam("id") long id, @CookieParam("username") Cookie name){
 		if(name==null){
 			return Response.status(401).build();
 		}
@@ -139,8 +146,8 @@ public class UserResource {
 		if(u==null){
 		    return Response.status(404).build();
 		}
-		_logger.info(name);
-		if(u.getUserName().equals(name)){
+		_logger.info(name.toString());
+		if(u.getUserName().equals(name.getValue())){
 			m.remove(u);
 			m.getTransaction().commit();
 			m.close();
@@ -158,7 +165,7 @@ public class UserResource {
 	@PUT
 	@Path("{id}/order/{bid}")
 	@Consumes({ "application/xml", "application/json" })
-	public Response addBookOrder(@PathParam("id") long id, @PathParam("bid") long bid, @CookieParam("username") String name){
+	public Response addBookOrder(@PathParam("id") long id, @PathParam("bid") long bid, @CookieParam("username") Cookie name){
 		if(name==null){
 			return Response.status(401).build();
 		}
@@ -168,7 +175,7 @@ public class UserResource {
 		if(u==null){
 		    throw new EntityNotFoundException();
 		}
-		if(u.getUserName().equals(name)){
+		if(u.getUserName().equals(name.getValue())){
 			Book b = m.find(Book.class, bid);
 			if(b==null){
 			    throw new EntityNotFoundException();
@@ -190,7 +197,7 @@ public class UserResource {
 	@PUT
 	@Path("{id}/order/isbn/{isbn}")
 	@Consumes({ "application/xml", "application/json" })
-	public Response addBookOrderUsingISBN(@PathParam("id") long id, @PathParam("isbn") String isbn, @CookieParam("username") String name){
+	public Response addBookOrderUsingISBN(@PathParam("id") long id, @PathParam("isbn") String isbn, @CookieParam("username") Cookie name){
 		if(name==null){
 			return Response.status(401).build();
 		}
@@ -200,7 +207,7 @@ public class UserResource {
 		if(u==null){
 		    throw new EntityNotFoundException();
 		}
-		if(u.getUserName().equals(name)){
+		if(u.getUserName().equals(name.getValue())){
 			Book b = m.createQuery("SELECT b FROM Book b WHERE b.isbn=:isbn", Book.class).setParameter("isbn", isbn).getSingleResult();
 			if(b==null){
 			    throw new EntityNotFoundException();
@@ -250,8 +257,7 @@ public class UserResource {
 	@PUT
 	@Path("{id}/review")
 	@Consumes({ "application/xml", "application/json" })
-	public Response updateAddUserReview(@PathParam("id") long id, Review r, @CookieParam("username") String name){
-		_logger.info(name);
+	public Response updateAddUserReview(@PathParam("id") long id, Review r, @CookieParam("username") Cookie name){
 		if(name==null){
 			return Response.status(401).build();
 		}
@@ -261,8 +267,8 @@ public class UserResource {
 		if(user==null){
 			return Response.status(404).build();
 		}
-		_logger.info(name);
-		if(user.getUserName().equals(name)){
+		_logger.info(name.toString());
+		if(user.getUserName().equals(name.getValue())){
 			Book b = m.createQuery("SELECT b FROM Book b WHERE b.isbn=:isbn", Book.class).setParameter("isbn", r.getIsbn()).getSingleResult();
 			if(b==null){
 				return Response.status(404).build();
@@ -292,7 +298,7 @@ public class UserResource {
 	@GET
 	@Path("{id}/book")
 	@Produces({ "application/xml", "application/json" })
-	public Response getBooksBoughtByUser(@PathParam("id") long id, @CookieParam("username") String name){
+	public Response getBooksBoughtByUser(@PathParam("id") long id, @CookieParam("username") Cookie name){
 		if(name==null){
 			return Response.status(401).build();
 		}
@@ -302,7 +308,7 @@ public class UserResource {
 		if(user==null){
 		    throw new EntityNotFoundException();
 		}
-		if(user.getUserName().equals(name)){
+		if(user.getUserName().equals(name.getValue())){
 			Set<BookDTO> bookSet = new HashSet<BookDTO>();
 			for(Book b: user.getUsersBooks()){
 				bookSet.add(DTOMapper.toBookDTO(b));
