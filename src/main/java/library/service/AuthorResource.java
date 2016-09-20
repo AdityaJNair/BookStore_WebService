@@ -57,7 +57,13 @@ public class AuthorResource {
 	public AuthorDTO getBook(@PathParam("name") String name){
 		EntityManager m = PersistenceManager.instance().createEntityManager();
 		m.getTransaction().begin();
-		Author a = m.createQuery("SELECT a FROM Author a WHERE a.authorName=:name", Author.class).setParameter("name", name).getSingleResult();
+		Author a = null;
+		try	{
+			a = m.createQuery("SELECT a FROM Author a WHERE a.authorName=:name", Author.class).setParameter("name", name).getSingleResult();
+		} catch (PersistenceException e){
+			m.close();
+			throw new EntityNotFoundException();
+		}
 		if (a == null) {
 			throw new EntityNotFoundException();
 		}

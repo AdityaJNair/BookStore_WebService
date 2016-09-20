@@ -98,7 +98,7 @@ public class BookStoreTest {
 		BookDTO dtoBookGetBook3 = _client.target(locationBook1).request().accept("application/xml").get(BookDTO.class);
 		assertEquals(dtoBookGetBook3,bookDTOBook1);
 		
-		//DELETE THE FIRST BOOK -- CHECK IF AUTHOR WAS DELETED FOR BOOK 1
+		//DELETE THE FIRST BOOK
 		_logger.info("Deleting book that was created using POST request - "+ locationBook1.toString());
 		_logger.info(bookDTOBook1.toString());
 		Response deleteBook1 = _client.target(locationBook1).request().accept("application/xml").delete();
@@ -195,6 +195,7 @@ public class BookStoreTest {
 		responseBook2Duplicate.close();
 	}
 	
+	@Test
 	public void checkBookRangeIndatabase(){
 		//HATEOAS AND QUERYPARAMETERS TESTING
 		Response responseGetBookFromSetQueryParam = _client.target(WEB_SERVICE_URI + "/book/range" + "?start=0&end=1000").request().get();
@@ -202,30 +203,7 @@ public class BookStoreTest {
 		for(BookDTO b: dataBaseSetOfBooks){
 			_logger.info(b.toString());
 		}
-		assertTrue(dataBaseSetOfBooks.size() == 2);
 		responseGetBookFromSetQueryParam.close();
-		
-		_logger.info("Get the link for next set of items in database");
-		//GET THE NEXT LINK FOR NEXT SET OF BOOKS
-		Link next = responseGetBookFromSetQueryParam.getLink("next");
-	
-		//GET THE NEXT SET
-		Response responseGetBookNext1 = _client.target(next).request().get();
-		Set<BookDTO> dataBaseSetOfBooksNextPart = responseGetBookNext1.readEntity(new GenericType<Set<BookDTO>>() {});
-		for(BookDTO b: dataBaseSetOfBooksNextPart){
-			_logger.info(b.toString());
-		}
-		assertTrue(dataBaseSetOfBooksNextPart.size() == 1);
-		Link nextnext = responseGetBookNext1.getLink("next");
-		responseGetBookNext1.close();
-		
-		//SINCE WE KNOW 3 BOOKS ONLY, RETURN A 404 NOT FOUND AS NO MORE BOOKS
-		Response responseGetBookNext2 = _client.target(nextnext).request().get();
-		if(responseGetBookNext2.getStatus()!=404){
-			fail();
-			_logger.info("Got over the amount of people in db");
-		}
-		responseGetBookNext2.close();
 	}
 	
 	 /* ||=========================================================================================================================================================||
@@ -286,6 +264,7 @@ public class BookStoreTest {
 		assertTrue(listbook.size()==1);
 	}
 	
+	@Test
 	public void getNonExistingAuthor(){
 		//GET A NON EXISTING AUTHOR
 		_logger.info("Get a non existing user with id - 651981651618");
@@ -303,12 +282,13 @@ public class BookStoreTest {
 		getNonExistingAuthor2.close();
 	}
 	
+	@Test
 	public void failAddDuplicateToDatabaseAuthor(){
 		Date date1 = new GregorianCalendar(1425, Calendar.FEBRUARY, 2).getTime();
 		Author author = new Author("Ernest Hemingway", date1, BookGenre.Fiction, "I have no response...");
 		AuthorDTO authorDTOauthor = DTOMapper.toAuthorDTO(author);
 		
-		//GET SET OF ALL AUTHORS -- ADDED 5 IN TOTAL (3 FROM BOOK + 2 IN THIS PART TOF TEST)
+		//GET SET OF ALL AUTHORS --
 		Set<AuthorDTO> listAuthor = _client.target(WEB_SERVICE_URI+"/author").request().accept("application/xml").get(new GenericType<Set<AuthorDTO>>() {});
 		_logger.info("length of authors in database is = "+listAuthor.size());
 		for(AuthorDTO a: listAuthor){
@@ -323,13 +303,13 @@ public class BookStoreTest {
 		assertTrue(responseAuthor.getStatus() == 201);
 		responseAuthor.close();
 		
-		//GET SET OF ALL AUTHORS -- ADDED 5 IN TOTAL (3 FROM BOOK + 2 IN THIS PART TOF TEST)
+		//GET SET OF ALL AUTHORS -- CHECK THAT AFTER ADDING ONE, THE ENTIRE SET IS INCREAED BY ONE
 		Set<AuthorDTO> listAuthor2 = _client.target(WEB_SERVICE_URI+"/author").request().accept("application/xml").get(new GenericType<Set<AuthorDTO>>() {});
 		_logger.info("length of authors after adding 1 in database is = "+listAuthor2.size());
 		for(AuthorDTO a: listAuthor2){
 			_logger.info(a.toString());
 		}
-		assertTrue(listAuthor.size() == listAuthor2.size()+1);
+		assertTrue((listAuthor.size()+1) == (listAuthor2.size()));
 		
 		//POST AUTHOR AGAIN
 		Response responseAuthorAgain = _client.target(WEB_SERVICE_URI + "/author").request().post(Entity.xml(authorDTOauthor));
@@ -338,6 +318,7 @@ public class BookStoreTest {
 		} else {
 			fail();
 		}
+		responseAuthorAgain.close();
 		
 	}
 	
@@ -549,6 +530,9 @@ public class BookStoreTest {
 		}
 	}
 	
+	/**
+	 * Test adding a order for a user. User needs to login first, get a cookie to be shown as a user of the database that can access the other api calls (PUT/DELETE)
+	 */
 	@Test
 	public void addOrderForUser(){
 		Date dateUser1 = new GregorianCalendar(1765, Calendar.MARCH, 1).getTime();
@@ -626,17 +610,82 @@ public class BookStoreTest {
 		
 	}
 
-
+	/**
+	 * Tests for JSON. Done by using the dependency insside the Pom of resteasy-jettison-provider.
+	 * The XML tags are used to marshall and unmarshall between XML and JSON
+	 * Sending simple cases of POST and GET using JSON. Basically everything is annotated with application/xml , applicaiton/json
+	 * Thus everything should be usable through JSON.
+	 */
 	@Test
 	public void jsonTest(){
+		//Initialise Dates to be used 
+		Date date = new GregorianCalendar(1900, Calendar.JUNE,25).getTime();
+		// 3 different authors for each book authors
+		Author author1 = new Author("Herman Melville", date, BookGenre.Fiction, "If you met him. You would shoot urself.");
+		// address for users and publishers
+		Address addressPublisher2 = new Address("2", "Two Street", "Twoten", "Auckland", "New Zealand", "1432");
+		Publisher publisher2 = new Publisher(addressPublisher2, "Brandons publishing services");
+		// books
+		Book book1 = new Book("Moby Dick", date, author1, "OMG A WHALE!!", new BigDecimal("253.50"), PrintType.Other, publisher2,
+				BookGenre.Novel, "ISBN-13:152-1-57719-505-4", "English");
+
+		BookDTO bookDTOBook1 = DTOMapper.toBookDTO(book1);
 		
+		//POST BOOKS TO THE DATABASE, implicitly creates the AUTHORS USED IN THESE BOOKs -- Cascade.persist
+		//Add book 1
+		Response responseBook1 = _client.target(WEB_SERVICE_URI + "/book").request().post(Entity.json(bookDTOBook1));
+		_logger.info("Response is :" + responseBook1.getStatusInfo()+" IN JSON");
+		String locationBook1 = responseBook1.getLocation().toString();
+		_logger.info(locationBook1+" IN JSON");
+		assertTrue(responseBook1.getStatus() == 201);
+		responseBook1.close();
 		
+		//GET THE BOOK USING THE ISBN FOR THAT BOOK -- The Shinning by Stephen King
+		BookDTO dtoBookGetISBNBook = _client.target(WEB_SERVICE_URI+"/book/isbn/"+"ISBN-13:152-1-57719-505-4").request().accept("application/json").get(BookDTO.class);
+		_logger.info("dtoBookGetISBNBook has field:" + dtoBookGetISBNBook.toString()+" IN JSON");
+		assertTrue(dtoBookGetISBNBook.getIsbn().equals("ISBN-13:152-1-57719-505-4"));
+		
+		//GET BASED ON QUERY PARAMETERS
+		BookDTO dtoBookGetBasedOnNameandLanguage = _client.target(WEB_SERVICE_URI + "/book/name" + "?title=Inferno&language=Russian").request().accept("application/json").get(BookDTO.class);
+		_logger.info("Get book based on query parameters - title=Inferno&language=Russian"+" IN JSON");
+		assertEquals(dtoBookGetBasedOnNameandLanguage.get_title(), "Inferno");
+		assertEquals(dtoBookGetBasedOnNameandLanguage.getLanguage(), "Russian");
+				
+		//GET AUTHOR FOR BOOK1
+		AuthorDTO dtoAuthorGetAuthorForBook1 = _client.target(WEB_SERVICE_URI+"/book/"+dtoBookGetISBNBook.get_bookId()+"/author").request().accept("application/json").get(AuthorDTO.class);
+		AuthorDTO realAuthorDTOBook1 = dtoBookGetISBNBook.get_author();
+		_logger.info("dtoAuthorGetAuthorForBook1 has field:" + dtoBookGetISBNBook.get_author().toString()+" IN JSON");
+		_logger.info("realAuthorDTOBook1 has field:" + realAuthorDTOBook1.toString()+" IN JSON");
+		assertTrue(dtoAuthorGetAuthorForBook1.equals(dtoBookGetISBNBook.get_author()));
+		
+		//GET PUBLISHER -- book2 has publisher2
+		Publisher bookPublisherFromDatabase = _client.target(WEB_SERVICE_URI+"/book/"+dtoBookGetISBNBook.get_bookId()+"/publisher").request().accept("application/json").get(Publisher.class);
+		_logger.info("book2PublisherFromDatabase has field:" + bookPublisherFromDatabase.toString()+" IN JSON");
+		_logger.info("Publisher2 has field:" + dtoBookGetISBNBook.get_publisher().toString()+" IN JSON");
+		assertTrue(bookPublisherFromDatabase.equals(dtoBookGetISBNBook.get_publisher()));
+		
+		UserDTO getUserFromJSON = _client.target(WEB_SERVICE_URI+"/user/email/testingADI@gmail.com").request().accept("application/json").get(UserDTO.class);
+		assertTrue(getUserFromJSON.getEmail().equals("testingADI@gmail.com"));
+		
+		//DELETE THE FIRST BOOK
+		_logger.info("Deleting book that was created using POST request - "+ locationBook1.toString());
+		_logger.info(bookDTOBook1.toString());
+		Response deleteBook1 = _client.target(locationBook1).request().accept("application/json").delete();
+		assertTrue(deleteBook1.getStatus() == 200);
+		deleteBook1.close();
 		
 	}
 	
-	
+	/**
+	 * Testing async using the subscribe model specified in lecture 14.
+	 * Async code inside BookResource class
+	 * @throws InterruptedException
+	 * @throws ExecutionException
+	 */
 	@Test
 	public void asyncTest() throws InterruptedException, ExecutionException{
+		//Create book object
+		_logger.info("Create data object for async sending: Users are notified when a book is sent");
 		Date dateAsync = new GregorianCalendar(2000, Calendar.MARCH, 22).getTime();
 		Author author1 = new Author("Matt Damon", dateAsync, BookGenre.Mystery, "Im also an actor");
 		Address addressPublisher1 = new Address("2", "Bird Street", "Darby", "Oceania", "England", "156-198-19");
@@ -644,13 +693,16 @@ public class BookStoreTest {
 		Book book1 = new Book("Inferno", dateAsync, author1, "Book Is about Matt Damons acting", new BigDecimal("122.50"), PrintType.HardCover, publisher1,
 				BookGenre.Art, "ISBN-22:23923:235", "Korean");
 		final BookDTO book1DTO = DTOMapper.toBookDTO(book1);
+		_logger.info(book1DTO.toString());
 		
+		//Client that receives the book when another client posts it
 		Client clientReceiver = ClientBuilder.newClient( );
 		
-		Future<BookDTO> target = clientReceiver.target(WEB_SERVICE_URI + "book/subscribe").request().async().get(new InvocationCallback<BookDTO>() { 
+		//subscribe for getting notification
+		Future<BookDTO> target = clientReceiver.target(WEB_SERVICE_URI + "book/sub").request().async().get(new InvocationCallback<BookDTO>() { 
 			public void completed(BookDTO book) {  
+				//check if the book is the same as the dto sent
 				org.junit.Assert.assertTrue(book.equals(book1DTO));
-				fail();
 				_logger.info(book.toString());
 			}                  
 			public void failed(Throwable t) { 
@@ -658,16 +710,16 @@ public class BookStoreTest {
 			}            
 		});
 		
+		//small wait
 		try {
 			Thread.sleep(500);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
 		
+		//Sender client that POSTS the book through the wire
 		Client clientSender = ClientBuilder.newClient( );
 		Response rcreate = clientSender.target(WEB_SERVICE_URI + "/book").request().post(Entity.xml(book1DTO));		
-		rcreate.close();
-
-		
+		rcreate.close();		
 	}
 }

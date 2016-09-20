@@ -140,7 +140,7 @@ public class BookResource {
 		try{
 			m.persist(domainBook);
 			m.getTransaction().commit();
-			// Notifying subscribers
+			// Notifying subscribers that a new book has been added
 			for (AsyncResponse response : asyncResponses) {
 				response.resume(bookdto);
 			}
@@ -287,15 +287,14 @@ public class BookResource {
 		return publisher;
 	}
 	
-	//-------------------------------------------------------------------------------------------------------------------
-	
 	/**
 	 * Subscribe method for async responses
 	 */
 	@GET
-	@Path("/subscribe")
+	@Path("/sub")
 	@Produces({"application/xml","application/json"})
 	public void subscribeToPage(@Suspended AsyncResponse response) {
+		//add the response to the list of async responses
 		asyncResponses.add(response);
 	}
 	
