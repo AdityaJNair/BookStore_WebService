@@ -597,12 +597,12 @@ public class BookStoreTest {
 		cookieLoginUser1.close();
 		_logger.info(cookieUser1.toString());
 
-
+		_logger.info("add order of book" + dtoBookBook1.toString());
 		Response responseAddOrder1ToUser2 = _client.target(WEB_SERVICE_URI+"/user/"+dtouser1.get_userId()+"/order/isbn/"+dtoBookBook1.getIsbn()).request().cookie(cookieUser1).accept("application/xml").put(null);
 		assertTrue(responseAddOrder1ToUser2.getStatus() == 201);
 		responseAddOrder1ToUser2.close();
 		
-	
+		_logger.info("add order of book" + dtoBookBook2.toString());
 		Response responseAddOrder2ToUser2 = _client.target(WEB_SERVICE_URI+"/user/"+dtouser1.get_userId()+"/order/isbn/"+dtoBookBook2.getIsbn()).request().cookie(cookieUser1).accept("application/xml").put(null);
 		assertTrue(responseAddOrder2ToUser2.getStatus() == 201);
 		responseAddOrder2ToUser2.close();
@@ -667,8 +667,6 @@ public class BookStoreTest {
 		Client clientSender = ClientBuilder.newClient( );
 		Response rcreate = clientSender.target(WEB_SERVICE_URI + "/book").request().post(Entity.xml(book1DTO));		
 		rcreate.close();
-		Response rdelete = clientSender.target(rcreate.getLocation()).request().delete();
-		rdelete.close();
 
 		
 	}
