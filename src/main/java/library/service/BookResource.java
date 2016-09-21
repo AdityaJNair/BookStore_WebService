@@ -68,6 +68,8 @@ public class BookResource {
 		m.getTransaction().begin();
 		Book b = m.find(Book.class, id);
 		if (b == null) {
+			m.close();
+			_logger.error("Entity not found");
 			throw new EntityNotFoundException();
 		}
 		BookDTO b1 = DTOMapper.toBookDTO(b);
@@ -90,6 +92,8 @@ public class BookResource {
 		m.getTransaction().begin();
 		Book b = m.createQuery("SELECT b FROM Book b WHERE b.title=:title AND b.language=:language", Book.class).setParameter("title", title).setParameter("language",language).getSingleResult();
 		if (b == null) {
+			m.close();
+			_logger.error("Entity not found");
 			throw new EntityNotFoundException();
 		}
 		BookDTO b1 = DTOMapper.toBookDTO(b);
@@ -112,6 +116,8 @@ public class BookResource {
 		m.getTransaction().begin();
 		Book b = m.createQuery("SELECT b FROM Book b WHERE b.isbn=:isbn", Book.class).setParameter("isbn", isbn).getSingleResult();
 		if (b == null) {
+			m.close();
+			_logger.error("Entity not found");
 			throw new EntityNotFoundException();
 		}
 		BookDTO b1 = DTOMapper.toBookDTO(b);
@@ -132,7 +138,6 @@ public class BookResource {
 		Book domainBook = DTOMapper.toBookDomain(bookdto);
 		EntityManager m = PersistenceManager.instance().createEntityManager();
 		m.getTransaction().begin();
-		//Need a better query here with select author name is true
 		TypedQuery<Author> authorQuery = m.createQuery("FROM Author", Author.class);
 		List<Author> listAuthors = authorQuery.getResultList();
 		for (Author a : listAuthors) {
@@ -149,6 +154,7 @@ public class BookResource {
 			}
 			asyncResponses.clear();
 		} catch (PersistenceException e){
+			_logger.error("Conflict found");
 			return Response.status(409).build();
 		}finally{
 			m.close();
@@ -169,6 +175,8 @@ public class BookResource {
 		m.getTransaction().begin();
 		Book b = m.find(Book.class, id);
 		if (b == null) {
+			m.close();
+			_logger.error("Entity not found");
 			return Response.status(404).build();
 		}
 		m.remove(b);
@@ -193,6 +201,8 @@ public class BookResource {
 		m.getTransaction().begin();
 		Book bookauthor = m.find(Book.class, bookid);
 		if (bookauthor == null) {
+			m.close();
+			_logger.error("Entity not found");
 			throw new EntityNotFoundException();
 		}
 		AuthorDTO authorDTO = DTOMapper.toAuthorDTO(bookauthor.get_author());
@@ -257,6 +267,8 @@ public class BookResource {
 		TypedQuery<Book> BookQuery = m.createQuery("FROM Book", Book.class);
 		List<Book> listBook = BookQuery.getResultList();
 		if (listBook == null||listBook.isEmpty()) {
+			m.close();
+			_logger.error("Entity not found");
 			throw new EntityNotFoundException();
 		}
 		for(Book u : listBook){
@@ -282,6 +294,8 @@ public class BookResource {
 		m.getTransaction().begin();
 		Book b = m.find(Book.class , bookid);
 		if (b == null) {
+			m.close();
+			_logger.error("Entity not found");
 			throw new EntityNotFoundException();
 		}
 		Publisher publisher = b.get_publisher();
@@ -301,7 +315,11 @@ public class BookResource {
 		asyncResponses.add(response);
 	}
 	
-		
+	/**
+	 * Get the reviews for a particular book with id
+	 * @param bookid
+	 * @return
+	 */
 	@GET
 	@Path("{id}/review")
 	@Produces({"application/xml","application/json"})
@@ -314,11 +332,15 @@ public class BookResource {
 		Set<ReviewDTO> rdtolist = new HashSet<ReviewDTO>();
 		Book b = m.find(Book.class, bookid);
 		if (b == null) {
+			m.close();
+			_logger.error("Entity not found");
 			throw new EntityNotFoundException();
 		}
 		for(BigInteger u: books){
 			User user = m.find(User.class, u.longValue());
 			if (user == null) {
+				m.close();
+				_logger.error("Entity not found");
 				throw new EntityNotFoundException();
 			}
 			for(Review r: user.getReviews()){

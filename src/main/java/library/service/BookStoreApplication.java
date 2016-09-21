@@ -44,6 +44,9 @@ public class BookStoreApplication extends Application {
 		return singletons;
 	}
 	
+	/**
+	 * Initialises the database that will be used in testing
+	 */
 	static void databaseInit(){
 		EntityManager m = PersistenceManager.instance().createEntityManager();
 		m.getTransaction().begin();

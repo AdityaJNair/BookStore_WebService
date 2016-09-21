@@ -44,7 +44,8 @@ import library.content.dto.ReviewDTO;
 import library.content.dto.UserDTO;
 
 /**
- * Resource class for Users. Able to create users, delete users, read users and put book orders into a user class
+ * Resource class for Users. Able to create users, delete users, read users and put book orders into a user class.
+ * Also allowed to add a review
  * @author adijn
  *
  */
@@ -64,13 +65,17 @@ public class UserResource {
 		URI uri = uriInfo.getAbsolutePath();
 		EntityManager m = PersistenceManager.instance().createEntityManager();
 		m.getTransaction().begin();
+		_logger.info("check if the user exists");
 		User b = m.find(User.class, id);
 		if(b==null){
+			m.close();
+			_logger.info("Entity not found");
 		    throw new EntityNotFoundException();
 		}
 		UserDTO b1 = DTOMapper.toUserDTO(b);
 		m.getTransaction().commit();
 		m.close();
+		_logger.info("add quick links to next api calls for user");
 		Link userLink = Link.fromUri(uri+"/book").rel("book").build();
 		Link userLogin = Link.fromUri(uri+"/loginservice"+"?name="+b1.getUserName()).rel("login").build();
 		Link userReview = Link.fromUri(uri+"/review").rel("review").build();
@@ -92,14 +97,20 @@ public class UserResource {
 		m.getTransaction().begin();
 		User u = null;
 		try{
+			_logger.info("querying for user where the email is = email given in path param");
 			u = m.createQuery("SELECT u FROM User u WHERE u.email=:email", User.class).setParameter("email", email).getSingleResult();
 
 		}catch(PersistenceException e){
+			m.close();
+			_logger.info("Entity not found");
 			throw new EntityNotFoundException();
 		}
 		if(u==null){
+			m.close();
+			_logger.info("Entity not found");
 		    throw new EntityNotFoundException();
 		}
+		_logger.info("return dto for user");
 		UserDTO udto = DTOMapper.toUserDTO(u);
 		m.getTransaction().commit();
 		m.close();
@@ -108,7 +119,7 @@ public class UserResource {
 	
 	
 	/**
-	 * Add a user
+	 * Add a user to the database
 	 * @param userdto
 	 * @return
 	 */
@@ -119,18 +130,22 @@ public class UserResource {
 		EntityManager m = PersistenceManager.instance().createEntityManager();
 		m.getTransaction().begin();
 		try{
+			_logger.info("persist user if not exist");
 			m.persist(domainUser);
 			m.getTransaction().commit();
 		} catch (PersistenceException e){
+			_logger.info("Duplicate user exists in database");
 			return Response.status(400).build();
 		} finally {
 			m.close();
 		}
+		_logger.info("return location which has id appended for user address uri");
 		return Response.created(URI.create("/user/" + domainUser.get_userId())).build();
 	}
 	
 	/**
-	 * Delete a user
+	 * Delete a user, implicitly deletes the reviews
+	 * Needs to have a cookie, so that no random person not in the database can delete a user.
 	 * @param id
 	 * @return
 	 */
@@ -138,11 +153,13 @@ public class UserResource {
 	@Path("{id}")
 	@Consumes({ "application/xml", "application/json" })
 	public Response deleteUser(@PathParam("id") long id, @CookieParam("username") Cookie name){
+		_logger.info("Check if have a cookie");
 		if(name==null){
 			return Response.status(401).build();
 		}
 		EntityManager m = PersistenceManager.instance().createEntityManager();
 		m.getTransaction().begin();
+		_logger.info("check if user exists");
 		User u = m.find(User.class, id);
 		if(u==null){
 		    return Response.status(404).build();
@@ -156,29 +173,36 @@ public class UserResource {
 		} else {
 			m.getTransaction().commit();
 			m.close();
+			_logger.info("if cookie username is not valid return unauthorised access");
 			return Response.status(401).build();
 		}
 	}
 	
 	/**
-	 * add a book to a user
+	 * Add a book to a user. This means they purchased the book. Cannot be undone. Requires a cookie
 	 */
 	@PUT
 	@Path("{id}/order/{bid}")
 	@Consumes({ "application/xml", "application/json" })
 	public Response addBookOrder(@PathParam("id") long id, @PathParam("bid") long bid, @CookieParam("username") Cookie name){
+		_logger.info("Check if cookie exists");
 		if(name==null){
 			return Response.status(401).build();
 		}
 		EntityManager m = PersistenceManager.instance().createEntityManager();
 		m.getTransaction().begin();
+		_logger.info("check if user exists based on id");
 		User u = m.find(User.class, id);
 		if(u==null){
+			m.close();
+			_logger.info("Entity not found");
 		    throw new EntityNotFoundException();
 		}
 		if(u.getUserName().equals(name.getValue())){
 			Book b = m.find(Book.class, bid);
 			if(b==null){
+				m.close();
+				_logger.info("Entity not found");
 			    throw new EntityNotFoundException();
 			}
 			u.addBook(b);
@@ -193,12 +217,13 @@ public class UserResource {
 	}
 	
 	/**
-	 * add a book to a user based on isbn
+	 * Add a book to a user based on isbn incase they do not have the id. Requires a cookie
 	 */
 	@PUT
 	@Path("{id}/order/isbn/{isbn}")
 	@Consumes({ "application/xml", "application/json" })
 	public Response addBookOrderUsingISBN(@PathParam("id") long id, @PathParam("isbn") String isbn, @CookieParam("username") Cookie name){
+		_logger.info("checking if cookie is given");
 		if(name==null){
 			return Response.status(401).build();
 		}
@@ -206,14 +231,18 @@ public class UserResource {
 		m.getTransaction().begin();
 		User u = m.find(User.class, id);
 		if(u==null){
+			m.close();
+			_logger.info("Entity not found");
 		    throw new EntityNotFoundException();
 		}
 		if(u.getUserName().equals(name.getValue())){
+			_logger.info("get books where the book isbn is equal to the one given");
 			Book b = m.createQuery("SELECT b FROM Book b WHERE b.isbn=:isbn", Book.class).setParameter("isbn", isbn).getSingleResult();
 			if(b==null){
+				m.close();
+				_logger.info("Entity not found");
 			    throw new EntityNotFoundException();
 			}
-	
 			u.addBook(b);
 			m.getTransaction().commit();
 			m.close();
@@ -226,7 +255,7 @@ public class UserResource {
 	}
 	
 	/**
-	 * Gets a list of all users
+	 * Gets a list of all users in the database
 	 * @return
 	 */
 	@GET
@@ -234,15 +263,20 @@ public class UserResource {
 	public Response getUserList(){
 		EntityManager m = PersistenceManager.instance().createEntityManager();
 		m.getTransaction().begin();
+		_logger.info("create a set of all users, empty initial");
 		Set<UserDTO> userDTOset = new HashSet<UserDTO>();
 		TypedQuery<User> userQuery = m.createQuery("FROM User", User.class);
 		List<User> listUser = userQuery.getResultList();
 		if(listUser==null||listUser.isEmpty()){
+			m.close();
+			_logger.info("Entity not found");
 		    throw new EntityNotFoundException();
 		}
+		_logger.info("map users to dtousers");
 		for(User u: listUser){
 			userDTOset.add(DTOMapper.toUserDTO(u));
 		}
+		_logger.info("add to a generic entity and send across");
 		GenericEntity<Set<UserDTO>> entity = new GenericEntity<Set<UserDTO>>(userDTOset){};
 		m.getTransaction().commit();
 		m.close();
@@ -250,7 +284,7 @@ public class UserResource {
 	}
 	
 	/**
-	 * Add a review for a book
+	 * Add a review for a book, needs a cookie as form of authenticating the user
 	 * @param id
 	 * @param bookId
 	 * @return
@@ -259,9 +293,11 @@ public class UserResource {
 	@Path("{id}/review")
 	@Consumes({ "application/xml", "application/json" })
 	public Response updateAddUserReview(@PathParam("id") long id, ReviewDTO rr, @CookieParam("username") Cookie name){
+		_logger.info("check if cookie exists");
 		if(name==null){
 			return Response.status(401).build();
 		}
+		_logger.info("map the review from dtoreview");
 		Review r = DTOMapper.toReviewDomain(rr);
 		EntityManager m = PersistenceManager.instance().createEntityManager();
 		m.getTransaction().begin();
@@ -271,12 +307,14 @@ public class UserResource {
 		}
 		_logger.info(name.toString());
 		if(user.getUserName().equals(name.getValue())){
+			_logger.info("get a book based on isbn of the book provided");
 			Book b = m.createQuery("SELECT b FROM Book b WHERE b.isbn=:isbn", Book.class).setParameter("isbn", r.getIsbn()).getSingleResult();
 			if(b==null){
 				return Response.status(404).build();
 			}
 			r.setBookReviewed(b);
 			try{
+				_logger.info("add review and finish, if conflict with existing review abort");
 				user.addReview(r);
 				m.getTransaction().commit();
 			} catch (PersistenceException e){
@@ -291,21 +329,28 @@ public class UserResource {
 		}
 	}
 	
+	/**
+	 * Get reviews done by the user specified by the id
+	 * @param id
+	 * @return
+	 */
 	@GET
 	@Path("{id}/review")
 	@Produces({ "application/xml", "application/json" })
 	public Response getReviewsByUser(@PathParam("id") long id){
 		EntityManager m = PersistenceManager.instance().createEntityManager();
 		m.getTransaction().begin();
+		_logger.info("find user for looking for review");
 		User user = m.find(User.class, id);
 		if(user==null){
 			return Response.status(404).build();
 		}
+		_logger.info("map reviews by user to dtousers");
 		Set<ReviewDTO> review = new HashSet<ReviewDTO>();
 		for(Review r: user.getReviews()){
 			review.add(DTOMapper.toReviewDTO(r));
 		}
-		
+		_logger.info("wrap to a generic entity for reviewdtos");
 		GenericEntity<Set<ReviewDTO>> entity = new GenericEntity<Set<ReviewDTO>>(review){};
 		m.getTransaction().commit();
 		m.close();
@@ -314,7 +359,7 @@ public class UserResource {
 	
 	
 	/**
-	 * Get the books that have been purchased by this user
+	 * Get the books that have been purchased by this user, requires cookie
 	 * @param id
 	 * @return
 	 */
@@ -322,6 +367,7 @@ public class UserResource {
 	@Path("{id}/book")
 	@Produces({ "application/xml", "application/json" })
 	public Response getBooksBoughtByUser(@PathParam("id") long id, @CookieParam("username") Cookie name){
+		_logger.info("check if cookie exist");
 		if(name==null){
 			return Response.status(401).build();
 		}
@@ -364,6 +410,7 @@ public class UserResource {
 		EntityManager m = PersistenceManager.instance().createEntityManager();
 		m.getTransaction().begin();
 		Set<UserDTO> userDTOset = new HashSet<UserDTO>();
+		_logger.info("look for ids in the range between start-end");
 		TypedQuery<User> userQuery = m.createQuery("SELECT b FROM User b WHERE b.userId BETWEEN :start AND :end", User.class).setParameter("start", start).setParameter("end", end);
 		List<User> listUser = userQuery.getResultList();
 		if(listUser==null || listUser.isEmpty()){
@@ -374,13 +421,14 @@ public class UserResource {
 					.rel("next")
 					.build(end+1, end+(end-start)+1);
 		}
+		_logger.info("map users to dtousers");
 		for(User b : listUser){
 			userDTOset.add(DTOMapper.toUserDTO(b));
 		}
 		GenericEntity<Set<UserDTO>> entity = new GenericEntity<Set<UserDTO>>(userDTOset){};
 		m.getTransaction().commit();
 		m.close();
-		
+		_logger.info("if link is null as empty, dont add the link");
  		ResponseBuilder builder = Response.ok(entity);
  		if(next != null) {
  			builder.links(next);
@@ -389,22 +437,33 @@ public class UserResource {
 		return response;
 	}
 	
+	/**
+	 * A login service that stores username as the key and name as the value.
+	 * A user must have this cookie to be able to have access to any PUT DELETE api calls in user resource
+	 * @param id
+	 * @param name
+	 * @return
+	 */
 	@GET
 	@Path("{id}/loginservice")
 	public Response userLoginService(@PathParam("id") long id,@QueryParam("name") String name){
+		_logger.info("login for a user");
 		EntityManager m = PersistenceManager.instance().createEntityManager();
 		m.getTransaction().begin();
+		_logger.info("check if a user exists");
 		User u = m.find(User.class, id);
 		if(u==null){
 			m.getTransaction().commit();
 			m.close();
 			return Response.status(404).build();
 		}
+		_logger.info("check if the name provided, is same as the name given");
 		if(u.getUserName().equals(name)){
 			_logger.info(name);
 			NewCookie newCookie = new NewCookie("username", name);
 			m.getTransaction().commit();
 			m.close();
+			_logger.info("return a cookie");
 			return Response.noContent().cookie(newCookie).build();
 		} else {
 			m.getTransaction().commit();

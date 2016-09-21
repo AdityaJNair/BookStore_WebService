@@ -768,7 +768,7 @@ public class BookStoreTest {
 		});
 		//small wait between a subscription and a sending
 		try {
-			Thread.sleep(100);
+			Thread.sleep(500);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
