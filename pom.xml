@@ -37,6 +37,7 @@
 			<version>3.0.19.Final</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.jboss.resteasy/resteasy-jettison-provider -->
+		<!-- dependency used for json -->
 		<dependency>
 			<groupId>org.jboss.resteasy</groupId>
 			<artifactId>resteasy-jettison-provider</artifactId>

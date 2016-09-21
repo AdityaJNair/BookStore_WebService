@@ -99,12 +99,22 @@ public class DTOMapper {
 		return authorDomain;
 	}
 	
+	/**
+	 * Converts a dto review to a domain review
+	 * @param dtoReview
+	 * @return
+	 */
 	public static Review toReviewDomain(ReviewDTO dtoReview){
 		Review reviewDomain = new Review(dtoReview.getReviewComment(), dtoReview.getReviewRating(), dtoReview.getIsbn());
 		reviewDomain.setBookReviewed(DTOMapper.toBookDomain(dtoReview.getBookReviewed()));
 		return reviewDomain;
 	}
 	
+	/**
+	 * Converts a domain review to a dto review
+	 * @param domainReview
+	 * @return
+	 */
 	public static ReviewDTO toReviewDTO(Review domainReview){
 		ReviewDTO dtoReview = new ReviewDTO(domainReview.getReviewComment(), domainReview.getReviewRating(), domainReview.getIsbn());
 		dtoReview.setBookReviewed(DTOMapper.toBookDTO(domainReview.getBookReviewed()));
