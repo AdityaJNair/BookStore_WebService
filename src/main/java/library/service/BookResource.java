@@ -1,5 +1,6 @@
 package library.service;
 
+import java.math.BigInteger;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -9,6 +10,7 @@ import java.util.Set;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.PersistenceException;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -300,4 +302,34 @@ public class BookResource {
 	}
 	
 		
+	@GET
+	@Path("{id}/review")
+	@Produces({"application/xml","application/json"})
+	public Response getReview(@PathParam("id") long bookid){
+		EntityManager m = PersistenceManager.instance().createEntityManager();
+		m.getTransaction().begin();
+		Query q = m.createNativeQuery("SELECT USER_USERID FROM USER_REVIEWS WHERE BOOKREVIEWED_BOOKID=:id").setParameter("id", bookid);
+		List<BigInteger> books = q.getResultList();
+		_logger.info("BOOK SIZE FOR REVIEW"+books.size());
+		Set<ReviewDTO> rdtolist = new HashSet<ReviewDTO>();
+		Book b = m.find(Book.class, bookid);
+		if (b == null) {
+			throw new EntityNotFoundException();
+		}
+		for(BigInteger u: books){
+			User user = m.find(User.class, u.longValue());
+			if (user == null) {
+				throw new EntityNotFoundException();
+			}
+			for(Review r: user.getReviews()){
+				if(r.getIsbn().equals(b.getIsbn())){
+					rdtolist.add(DTOMapper.toReviewDTO(r));
+				}
+			}
+		}
+		GenericEntity<Set<ReviewDTO>> entity = new GenericEntity<Set<ReviewDTO>>(rdtolist){};
+		m.getTransaction().commit();
+		m.close();
+		return Response.ok(entity).build();
+	}
 }

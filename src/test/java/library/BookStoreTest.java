@@ -490,6 +490,15 @@ public class BookStoreTest {
 			_logger.info("Check reviews of user "+ b.toString());
 		}
 		assertTrue(reviewDTOSet.size() == 1);
+		responseToSeeIfReviewAdded.close();
+		
+		Response responseGetBookReview = _client.target(WEB_SERVICE_URI+"/book/"+dtoBookBook2.get_bookId()+"/review").request().get();
+		Set<ReviewDTO> reviewDTOSetBook = responseGetBookReview.readEntity(new GenericType<Set<ReviewDTO>>() {});
+		for(ReviewDTO b: reviewDTOSetBook){
+			_logger.info("Check reviews of book "+ b.toString());
+		}
+		assertTrue(reviewDTOSetBook.size() == 1);
+		responseGetBookReview.close();
 		
 		//CAN ONLY DELETE USING THE COOKIE OF A VALID USER - REMOVES COMMENTS TOO
 		Response deleteUser1WithCookie = _client.target(locationUser1).request().cookie(cookieUser1).delete();
