@@ -766,14 +766,12 @@ public class BookStoreTest {
 				fail();
 			}            
 		});
-		
-		//small wait
+		//small wait between a subscription and a sending
 		try {
-			Thread.sleep(500);
+			Thread.sleep(100);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		
 		//Sender client that POSTS the book through the wire
 		Client clientSender = ClientBuilder.newClient( );
 		Response rcreate = clientSender.target(WEB_SERVICE_URI + "/book").request().post(Entity.xml(book1DTO));		
